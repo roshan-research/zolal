@@ -23,7 +23,7 @@ var QuranView = Backbone.View.extend({
 	},
 	render: function() {
 		page = _.filter(this.collection.models, function (item) {
-			return item.get('soure') === '20';
+			return item.get('page') === 3;
 		});
 
 		_.each(page, function (item) {
