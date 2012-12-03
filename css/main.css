@@ -1,0 +1,7 @@
+body {
+	direction: rtl;
+}
+
+.container {
+	max-width: 800px;
+}
