@@ -27,5 +27,13 @@
 			</ul>
 		</div>
 	</div>
+	<script id="addressTemplate" type="text/template">
+	<% if (mode == 'quran') { %>
+		<span>صفحه <%= page %></span> <span>سوره <%= sura %></span>
+		<% if (aya != '') { %>
+			<span>آیه <%= aya %></span>
+		<% } %>
+	<% } %>
+	</script>
 </body>
 </html>

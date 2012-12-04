@@ -1,16 +1,15 @@
 $(document).ready(function() {
 
-var Aye = Backbone.Model.extend({});
+var Aya = Backbone.Model.extend({});
 
 var Quran = Backbone.Collection.extend({
-	model: Aye
+	model: Aya
 });
 
-var AyeView = Backbone.View.extend({
-	template: '<span rel="<%= soure %>-<%= num %>"><%= text %> (<%= num %>) </span>',
+var AyaView = Backbone.View.extend({
+	template: _.template('<span rel="<%= sura %>-<%= aya %>"><%= text %> (<%= aya %>) </span>'),
 	render: function () {
-		var tmpl = _.template(this.template);
-		this.setElement(tmpl(this.model.toJSON()));
+		this.setElement(this.template(this.model.toJSON()));
 		return this;
 	}
 });
@@ -18,9 +17,10 @@ var AyeView = Backbone.View.extend({
 var QuranView = Backbone.View.extend({
 	el: $("#quran"),
 	initialize: function() {
-		this.collection = new Quran(ayes);
+		this.collection = new Quran(ayas);
 		this.page = 1;
-		this.render();
+		this.sura = '';
+		this.aya = '';
 	},
 	render: function() {
 		this.$el.html('');
@@ -30,9 +30,11 @@ var QuranView = Backbone.View.extend({
 		}, this);
 
 		_.each(page, function (item) {
-			var ayeView = new AyeView({model: item});
-			this.$el.append(ayeView.render().el);
+			var ayaView = new AyaView({model: item});
+			this.$el.append(ayaView.render().el);
 		}, this);
+
+		this.trigger('render');
 	},
 	nextPage: function () {
 		this.page += 1;
@@ -46,17 +48,29 @@ var QuranView = Backbone.View.extend({
 	}
 });
 
+var AddressView = Backbone.View.extend({
+	el: $("#address"),
+	template: _.template($("#addressTemplate").html()),
+	render: function() {
+		this.$el.html(this.template(this.location));
+	}
+});
+
 var AppView = Backbone.View.extend({
 	el: $("body"),
 	initialize: function() {
+		this.address = new AddressView();
+		
 		this.quran = new QuranView();
+		this.quran.on('render', this.updateAddress, this);
+		this.quran.render()
 	},
 	events: {
 		'keydown': 'navKey'
 	},
-	nextClick: function(e) {
-		e.preventDefault();
-		this.quran.nextPage();
+	updateAddress: function() {
+		this.address.location = {'mode': 'quran', 'page': this.quran.page, 'sura': this.quran.sura, 'aya': this.quran.aya};
+		this.address.render();
 	},
 	navKey: function(e) {
 		if(e.keyCode == 37) // left arrow
