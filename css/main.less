@@ -1,0 +1,33 @@
+@font-face {
+	font-family: QuranFont;
+	font-weight: normal;
+	src: url('../font/QuranFont.ttf') format('truetype');
+}
+
+body {
+	direction: rtl;
+}
+
+@footer: 60px;
+#wrap {
+	min-height: 100%;
+	height: auto !important;
+	height: 100%;
+	margin: 0 auto -@footer;
+}
+#push, #footer {
+	height: @footer;
+}
+
+.container {
+	max-width: 600px;
+}
+
+#quran {
+	margin: 20px auto;
+	text-align: justify;
+	font-family: QuranFont;
+	word-spacing: 3px;
+	font-size: 20px;
+	line-height: 45px;
+}

@@ -1,15 +1,15 @@
 """	Create db.js file
 
-	from enchanced quran text file.
+	From simple quran text file with aya numbers.
 """
 ayes = {}
 db = open('data/db.js', 'w')
-for line in open('data/quran-enhanced.txt'):
+for line in open('data/quran-text.txt'):
 	line = line.split('|')
 
 	if len(line) == 3:
 		key = '%s-%s' % (line[0], line[1])
-		ayes[key] = {'soure': int(line[0]), 'num': int(line[1]), 'text': line[2].strip()}
+		ayes[key] = {'soure': int(line[0]), 'num': int(line[1]), 'text': line[2].strip().replace('ى', 'ي')}
 
 pages, p = {}, 1
 for line in open('data/quran-pages.txt'):
