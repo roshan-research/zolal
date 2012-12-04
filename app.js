@@ -19,7 +19,7 @@ var QuranView = Backbone.View.extend({
 	initialize: function() {
 		this.collection = new Quran(ayas);
 		this.page = 1;
-		this.sura = '';
+		this.sura = 1;
 		this.aya = '';
 	},
 	render: function() {
@@ -34,6 +34,7 @@ var QuranView = Backbone.View.extend({
 			this.$el.append(ayaView.render().el);
 		}, this);
 
+		this.sura = page[0].attributes['sura'];
 		this.trigger('render');
 	},
 	nextPage: function () {
@@ -69,7 +70,7 @@ var AppView = Backbone.View.extend({
 		'keydown': 'navKey'
 	},
 	updateAddress: function() {
-		this.address.location = {'mode': 'quran', 'page': this.quran.page, 'sura': this.quran.sura, 'aya': this.quran.aya};
+		this.address.location = {'mode': 'quran', 'page': this.quran.page, 'sura': suras[this.quran.sura-1], 'aya': this.quran.aya};
 		this.address.render();
 	},
 	navKey: function(e) {
