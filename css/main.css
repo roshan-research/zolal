@@ -3,8 +3,15 @@
   font-weight: normal;
   src: url('../font/QuranFont.ttf') format('truetype');
 }
+@font-face {
+  font-family: AppFont;
+  font-weight: normal;
+  src: local('B Mitra');
+}
 body {
   direction: rtl;
+  font-family: AppFont;
+  font-size: 18px;
 }
 #wrap {
   min-height: 100%;
@@ -17,13 +24,41 @@ body {
   height: 60px;
 }
 .container {
-  max-width: 600px;
+  max-width: 800px;
 }
 #quran {
   margin: 20px auto;
   text-align: justify;
   font-family: QuranFont;
   word-spacing: 3px;
-  font-size: 20px;
+  font-size: 18px;
   line-height: 45px;
+}
+#tafsir {
+  height: 600px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  text-align: justify;
+}
+#tafsir h1 {
+  font-size: 1.2em;
+}
+#tafsir h2,
+#tafsir h3 {
+  font-size: 1.1em;
+}
+#tafsir blockquote {
+  padding: 0 15px;
+  margin: 0 20px;
+  border-right: 5px solid #EEE;
+  border-left: none;
+}
+#tafsir em {
+  font-style: normal;
+  font-weight: bold;
+  font-size: .85em;
+}
+#address {
+  float: left;
+  padding: 10px;
 }

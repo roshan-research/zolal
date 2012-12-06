@@ -2,8 +2,14 @@ $(document).ready(function() {
 
 var Aya = Backbone.Model.extend({});
 
+var Bayan = Backbone.Model.extend({});
+
 var Quran = Backbone.Collection.extend({
 	model: Aya
+});
+
+var Tafsir = Backbone.Collection.extend({
+	model: Bayan
 });
 
 var AyaView = Backbone.View.extend({
@@ -49,6 +55,56 @@ var QuranView = Backbone.View.extend({
 	}
 });
 
+var TafsirView = Backbone.View.extend({
+	el: $("#tafsir"),
+	initialize: function() {
+		this.collection = new Tafsir(bayans);
+		this.sections = sections;
+		this.section = 20;
+	},
+	render: function() {
+		this.firstSection = this.section;
+		this.lastSection = this.section-1;
+
+		this.$el.html('');
+		this.appendLast();
+		this.prependFirst();
+	},
+	events: {
+		'scroll': 'checkScroll'
+	},
+	getSection: function(section) {
+		return this.collection.get(this.sections[section]).get('content');
+	},
+	prependFirst: function() {
+		if (this.firstSection > 0) {
+			this.firstSection -= 1;
+			fix_off = 10;
+
+			topOff = this.el.scrollTop + fix_off;
+			section = $(this.getSection(this.firstSection));
+			this.$el.prepend(section);
+			this.$el.scrollTop(topOff + section.height());
+		}
+	},
+	appendLast: function() {
+		if (this.lastSection < this.sections.length-1) {
+			this.lastSection += 1;
+			this.$el.append(this.getSection(this.lastSection));
+		}
+	},
+	checkScroll: function () {
+		this.isLoading = false;
+		triggerOff = 300;
+
+		if(!this.isLoading && this.el.scrollTop < triggerOff)
+			this.prependFirst();
+
+		if(!this.isLoading && this.el.scrollTop + this.el.clientHeight + triggerOff > this.el.scrollHeight)
+			this.appendLast();
+	}
+});
+
 var AddressView = Backbone.View.extend({
 	el: $("#address"),
 	template: _.template($("#addressTemplate").html()),
@@ -64,7 +120,11 @@ var AppView = Backbone.View.extend({
 		
 		this.quran = new QuranView();
 		this.quran.on('render', this.updateAddress, this);
-		this.quran.render()
+		// this.quran.render();
+
+		this.tafsir = new TafsirView();
+		this.tafsir.render();
+
 	},
 	events: {
 		'keydown': 'navKey'
@@ -81,6 +141,6 @@ var AppView = Backbone.View.extend({
 	}
 });
 
-var app = new AppView();
+window.app = new AppView();
 
 });
