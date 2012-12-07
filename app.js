@@ -24,15 +24,12 @@ var QuranView = Backbone.View.extend({
 	el: $("#quran"),
 	initialize: function() {
 		this.collection = new Quran(ayas);
-		this.page = 1;
-		this.sura = 1;
-		this.aya = '';
 	},
 	render: function() {
 		this.$el.html('');
 
 		page = _.filter(this.collection.models, function (item) {
-			return item.get('page') === this.page;
+			return item.get('page') === this.position.page;
 		}, this);
 
 		_.each(page, function (item) {
@@ -40,18 +37,17 @@ var QuranView = Backbone.View.extend({
 			this.$el.append(ayaView.render().el);
 		}, this);
 
-		this.sura = page[0].attributes['sura'];
-		this.trigger('render');
+		this.position.sura = page[0].attributes['sura'];
 	},
 	nextPage: function () {
-		this.page += 1;
-		if (this.page > 604) this.page = 604;
-		this.render();
+		this.position.page += 1;
+		if (this.position.page > 604)
+			this.position.page = 604;
 	},
 	prevPage: function () {
-		this.page -= 1;
-		if (this.page < 1) this.page = 1;
-		this.render();
+		this.position.page -= 1;
+		if (this.position.page < 1)
+			this.position.page = 1;
 	}
 });
 
@@ -79,9 +75,9 @@ var TafsirView = Backbone.View.extend({
 	prependFirst: function() {
 		if (this.firstSection > 0) {
 			this.firstSection -= 1;
-			fix_off = 10;
+			fixOff = 10;
 
-			topOff = this.el.scrollTop + fix_off;
+			topOff = this.$el.scrollTop() + fixOff;
 			section = $(this.getSection(this.firstSection));
 			this.$el.prepend(section);
 			this.$el.scrollTop(topOff + section.height());
@@ -109,7 +105,12 @@ var AddressView = Backbone.View.extend({
 	el: $("#address"),
 	template: _.template($("#addressTemplate").html()),
 	render: function() {
-		this.$el.html(this.template(this.location));
+		// clone position
+		position = $.extend({}, this.position);
+		if (position.mode == 'quran')
+			position.sura = suras[position.sura-1];
+		
+		this.$el.html(this.template(position));
 	}
 });
 
@@ -117,27 +118,49 @@ var AppView = Backbone.View.extend({
 	el: $("body"),
 	initialize: function() {
 		this.address = new AddressView();
-		
 		this.quran = new QuranView();
-		this.quran.on('render', this.updateAddress, this);
-		// this.quran.render();
-
 		this.tafsir = new TafsirView();
-		this.tafsir.render();
 
+		// set heights
+		margins = this.tafsir.$el.outerHeight(true) - this.tafsir.$el.outerHeight();
+		pageHeight = $('#wrap').height() - $('#footer').height() - margins;
+		this.quran.$el.height(pageHeight);
+		this.tafsir.$el.height(pageHeight);
+
+		this.position = {'mode': 'quran', 'page': 1, 'sura': 1, 'aya': 0};
+		this.address.position = this.position;
+		this.render();
 	},
-	events: {
-		'keydown': 'navKey'
-	},
-	updateAddress: function() {
-		this.address.location = {'mode': 'quran', 'page': this.quran.page, 'sura': suras[this.quran.sura-1], 'aya': this.quran.aya};
+	render: function() {
+		if (this.position.mode == 'quran') {
+			this.quran.$el.show();
+			this.tafsir.$el.hide();
+			this.quran.position = this.position;
+			this.quran.render();
+		} else {
+			this.quran.$el.hide();
+			this.tafsir.$el.show();
+			this.tafsir.render();
+		}
 		this.address.render();
 	},
+	events: {
+		'keydown': 'navKey',
+		'click #navigator a': 'navigate'
+	},
+	navigate: function(e) {
+		e.preventDefault();
+		this.position.mode = $(e.target).attr('rel');
+		this.render();
+	},
 	navKey: function(e) {
-		if(e.keyCode == 37) // left arrow
-			this.quran.nextPage();
-		else if(e.keyCode == 39) // right arrow
-			this.quran.prevPage();
+		if (this.position.mode == 'quran') {
+			if(e.keyCode == 37) // left arrow
+				this.quran.nextPage();
+			else if(e.keyCode == 39) // right arrow
+				this.quran.prevPage();
+			this.render();
+		}
 	}
 });
 

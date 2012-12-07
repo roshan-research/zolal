@@ -11,6 +11,9 @@
 body {
   direction: rtl;
   font-family: AppFont;
+}
+body,
+blockquote p {
   font-size: 18px;
 }
 #wrap {
@@ -26,19 +29,18 @@ body {
 .container {
   max-width: 800px;
 }
-#quran {
+#quran,
+#tafsir {
   margin: 20px auto;
   text-align: justify;
+  overflow: auto;
+}
+#quran {
+  max-width: 600px;
   font-family: QuranFont;
   word-spacing: 3px;
   font-size: 18px;
   line-height: 45px;
-}
-#tafsir {
-  height: 600px;
-  overflow-y: scroll;
-  overflow-x: hidden;
-  text-align: justify;
 }
 #tafsir h1 {
   font-size: 1.2em;
@@ -46,6 +48,11 @@ body {
 #tafsir h2,
 #tafsir h3 {
   font-size: 1.1em;
+}
+#tafsir h1,
+#tafsir h2,
+#tafsir h3 {
+  margin-bottom: 0;
 }
 #tafsir blockquote {
   padding: 0 15px;
