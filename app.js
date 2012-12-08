@@ -56,13 +56,14 @@ var TafsirView = Backbone.View.extend({
 	initialize: function() {
 		this.collection = new Tafsir(bayans);
 		this.sections = sections;
-		this.section = 20;
+		this.isLoading = false;
 	},
 	render: function() {
-		this.firstSection = this.section;
-		this.lastSection = this.section-1;
+		this.firstSection = this.position.section;
+		this.lastSection = this.position.section-1;
 
-		this.$el.html('');
+		this.$el.empty();
+		this.$el.scrollTop(0);
 		this.appendLast();
 		this.prependFirst();
 	},
@@ -71,6 +72,16 @@ var TafsirView = Backbone.View.extend({
 	},
 	getSection: function(section) {
 		return this.collection.get(this.sections[section]).get('content');
+	},
+	findSection: function(quran) {
+		sura = quran.sura; aya = quran.aya;
+		for (s in this.sections) {
+			l = this.sections[s].split('-');
+			m = l[1].split(':');
+			if (l[0] == sura && (aya == 0 || (aya >= m[0] && aya <= m[1])))
+				return s;
+		}
+		return 0;
 	},
 	prependFirst: function() {
 		if (this.firstSection > 0) {
@@ -90,7 +101,6 @@ var TafsirView = Backbone.View.extend({
 		}
 	},
 	checkScroll: function () {
-		this.isLoading = false;
 		triggerOff = 300;
 
 		if(!this.isLoading && this.el.scrollTop < triggerOff)
@@ -106,9 +116,9 @@ var AddressView = Backbone.View.extend({
 	template: _.template($("#addressTemplate").html()),
 	render: function() {
 		// clone position
-		position = $.extend({}, this.position);
+		position = $.extend(true, {}, this.position);
 		if (position.mode == 'quran')
-			position.sura = suras[position.sura-1];
+			position.quran.sura = suras[position.quran.sura-1];
 		
 		this.$el.html(this.template(position));
 	}
@@ -127,15 +137,18 @@ var AppView = Backbone.View.extend({
 		this.quran.$el.height(pageHeight);
 		this.tafsir.$el.height(pageHeight);
 
-		this.position = {'mode': 'quran', 'page': 1, 'sura': 1, 'aya': 0};
+		// set position
+		this.position = {'mode': 'quran', 'quran': {'page': 1, 'sura': 1, 'aya': 0}, 'tafsir': {'section': 0}};
 		this.address.position = this.position;
+		this.quran.position = this.position.quran;
+		this.tafsir.position = this.position.tafsir;
+
 		this.render();
 	},
 	render: function() {
 		if (this.position.mode == 'quran') {
 			this.quran.$el.show();
 			this.tafsir.$el.hide();
-			this.quran.position = this.position;
 			this.quran.render();
 		} else {
 			this.quran.$el.hide();
@@ -150,8 +163,14 @@ var AppView = Backbone.View.extend({
 	},
 	navigate: function(e) {
 		e.preventDefault();
+
+		lastMode = this.position.mode;
 		this.position.mode = $(e.target).attr('rel');
-		this.render();
+		if (lastMode == 'quran' && this.position.mode == 'tafsir')
+			this.position.tafsir.section = this.tafsir.findSection(this.position.quran);
+
+		if (lastMode != this.position.mode)
+			this.render();
 	},
 	navKey: function(e) {
 		if (this.position.mode == 'quran') {
