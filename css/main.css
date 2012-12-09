@@ -43,7 +43,7 @@ blockquote p {
   line-height: 45px;
 }
 #tafsir {
-  padding-left: 5px;
+  padding: 0 5px;
 }
 #tafsir h1 {
   font-size: 1.2em;

@@ -51,6 +51,14 @@ var QuranView = Backbone.View.extend({
 	}
 });
 
+var sectionToAddress = function(section) {
+	tmp = section.replace(':', '-');
+	parts = tmp.split('-');
+	if (parts.length == 2)
+		parts.push(parts[1]);
+	return [Number(parts[0]), Number(parts[1]), Number(parts[2])];
+};
+
 var TafsirView = Backbone.View.extend({
 	el: $("#tafsir"),
 	initialize: function() {
@@ -61,6 +69,7 @@ var TafsirView = Backbone.View.extend({
 	render: function() {
 		this.firstSection = this.position.section;
 		this.lastSection = this.position.section-1;
+		this.position.section = this.sections[this.position.section];
 
 		this.$el.empty();
 		this.$el.scrollTop(0);
@@ -75,11 +84,10 @@ var TafsirView = Backbone.View.extend({
 	},
 	findSection: function(quran) {
 		sura = quran.sura; aya = quran.aya;
-		for (s in this.sections) {
-			l = this.sections[s].split('-');
-			m = l[1].split(':');
-			if (l[0] == sura && (aya == 0 || (aya >= m[0] && aya <= m[1])))
-				return s;
+		for (section in this.sections) {
+			parts = sectionToAddress(sections[section]);
+			if (parts[0] == sura && (aya == 0 || (aya >= parts[1] && aya <= parts[2])))
+				return section;
 		}
 		return 0;
 	},
@@ -103,6 +111,21 @@ var TafsirView = Backbone.View.extend({
 	checkScroll: function () {
 		triggerOff = 300;
 
+		// this.position.section
+		var focus = ''; var focusTop = -10000; var elHeight = this.$el.height() * 0.8;
+		this.$el.find('div').each(function(i, item) {
+			off = $(item).offset().top;
+			if (off > focusTop && off < elHeight) {
+				focusTop = off;
+				focus = $(item).attr('rel');
+				return false; // break each
+			}
+		});
+		if (focus !== '' && focus != this.position.section) {
+			this.position.section = focus;
+			this.trigger('updateAddress');
+		}
+
 		if(!this.isLoading && this.el.scrollTop < triggerOff)
 			this.prependFirst();
 
@@ -119,6 +142,10 @@ var AddressView = Backbone.View.extend({
 		position = $.extend(true, {}, this.position);
 		if (position.mode == 'quran')
 			position.quran.sura = suras[position.quran.sura-1];
+		else if (position.mode == 'tafsir') {
+			parts = sectionToAddress(position.tafsir.section);
+			position.tafsir = {'sura': suras[parts[0]-1], 'mi': parts[1], 'ma': parts[2]}
+		}
 		
 		this.$el.html(this.template(position));
 	}
@@ -130,6 +157,7 @@ var AppView = Backbone.View.extend({
 		this.address = new AddressView();
 		this.quran = new QuranView();
 		this.tafsir = new TafsirView();
+		this.tafsir.on('updateAddress', this.address.render, this.address);
 
 		// set heights
 		margins = this.tafsir.$el.outerHeight(true) - this.tafsir.$el.outerHeight();
