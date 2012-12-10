@@ -41,13 +41,19 @@ var QuranView = Backbone.View.extend({
 	},
 	nextPage: function () {
 		this.position.page += 1;
-		if (this.position.page > 604)
+		if (this.position.page > 604) {
 			this.position.page = 604;
+			return false;
+		}
+		return true;
 	},
 	prevPage: function () {
 		this.position.page -= 1;
-		if (this.position.page < 1)
+		if (this.position.page < 1) {
 			this.position.page = 1;
+			return false;
+		}
+		return true;
 	}
 });
 
@@ -67,9 +73,9 @@ var TafsirView = Backbone.View.extend({
 		this.isLoading = false;
 	},
 	render: function() {
-		this.firstSection = this.position.section;
-		this.lastSection = this.position.section-1;
-		this.position.section = this.sections[this.position.section];
+		sectionIndex = _.indexOf(this.sections, this.position.section);
+		this.firstSection = sectionIndex;
+		this.lastSection = sectionIndex-1;
 
 		this.$el.empty();
 		this.$el.scrollTop(0);
@@ -84,8 +90,9 @@ var TafsirView = Backbone.View.extend({
 	},
 	findSection: function(quran) {
 		sura = quran.sura; aya = quran.aya;
-		for (section in this.sections) {
-			parts = sectionToAddress(sections[section]);
+		for (s in this.sections) {
+			section = this.sections[s];
+			parts = sectionToAddress(section);
 			if (parts[0] == sura && (aya == 0 || (aya >= parts[1] && aya <= parts[2])))
 				return section;
 		}
@@ -112,13 +119,12 @@ var TafsirView = Backbone.View.extend({
 		triggerOff = 300;
 
 		// this.position.section
-		var focus = ''; var focusTop = -10000; var elHeight = this.$el.height() * 0.8;
+		var focus = ''; var focusTop = -100000; var elHeight = this.$el.height() * 0.9;
 		this.$el.find('div').each(function(i, item) {
 			off = $(item).offset().top;
 			if (off > focusTop && off < elHeight) {
 				focusTop = off;
 				focus = $(item).attr('rel');
-				return false; // break each
 			}
 		});
 		if (focus !== '' && focus != this.position.section) {
@@ -140,9 +146,12 @@ var AddressView = Backbone.View.extend({
 	render: function() {
 		// clone position
 		position = $.extend(true, {}, this.position);
-		if (position.mode == 'quran')
+		if (position.mode == 'quran') {
+			app.router.navigate('quran/p'+ this.position.quran.page, false);
 			position.quran.sura = suras[position.quran.sura-1];
+		}
 		else if (position.mode == 'tafsir') {
+			app.router.navigate('almizan/'+ this.position.tafsir.section, false)
 			parts = sectionToAddress(position.tafsir.section);
 			position.tafsir = {'sura': suras[parts[0]-1], 'mi': parts[1], 'ma': parts[2]}
 		}
@@ -159,6 +168,7 @@ var AppView = Backbone.View.extend({
 		this.tafsir = new TafsirView();
 		this.tafsir.on('updateAddress', this.address.render, this.address);
 
+
 		// set heights
 		margins = this.tafsir.$el.outerHeight(true) - this.tafsir.$el.outerHeight();
 		pageHeight = $('#wrap').height() - $('#footer').height() - margins;
@@ -166,19 +176,17 @@ var AppView = Backbone.View.extend({
 		this.tafsir.$el.height(pageHeight);
 
 		// set position
-		this.position = {'mode': 'quran', 'quran': {'page': 1, 'sura': 1, 'aya': 0}, 'tafsir': {'section': 0}};
+		this.position = {'mode': 'quran', 'quran': {'page': 1, 'sura': 1, 'aya': 0}, 'tafsir': {'section': '2-1:5'}};
 		this.address.position = this.position;
 		this.quran.position = this.position.quran;
 		this.tafsir.position = this.position.tafsir;
-
-		this.render();
 	},
 	render: function() {
 		if (this.position.mode == 'quran') {
 			this.quran.$el.show();
 			this.tafsir.$el.hide();
 			this.quran.render();
-		} else {
+		} else if (this.position.mode == 'tafsir') {
 			this.quran.$el.hide();
 			this.tafsir.$el.show();
 			this.tafsir.render();
@@ -201,16 +209,43 @@ var AppView = Backbone.View.extend({
 			this.render();
 	},
 	navKey: function(e) {
+		refresh = false;
+
 		if (this.position.mode == 'quran') {
 			if(e.keyCode == 37) // left arrow
-				this.quran.nextPage();
+				refresh = this.quran.nextPage();
 			else if(e.keyCode == 39) // right arrow
-				this.quran.prevPage();
-			this.render();
+				refresh = this.quran.prevPage();
 		}
+
+		if (refresh)
+			this.render();
 	}
 });
 
-window.app = new AppView();
+var AddressRouter = Backbone.Router.extend({
+	routes: {
+		'quran/p:page': 'quranPage',
+		'almizan/:section': 'almizanSection'
+	},
+	quranPage: function (page) {
+		app.position.mode = 'quran';
+		app.position.quran.page = Number(page);
+		app.render();
+	},
+	almizanSection: function (section) {
+		app.position.mode = 'tafsir';
+		app.position.tafsir.section = section;
+		app.render();
+	}
+});
+
+var app = new AppView();
+
+// setup router
+app.router = new AddressRouter();
+Backbone.history.start();
+
+app.render();
 
 });
