@@ -11,30 +11,32 @@ print('var suras = %s;' % str(suras), file=db)
 
 # ayas
 ayas = {}
-for line in open('data/quran-text.txt'):
-	line = line.split('|')
+with open('data/quran-text.txt') as lines:
+	for line in lines:
+		line = line.split('|')
 
-	if len(line) == 3:
-		key = '%s-%s' % (line[0], line[1])
-		ayas[key] = {'sura': int(line[0]), 'aya': int(line[1]), 'text': line[2].strip().replace('ى', 'ي')}
+		if len(line) == 3:
+			key = '%s-%s' % (line[0], line[1])
+			ayas[key] = {'sura': int(line[0]), 'aya': int(line[1]), 'text': line[2].strip().replace('ى', 'ي')}
 
-pages, p = {}, 1
-for line in open('data/quran-pages.txt'):
-	line = line.strip()
-	if line:
-		pages[line] = p
-		p += 1
+pages = {}
+with open('data/quran-lines.txt') as lines:
+	lines.readline()
+	for line in lines:
+		line = line.split(', ')
+		if line:
+			if line[3] != 'S':
+				pages['%s-%s' % (line[2], line[3])] = line[0]
 
 
 def key_to_int(k):
 	l = k.split('-')
 	return int(l[0])*10000+int(l[1])
 
-page = 1
 print('var ayas = [', file=db)
 for key in sorted(ayas.keys(), key=key_to_int):
 	if key in pages:
-		page = pages[key]
+		page = int(pages[key])
 	ayas[key]['page'] = page
 
 	print(ayas[key], ',', sep='', file=db)
