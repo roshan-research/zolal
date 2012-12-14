@@ -3,11 +3,16 @@
 	From simple quran text file with aya numbers.
 """
 
+import re
+from pyquery import PyQuery as pq
+
 db = open('data/db.js', 'w')
 
 # suras
 suras = ['الفاتحة', 'البقرة', 'آل عمران', 'النساء', 'المائدة', 'الأنعام', 'الأعراف', 'الأنفال', 'التوبة', 'يونس', 'هود', 'يوسف', 'الرعد', 'ابراهيم', 'الحجر', 'النحل', 'الإسراء', 'الكهف', 'مريم', 'طه', 'الأنبياء', 'الحج', 'المؤمنون', 'النور', 'الفرقان', 'الشعراء', 'النمل', 'القصص', 'العنكبوت', 'الروم', 'لقمان', 'السجدة', 'الأحزاب', 'سبإ', 'فاطر', 'يس', 'الصافات', 'ص', 'الزمر', 'غافر', 'فصلت', 'الشورى', 'الزخرف', 'الدخان', 'الجاثية', 'الأحقاف', 'محمد', 'الفتح', 'الحجرات', 'ق', 'الذاريات', 'الطور', 'النجم', 'القمر', 'الرحمن', 'الواقعة', 'الحديد', 'المجادلة', 'الحشر', 'الممتحنة', 'الصف', 'الجمعة', 'المنافقون', 'التغابن', 'الطلاق', 'التحريم', 'الملك', 'القلم', 'الحاقة', 'المعارج', 'نوح', 'الجن', 'المزمل', 'المدثر', 'القيامة', 'الانسان', 'المرسلات', 'النبإ', 'النازعات', 'عبس', 'التكوير', 'الإنفطار', 'المطففين', 'الإنشقاق', 'البروج', 'الطارق', 'الأعلى', 'الغاشية', 'الفجر', 'البلد', 'الشمس', 'الليل', 'الضحى', 'الشرح', 'التين', 'العلق', 'القدر', 'البينة', 'الزلزلة', 'العاديات', 'القارعة', 'التكاثر', 'العصر', 'الهمزة', 'الفيل', 'قريش', 'الماعون', 'الكوثر', 'الكافرون', 'النصر', 'المسد', 'الإخلاص', 'الفلق', 'الناس']
+symbols = 'ۖۗۚۛ'
 print('var suras = %s;' % str(suras), file=db)
+
 
 # ayas
 ayas = {}
@@ -19,7 +24,7 @@ with open('data/quran-text.txt') as lines:
 			key = '%s-%s' % (line[0], line[1])
 			ayas[key] = {'sura': int(line[0]), 'aya': int(line[1]), 'text': line[2].strip().replace('ى', 'ي')}
 
-pages = {}
+pages, quran_lines = {}, {}
 with open('data/quran-lines.txt') as lines:
 	lines.readline()
 	for line in lines:
@@ -27,25 +32,61 @@ with open('data/quran-lines.txt') as lines:
 		if line:
 			if line[3] != 'S':
 				pages['%s-%s' % (line[2], line[3])] = line[0]
+				quran_lines['%s-%s' % (line[0], line[1])] = line[4].count(';')
 
 
 def key_to_int(k):
 	l = k.split('-')
 	return int(l[0])*10000+int(l[1])
 
-print('var ayas = [', file=db)
+line_words = iter(sorted(quran_lines.keys(), key=key_to_int))
+current_line = quran_lines[line_words.__next__()]
+page = 0
 for key in sorted(ayas.keys(), key=key_to_int):
+
 	if key in pages:
-		page = int(pages[key])
+		if page != int(pages[key]):
+			page = int(pages[key])
+			count = 0
+
 	ayas[key]['page'] = page
 
+	# todo care about hizb and sajde characters
+	html, parts = '', []
+	text = ayas[key]['text']
+
+	text = re.sub('( ['+ symbols +'])', '\\1', text)
+	text = re.sub('(['+ symbols +'])', '<span class="mark">\\1</span>', text)
+	aya_parts = text.split(' ')
+	aya_parts.append('<span class="number">(%d)</span>' % ayas[key]['aya'])
+	for part in aya_parts:
+		parts.append(part)
+		count += 1
+		if (count >= current_line):
+			html += ' '.join(parts) + ' '  # use <br> for line breaks
+			count, parts = 0, []
+
+			try:
+				current_line = quran_lines[line_words.__next__()]
+			except:
+				pass
+
+	if parts:
+		html += ' '.join(parts)
+		parts = []
+
+	ayas[key]['html'] = html
+
+
+print('var ayas = [', file=db)
+
+for key in sorted(ayas.keys(), key=key_to_int):
 	print(ayas[key], ',', sep='', file=db)
 
 print('];', file=db)
 
-# tafsir
-from pyquery import PyQuery as pq
 
+# tafsir
 almizan = open('data/almizan.html').read()
 
 sections = []

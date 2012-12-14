@@ -13,7 +13,7 @@ var Tafsir = Backbone.Collection.extend({
 });
 
 var AyaView = Backbone.View.extend({
-	template: _.template('<span rel="<%= sura %>-<%= aya %>"><%= text %> (<%= aya %>) </span>'),
+	template: _.template('<span rel="<%= sura %>-<%= aya %>"><%= html %></span>'),
 	render: function () {
 		this.setElement(this.template(this.model.toJSON()));
 		return this;
@@ -34,7 +34,7 @@ var QuranView = Backbone.View.extend({
 
 		_.each(page, function (item) {
 			var ayaView = new AyaView({model: item});
-			this.$el.append(ayaView.render().el);
+			this.$el.append(ayaView.render().el, ' ');
 		}, this);
 
 		this.position.sura = page[0].attributes['sura'];

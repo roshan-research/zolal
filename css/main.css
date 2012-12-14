@@ -41,6 +41,10 @@ blockquote p {
   word-spacing: 3px;
   font-size: 18px;
   line-height: 45px;
+  padding: 5px;
+}
+#quran span.mark {
+  color: #3A87AD;
 }
 #tafsir {
   padding: 0 5px;
