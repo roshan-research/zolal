@@ -34,6 +34,11 @@ var QuranView = Backbone.View.extend({
 
 		_.each(page, function (item) {
 			var ayaView = new AyaView({model: item});
+			if (item.get('aya') == 1) {
+				this.$el.append('<div class="sura"><span>'+ suras[item.get('sura')-1] +'</span></div>');
+				if (item.get('sura') != 1 && item.get('sura') != 9)
+					this.$el.append('<div class="bism"><span>بِسمِ اللَّهِ الرَّحمٰنِ الرَّحيمِ</span></div>');
+			}
 			this.$el.append(ayaView.render().el, ' ');
 		}, this);
 
