@@ -41,8 +41,8 @@ blockquote p {
   word-spacing: 3px;
   font-size: 18px;
   line-height: 45px;
-  padding: 0 5px;
-  text-shadow: 1px 1px 2px #ddd;
+  padding: 0 10px;
+  text-shadow: 1px 1px 1px #eee;
 }
 #quran div.bism {
   text-align: center;
@@ -62,13 +62,15 @@ blockquote p {
 }
 #tafsir {
   padding: 0 5px;
+  font-size: 20px;
+  line-height: 25px;
 }
 #tafsir h1 {
-  font-size: 1.2em;
+  font-size: 1.1em;
 }
 #tafsir h2,
 #tafsir h3 {
-  font-size: 1.1em;
+  font-size: 1em;
 }
 #tafsir h1,
 #tafsir h2,
@@ -80,6 +82,13 @@ blockquote p {
   margin: 0 20px;
   border-right: 5px solid #EEE;
   border-left: none;
+  font-size: 1em;
+}
+#tafsir blockquote p {
+  margin-bottom: 1px;
+}
+#tafsir p {
+  margin-bottom: 8px;
 }
 #tafsir em {
   font-style: normal;
@@ -88,5 +97,5 @@ blockquote p {
 }
 #address {
   float: left;
-  padding: 10px;
+  padding: 7px 15px;
 }
