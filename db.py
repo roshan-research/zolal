@@ -13,7 +13,11 @@ suras = ['الفاتحة', 'البقرة', 'آل عمران', 'النساء', '�
 symbols = 'ۖۗۚۛ'
 bismillah = 'بِسمِ اللَّهِ الرَّحمٰنِ الرَّحيمِ'
 
-print('var suras = %s;' % str(suras), file=db)
+
+def refineText(text):
+	return text.strip().replace('ى', 'ي')
+
+print('var suras = %s;' % str([refineText(sura) for sura in suras]), file=db)
 
 
 # ayas
@@ -27,7 +31,7 @@ with open('data/quran-text.txt') as lines:
 				line[2] = line[2][len(bismillah):]
 
 			key = '%s-%s' % (line[0], line[1])
-			ayas[key] = {'sura': int(line[0]), 'aya': int(line[1]), 'text': line[2].strip().replace('ى', 'ي')}
+			ayas[key] = {'sura': int(line[0]), 'aya': int(line[1]), 'text': refineText(line[2])}
 
 pages, quran_lines = {}, {}
 with open('data/quran-lines.txt') as lines:
