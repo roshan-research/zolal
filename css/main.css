@@ -39,26 +39,34 @@ blockquote p {
   max-width: 600px;
   font-family: QuranFont;
   word-spacing: 3px;
-  font-size: 18px;
-  line-height: 45px;
+  font-size: 20px;
+  line-height: 44px;
   padding: 0 10px;
-  text-shadow: 1px 1px 1px #eee;
+  text-shadow: 0.5px 0.5px 1px #eee;
 }
 #quran div.bism {
   text-align: center;
   font-size: .9em;
 }
 #quran div.sura {
-  margin: 10px 0 5px;
+  margin: 12px 0 5px;
   text-align: center;
   background: #eee;
 }
 #quran div.sura span {
   text-shadow: 1px 1px 2px #999;
-  line-height: 38px;
+  line-height: 20px;
 }
 #quran span.mark {
   color: #3A87AD;
+  font-family: AppFont;
+  word-spacing: 5px;
+}
+#quran span.number {
+  font-family: AppFont;
+  font-weight: bold;
+  font-size: .9em;
+  color: #999;
 }
 #tafsir {
   padding: 0 5px;
