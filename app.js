@@ -6,6 +6,7 @@ $(document).ready(function() {
 
 var zolaldb = {
 	id: 'zolaldb',
+	nolog: true,
 	migrations: [{
 		version: '1.0',
 		migrate: function(transaction, next) {
@@ -62,8 +63,11 @@ var QuranView = Backbone.View.extend({
 				if (page.length == 0) {
 					$.get('files/quran/p'+ quran.position.page, function(data) {
 						_.each(data.split('\n'), function(item) {
-							aya = new Aya($.parseJSON(item));
-							aya.save();
+							item = $.parseJSON(item);
+							if (item) {
+								aya = new Aya(item);
+								aya.save();
+							}
 						});
 						quran.render();
 					});
