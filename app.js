@@ -70,7 +70,7 @@ var QuranView = Backbone.View.extend({
 							}
 						});
 						quran.render();
-					});
+					}).error(connectionError);
 				} else {
 					el.html('');
 					_.each(page.models, function (item) {
@@ -156,7 +156,7 @@ var TafsirView = Backbone.View.extend({
 					bayan.set('content', item);
 					bayan.save();
 					tafsir.addSection(section, flag);
-				});
+				}).error(connectionError);
 			}
 		});
 	},
@@ -309,6 +309,10 @@ Backbone.history.start();
 app.render();
 
 });
+
+var connectionError = function() {
+	alert('خطا در اتصال به شبکه.');
+};
 
 // set heights
 $(window).load(function() {
