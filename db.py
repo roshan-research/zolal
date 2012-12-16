@@ -3,10 +3,12 @@
 	From simple quran text file with aya numbers.
 """
 
-import re
+import re, json
 from pyquery import PyQuery as pq
+from path import path
 
-db = open('data/db.js', 'w')
+files = path('files')
+# db = open('data/db.js', 'w')
 
 # suras
 suras = ['الفاتحة', 'البقرة', 'آل عمران', 'النساء', 'المائدة', 'الأنعام', 'الأعراف', 'الأنفال', 'التوبة', 'يونس', 'هود', 'يوسف', 'الرعد', 'ابراهيم', 'الحجر', 'النحل', 'الإسراء', 'الكهف', 'مريم', 'طه', 'الأنبياء', 'الحج', 'المؤمنون', 'النور', 'الفرقان', 'الشعراء', 'النمل', 'القصص', 'العنكبوت', 'الروم', 'لقمان', 'السجدة', 'الأحزاب', 'سبإ', 'فاطر', 'يس', 'الصافات', 'ص', 'الزمر', 'غافر', 'فصلت', 'الشورى', 'الزخرف', 'الدخان', 'الجاثية', 'الأحقاف', 'محمد', 'الفتح', 'الحجرات', 'ق', 'الذاريات', 'الطور', 'النجم', 'القمر', 'الرحمن', 'الواقعة', 'الحديد', 'المجادلة', 'الحشر', 'الممتحنة', 'الصف', 'الجمعة', 'المنافقون', 'التغابن', 'الطلاق', 'التحريم', 'الملك', 'القلم', 'الحاقة', 'المعارج', 'نوح', 'الجن', 'المزمل', 'المدثر', 'القيامة', 'الانسان', 'المرسلات', 'النبإ', 'النازعات', 'عبس', 'التكوير', 'الإنفطار', 'المطففين', 'الإنشقاق', 'البروج', 'الطارق', 'الأعلى', 'الغاشية', 'الفجر', 'البلد', 'الشمس', 'الليل', 'الضحى', 'الشرح', 'التين', 'العلق', 'القدر', 'البينة', 'الزلزلة', 'العاديات', 'القارعة', 'التكاثر', 'العصر', 'الهمزة', 'الفيل', 'قريش', 'الماعون', 'الكوثر', 'الكافرون', 'النصر', 'المسد', 'الإخلاص', 'الفلق', 'الناس']
@@ -17,7 +19,7 @@ bismillah = 'بِسمِ اللَّهِ الرَّحمٰنِ الرَّحيمِ'
 def refineText(text):
 	return text.strip().replace('ى', 'ي')
 
-print('var suras = %s;' % str([refineText(sura) for sura in suras]), file=db)
+# print('var suras = %s;' % str([refineText(sura) for sura in suras]), file=db)
 
 
 # ayas
@@ -31,7 +33,7 @@ with open('data/quran-text.txt') as lines:
 				line[2] = line[2][len(bismillah):]
 
 			key = '%s-%s' % (line[0], line[1])
-			ayas[key] = {'sura': int(line[0]), 'aya': int(line[1]), 'text': refineText(line[2])}
+			ayas[key] = {'id': '%s-%s' % (line[0], line[1]), 'sura': int(line[0]), 'aya': int(line[1]), 'text': refineText(line[2])}
 
 pages, quran_lines = {}, {}
 with open('data/quran-lines.txt') as lines:
@@ -87,27 +89,26 @@ for key in sorted(ayas.keys(), key=key_to_int):
 	ayas[key]['html'] = html
 
 
-print('var ayas = [', file=db)
-
+page = 0
 for key in sorted(ayas.keys(), key=key_to_int):
-	print(ayas[key], ',', sep='', file=db)
+	aya = ayas[key]
+	if aya['page'] != page:
+		page = aya['page']
+		quran_file = open(files / 'quran' / ('p%d' % page), 'w')
 
-print('];', file=db)
+	print(json.dumps(aya), file=quran_file)
 
 
 # tafsir
 almizan = open('data/almizan.html').read()
 
 sections = []
-print('var bayans = [', file=db)
 d = pq(almizan)
 for i, div in enumerate(d('div')):
 	div = pq(div)
 	key = div.attr('rel')
 	if key:
 		sections.append(key)
-		print("{'id': '%s', 'content':'%s'}," % (key, div.outerHtml().replace('\n', '')), file=db)
+		print(div.outerHtml().replace('\n', ''), file=open(files / 'almizan' / key, 'w'))
 
-print('];', file=db)
-
-print('var sections = %s;' % str(sections), file=db)
+# print('var sections = %s;' % str(sections), file=db)
