@@ -316,7 +316,7 @@ var connectionError = function() {
 
 // set heights
 $(window).load(function() {
-	margins = app.tafsir.$el.outerHeight(true) - app.tafsir.$el.outerHeight();
+	margins = app.quran.$el.outerHeight(true) - app.quran.$el.height();
 	pageHeight = $('#wrap').height() - $('#footer').height() - margins;
 	app.quran.$el.height(pageHeight);
 	app.tafsir.$el.height(pageHeight);

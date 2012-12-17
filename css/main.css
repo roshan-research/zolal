@@ -31,7 +31,8 @@ blockquote p {
 }
 #quran,
 #tafsir {
-  margin: 20px auto;
+  margin: 10px auto;
+  padding: 10px;
   text-align: justify;
   overflow: auto;
 }
@@ -41,7 +42,6 @@ blockquote p {
   word-spacing: 3px;
   font-size: 20px;
   line-height: 44px;
-  padding: 0 10px;
   text-shadow: 0.5px 0.5px 1px #eee;
 }
 #quran div.bism {
