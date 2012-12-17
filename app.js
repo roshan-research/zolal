@@ -306,7 +306,8 @@ app = new AppView();
 app.router = new AddressRouter();
 Backbone.history.start();
 
-app.render();
+if (Backbone.history.getFragment() == '')
+	app.render();
 
 });
 
