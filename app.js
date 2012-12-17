@@ -64,10 +64,8 @@ var QuranView = Backbone.View.extend({
 					$.get('files/quran/p'+ quran.position.page, function(data) {
 						_.each(data.split('\n'), function(item) {
 							item = $.parseJSON(item);
-							if (item) {
-								aya = new Aya(item);
-								aya.save();
-							}
+							if (item)
+								(new Aya(item)).save();
 						});
 						quran.render();
 					}).error(connectionError);
@@ -153,8 +151,7 @@ var TafsirView = Backbone.View.extend({
 			},
 			error: function () {
 				$.get('files/almizan/'+ section_id, function(item) {
-					bayan.set('content', item);
-					bayan.save();
+					(new Bayan({id: section_id, content: item})).save();
 					tafsir.addSection(section, flag);
 				}).error(connectionError);
 			}
