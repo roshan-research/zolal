@@ -121,38 +121,103 @@ var TafsirView = Backbone.View.extend({
 	render: function() {
 		sectionIndex = _.indexOf(this.sections, this.position.section);
 		this.firstSection = sectionIndex;
-		this.lastSection = sectionIndex-1;
+		this.lastSection = sectionIndex;
 
 		this.$el.empty();
+		this.elements = {};
 		this.$el.scrollTop(0);
-		this.appendLast();
-		this.prependFirst();
+	
+		this.loadSection(this.lastSection, 'append');
 	},
 	events: {
 		'scroll': 'checkScroll'
 	},
-	addSection: function(section, flag) {
+	addElements: function(currentId, flag) {
+		currentId = Number(currentId);
+		toLoad = 20;
+		append = flag == 'append';
+
+		if (append)
+			lastId = currentId + toLoad;
+		else
+			lastId = currentId - toLoad;
+
+		if (!(lastId in this.elements)) {
+			if (append) {
+				if (this.lastSection < this.sections.length-1) {
+					this.lastSection += 1;
+					this.loadSection(this.lastSection, flag);
+				}
+			} else {
+				if (this.firstSection > 0) {
+					this.firstSection -= 1;
+					this.loadSection(this.firstSection, flag);
+				}
+			}
+		}
+
+		if (!append) {
+			topOff = this.$el.scrollTop();
+			firstChild = this.$el.children().first().next();
+			firstChildTop = firstChild.position().top;
+		}
+
+		if (append) {
+			for (i = currentId; i < lastId; i++)
+				if (i in this.elements)
+					this.$el.append(this.elements[String(i)]);
+		} else {
+			if (currentId == 0) currentId = -1;
+			for (i = currentId; i > lastId; i--)
+				if (i in this.elements)
+					this.$el.prepend(this.elements[String(i)]);
+		}
+				
+		// delete this.elements[i];
+
+		if (!append) {
+			extraHeight = firstChild.position().top - firstChildTop;
+			if (extraHeight > 0)
+				this.$el.scrollTop(topOff + extraHeight);
+		}
+	},
+	loadSection: function(section, flag) {
 		section_id = this.sections[section];
 		var bayan = new Bayan({id: section_id});
-		var el = this.$el;
 		var tafsir = this;
-
+		
 		bayan.fetch({
 			success: function () {
-				if (flag == 'append') {
-					el.append(bayan.get('content'));
-				} else if (flag == 'prepend') {
-					fixOff = 10;
-					topOff = el.scrollTop() + fixOff;
-					content = $(bayan.get('content'));
-					el.prepend(content);
-					el.scrollTop(topOff + content.height());
-				}
+				// retrieve prev section id
+				pid = _.indexOf(tafsir.sections, bayan.get('id'));
+				if (pid > 0) pid = ' prev="'+ tafsir.sections[pid-1] +'"'; else pid = '';
+
+				data = $('<code class="section"'+ pid +'>'+ bayan.get('id') +'</code>'+ bayan.get('content'));
+				append = flag == 'append';
+
+				lastKey = 0;
+				order = append ? 1 : -1;
+
+				for (key in tafsir.elements)
+					if ((append && (Number(key) > lastKey)) || (!append && (Number(key) < lastKey)))
+						lastKey = Number(key);
+
+				startKey = append ? lastKey : lastKey - data.length;
+
+				data.each(function(i, item) {
+					item = $(item).attr('i', startKey+i);
+					tafsir.elements[String(startKey+i)] = item;
+				});
+
+				tafsir.addElements(lastKey, flag);
+
+				if (append && lastKey == 0 && tafsir.firstSection > 0)
+					tafsir.addElements(-1, 'prepend');
 			},
 			error: function () {
 				$.get('files/almizan/'+ section_id, function(item) {
 					(new Bayan({id: section_id, content: item})).save();
-					tafsir.addSection(section, flag);
+					tafsir.loadSection(section, flag);
 				}).error(connectionError);
 			}
 		});
@@ -167,40 +232,32 @@ var TafsirView = Backbone.View.extend({
 		}
 		return 0;
 	},
-	prependFirst: function() {
-		if (this.firstSection > 0) {
-			this.firstSection -= 1;
-			this.addSection(this.firstSection, 'prepend');
-		}
-	},
-	appendLast: function() {
-		if (this.lastSection < this.sections.length-1) {
-			this.lastSection += 1;
-			this.addSection(this.lastSection, 'append');
-		}
-	},
 	checkScroll: function () {
+		// focused section
+		var focusCode = this.$el.find('code.section').first().next(); // code element is hidden
+		this.$el.find('code.section').each(function() {
+			if (focusCode.position().top < 0 && $(this).next().position().top > focusCode.position().top)
+				focusCode = $(this).next();
+		});
+
 		triggerOff = 300;
 
-		// this.position.section
-		var focus = ''; var focusTop = -100000; var elHeight = this.$el.height() * 0.9;
-		this.$el.find('div').each(function(i, item) {
-			off = $(item).offset().top;
-			if (off > focusTop && off < elHeight) {
-				focusTop = off;
-				focus = $(item).attr('rel');
-			}
-		});
-		if (focus !== '' && focus != this.position.section) {
+		if (focusCode.position().top - triggerOff <= 0)
+			focus = focusCode.prev().text();
+		else
+			focus =focusCode.prev().attr('prev');
+
+		if (focus != '' && focus != this.position.section) {
 			this.position.section = focus;
 			this.trigger('updateAddress');
 		}
-
+		
+		// scroll event
 		if(!this.isLoading && this.el.scrollTop < triggerOff)
-			this.prependFirst();
+			this.addElements(this.$el.children().first().attr('i'), 'prepend');
 
 		if(!this.isLoading && this.el.scrollTop + this.el.clientHeight + triggerOff > this.el.scrollHeight)
-			this.appendLast();
+			this.addElements(this.$el.children().last().attr('i'), 'append');
 	}
 });
 

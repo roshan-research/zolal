@@ -109,6 +109,6 @@ for i, div in enumerate(d('div')):
 	key = div.attr('rel')
 	if key:
 		sections.append(key)
-		print(div.outerHtml().replace('\n', ''), file=open(files / 'almizan' / key, 'w'))
+		print(div.html().replace('\n', ''), file=open(files / 'almizan' / key, 'w'))
 
 # print('var sections = %s;' % str(sections), file=db)

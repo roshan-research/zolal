@@ -107,3 +107,6 @@ blockquote p {
   float: left;
   padding: 7px 15px;
 }
+code {
+  display: none;
+}
