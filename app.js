@@ -57,32 +57,40 @@ var QuranView = Backbone.View.extend({
 		var el = this.$el;
 		var quran = this;
 
+		var loadPage = function (page) {
+			el.html('');
+			_.each(page.models, function (item) {
+				var ayaView = new AyaView({model: item});
+				if (item.get('aya') == 1) {
+					el.append('<div class="sura"><span>'+ suras[item.get('sura')-1] +'</span></div>');
+					if (item.get('sura') != 1 && item.get('sura') != 9)
+						el.append('<div class="bism"><span>بِسمِ اللَّهِ الرَّحمٰنِ الرَّحيمِ</span></div>');
+				}
+				el.append(ayaView.render().el, ' ');
+			});
+			quran.position.sura = page.models[0].attributes['sura'];
+		}
+
 		this.collection.fetch({
 			conditions: {'page': quran.position.page},
-			success: function(page) {
+			success: $.proxy(function(page) {
 				if (page.length == 0) {
-					$.get('files/quran/p'+ quran.position.page, function(data) {
+					$.get('files/quran/p'+ this.page, function(data) {
 						_.each(data.split('\n'), function(item) {
 							item = $.parseJSON(item);
-							if (item)
-								(new Aya(item)).save();
+							if (item) {
+								aya = new Aya(item);
+								aya.save();
+								page.add(aya);
+							}
 						});
-						quran.render();
+	
+						loadPage(page);
+
 					}).error(connectionError);
-				} else {
-					el.html('');
-					_.each(page.models, function (item) {
-						var ayaView = new AyaView({model: item});
-						if (item.get('aya') == 1) {
-							el.append('<div class="sura"><span>'+ suras[item.get('sura')-1] +'</span></div>');
-							if (item.get('sura') != 1 && item.get('sura') != 9)
-								el.append('<div class="bism"><span>بِسمِ اللَّهِ الرَّحمٰنِ الرَّحيمِ</span></div>');
-						}
-						el.append(ayaView.render().el, ' ');
-					});
-					quran.position.sura = page.models[0].attributes['sura'];
-				}
-			}
+				} else
+					loadPage(page);
+			}, {'page': quran.position.page})
 		});
 	},
 	nextPage: function () {
