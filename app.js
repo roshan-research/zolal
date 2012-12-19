@@ -182,44 +182,54 @@ var TafsirView = Backbone.View.extend({
 		}
 	},
 	loadSection: function(section, flag) {
-		section_id = this.sections[section];
-		var bayan = new Bayan({id: section_id});
 		var tafsir = this;
+
+		var loadBayan = function (bayan, flag) {
+
+			// retrieve prev section id
+			pid = _.indexOf(tafsir.sections, bayan.get('id'));
+			if (pid > 0) pid = ' prev="'+ tafsir.sections[pid-1] +'"'; else pid = '';
+
+			data = $('<code class="section"'+ pid +'>'+ bayan.get('id') +'</code>'+ bayan.get('content'));
+			append = flag == 'append';
+
+			lastKey = 0;
+			order = append ? 1 : -1;
+
+			for (key in tafsir.elements)
+				if ((append && (Number(key) > lastKey)) || (!append && (Number(key) < lastKey)))
+					lastKey = Number(key);
+
+			startKey = append ? lastKey : lastKey - data.length;
+
+			data.each(function(i, item) {
+				item = $(item).attr('i', startKey+i);
+				tafsir.elements[String(startKey+i)] = item;
+			});
+
+			tafsir.addElements(lastKey, flag);
+
+			if (append && lastKey == 0 && tafsir.firstSection > 0)
+				tafsir.addElements(-1, 'prepend');
+		}
 		
+		bayan = new Bayan({id: this.sections[section]});
 		bayan.fetch({
-			success: function () {
-				// retrieve prev section id
-				pid = _.indexOf(tafsir.sections, bayan.get('id'));
-				if (pid > 0) pid = ' prev="'+ tafsir.sections[pid-1] +'"'; else pid = '';
-
-				data = $('<code class="section"'+ pid +'>'+ bayan.get('id') +'</code>'+ bayan.get('content'));
-				append = flag == 'append';
-
-				lastKey = 0;
-				order = append ? 1 : -1;
-
-				for (key in tafsir.elements)
-					if ((append && (Number(key) > lastKey)) || (!append && (Number(key) < lastKey)))
-						lastKey = Number(key);
-
-				startKey = append ? lastKey : lastKey - data.length;
-
-				data.each(function(i, item) {
-					item = $(item).attr('i', startKey+i);
-					tafsir.elements[String(startKey+i)] = item;
-				});
-
-				tafsir.addElements(lastKey, flag);
-
-				if (append && lastKey == 0 && tafsir.firstSection > 0)
-					tafsir.addElements(-1, 'prepend');
+			success: function (bayan) {
+				loadBayan(bayan, flag);
 			},
-			error: function () {
-				$.get('files/almizan/'+ section_id, function(item) {
-					(new Bayan({id: section_id, content: item})).save();
-					tafsir.loadSection(section, flag);
-				}).error(connectionError);
-			}
+			error: $.proxy(function (bayan) {
+				$.ajax({
+					context: {section: bayan.get('id'), flag: flag},
+					url: 'files/almizan/'+ bayan.get('id'),
+					success: function(item){
+						bayan = new Bayan({id: this.section, content: item});
+						bayan.save();
+						loadBayan(bayan, this.flag);
+					},
+					error: connectionError
+				});
+			}, {flag: flag})
 		});
 	},
 	findSection: function(quran) {
