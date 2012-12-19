@@ -211,8 +211,11 @@ var TafsirView = Backbone.View.extend({
 
 			if (append && lastKey == 0 && tafsir.firstSection > 0)
 				tafsir.addElements(-1, 'prepend');
+
+			tafsir.isLoading = false;
 		}
 		
+		tafsir.isLoading = true;
 		bayan = new Bayan({id: this.sections[section]});
 		bayan.fetch({
 			success: function (bayan) {
