@@ -69,6 +69,7 @@ var QuranView = Backbone.View.extend({
 				el.append(ayaView.render().el, ' ');
 			});
 			quran.position.sura = page.models[0].attributes['sura'];
+			quran.trigger('updateAddress');
 		}
 
 		this.collection.fetch({
@@ -312,6 +313,7 @@ var AppView = Backbone.View.extend({
 		this.address = new AddressView();
 		this.quran = new QuranView();
 		this.tafsir = new TafsirView();
+		this.quran.on('updateAddress', this.address.render, this.address);
 		this.tafsir.on('updateAddress', this.address.render, this.address);
 
 		// set position
