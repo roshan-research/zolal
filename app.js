@@ -159,7 +159,8 @@ var TafsirView = Backbone.View.extend({
 		if (!append) {
 			topOff = this.$el.scrollTop();
 			firstChild = this.$el.children().first().next();
-			firstChildTop = firstChild.position().top;
+			if (firstChild.length)
+				firstChildTop = firstChild.position().top;
 		}
 
 		if (append) {
@@ -175,7 +176,7 @@ var TafsirView = Backbone.View.extend({
 				
 		// delete this.elements[i];
 
-		if (!append) {
+		if (!append && firstChild.length) {
 			extraHeight = firstChild.position().top - firstChildTop;
 			if (extraHeight > 0)
 				this.$el.scrollTop(topOff + extraHeight);
@@ -254,11 +255,14 @@ var TafsirView = Backbone.View.extend({
 		});
 
 		triggerOff = 300;
+		focus = '';
 
-		if (focusCode.position().top - triggerOff <= 0)
-			focus = focusCode.prev().text();
-		else
-			focus =focusCode.prev().attr('prev');
+		if (focusCode.length) {
+			if (focusCode.position().top - triggerOff <= 0)
+				focus = focusCode.prev().text();
+			else
+				focus =focusCode.prev().attr('prev');
+		}
 
 		if (focus != '' && focus != this.position.section) {
 			this.position.section = focus;
