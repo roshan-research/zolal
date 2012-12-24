@@ -41,8 +41,9 @@ blockquote p {
   font-family: QuranFont;
   word-spacing: 3px;
   font-size: 20px;
-  line-height: 44px;
+  line-height: 46px;
   text-shadow: 0.5px 0.5px 1px #eee;
+  cursor: pointer;
 }
 #quran div.bism {
   text-align: center;
@@ -56,6 +57,16 @@ blockquote p {
 #quran div.sura span {
   text-shadow: 1px 1px 2px #999;
   line-height: 20px;
+}
+#quran span.aya {
+  margin-left: 4px;
+}
+#quran span.aya.active {
+  background: -webkit-linear-gradient(top, #ffe699, #ffe699) no-repeat;
+  background-position-y: 26px;
+  background-size: 100% 4px;
+  padding-right: 2px;
+  margin-right: -2px;
 }
 #quran span.mark {
   color: #3A87AD;

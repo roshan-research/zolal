@@ -44,8 +44,9 @@ body, blockquote p {
 	font-family: QuranFont;
 	word-spacing: 3px;
 	font-size: 20px;
-	line-height: 44px;
+	line-height: 46px;
 	text-shadow: 0.5px 0.5px 1px #eee;
+	cursor: pointer;
 
 	div.bism {
 		text-align: center;
@@ -61,10 +62,23 @@ body, blockquote p {
 			line-height: 20px;
 		}
 	}
+
+	span.aya {
+		margin-left: 4px;
+
+		&.active {
+			background: -webkit-linear-gradient(top, hsl(45, 100%, 80%), hsl(45, 100%, 80%)) no-repeat;
+			background-position-y: 26px;
+			background-size: 100% 4px;
+			padding-right: 2px;
+			margin-right: -2px;
+		}
+	}
+
 	span.mark {
 		color: #3A87AD;
 		font-family: AppFont;
-		word-spacing: 5px
+		word-spacing: 5px;
 	}
 	span.number {
 		font-family: AppFont;

@@ -86,7 +86,7 @@ for key in sorted(ayas.keys(), key=key_to_int):
 		html += ' '.join(parts)
 		parts = []
 
-	ayas[key]['html'] = html
+	ayas[key]['html'] = html.strip()
 
 
 page = 0
