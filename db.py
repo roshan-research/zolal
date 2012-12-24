@@ -109,7 +109,7 @@ for i, div in enumerate(d('div')):
 	div = pq(div)
 	key = div.attr('rel')
 	if key:
-		almizan_sectionsalmizan_sections.append(key)
+		almizan_sections.append(key)
 		print(div.html().replace('\n', ''), file=open(files / 'almizan' / key, 'w'))
 
 print('var almizan_sections = %s;' % str(almizan_sections), file=meta)
