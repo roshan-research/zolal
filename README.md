@@ -8,6 +8,10 @@ Put these files in `data` folder:
 + `quran-lines.txt` extracted from [madani.sqlite3.db](https://github.com/quran/quran.com-images/blob/master/data/madani.sqlite3.db?raw=true)
 + `almizan.html` from [almizan-data](https://github.com/nournia/almizan-data)
 
+Then execute following command to fill `files` folder with `quran` and `almizan` data:
+
+	python3 db.py
+
 ## Run
 Start a simple server for hosting whole directory:
 
