@@ -60,13 +60,17 @@ blockquote p {
 }
 #quran span.aya {
   margin-left: 4px;
-}
-#quran span.aya.active {
-  background: -webkit-linear-gradient(top, #ffe699, #ffe699) no-repeat;
-  background-position-y: 26px;
-  background-size: 100% 4px;
   padding-right: 2px;
   margin-right: -2px;
+  background-repeat: no-repeat;
+  background-position-y: 26px;
+  background-size: 100% 4px;
+}
+#quran span.aya:hover {
+  background-image: -webkit-linear-gradient(top, #ffecb3, #ffecb3);
+}
+#quran span.aya.active {
+  background-image: -webkit-linear-gradient(top, #ffdf80, #ffdf80);
 }
 #quran span.mark {
   color: #3A87AD;

@@ -65,13 +65,17 @@ body, blockquote p {
 
 	span.aya {
 		margin-left: 4px;
+		padding-right: 2px;
+		margin-right: -2px;
+		background-repeat: no-repeat;
+		background-position-y: 26px;
+		background-size: 100% 4px;
 
+		&:hover {
+			background-image: -webkit-linear-gradient(top, hsl(45, 100%, 85%), hsl(45, 100%, 85%));
+		}
 		&.active {
-			background: -webkit-linear-gradient(top, hsl(45, 100%, 80%), hsl(45, 100%, 80%)) no-repeat;
-			background-position-y: 26px;
-			background-size: 100% 4px;
-			padding-right: 2px;
-			margin-right: -2px;
+			background-image: -webkit-linear-gradient(top, hsl(45, 100%, 75%), hsl(45, 100%, 75%));
 		}
 	}
 

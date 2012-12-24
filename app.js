@@ -45,6 +45,16 @@ var AyaView = Backbone.View.extend({
 	render: function () {
 		this.setElement(this.template(this.model.toJSON()));
 		return this;
+	},
+	events: {
+		'click': 'click'
+	},
+	click: function(e) {
+		this.$el.parent().find('.active').removeClass('active');
+		$(e.currentTarget).addClass('active');
+		app.quran.position.aya = this.model.get('aya');
+		app.quran.position.sura = this.model.get('sura');
+		app.quran.trigger('updateAddress');
 	}
 });
 
@@ -68,6 +78,8 @@ var QuranView = Backbone.View.extend({
 				}
 				el.append(ayaView.render().el, ' ');
 			});
+
+			quran.position.aya = '';
 			quran.position.sura = page.models[0].attributes['sura'];
 			quran.trigger('updateAddress');
 		};
@@ -370,11 +382,17 @@ var AddressRouter = Backbone.Router.extend({
 		'almizan/:section': 'almizanSection'
 	},
 	quranPage: function (page) {
+		if (isNaN(page) || page < 0 || page > 605)
+			return;
+
 		app.position.mode = 'quran';
 		app.position.quran.page = Number(page);
 		app.render();
 	},
 	almizanSection: function (section) {
+		if (!(section in almizan_sections))
+			return;
+
 		app.position.mode = 'tafsir';
 		app.position.tafsir.section = section;
 		app.render();
