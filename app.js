@@ -408,7 +408,7 @@ var AddressRouter = Backbone.Router.extend({
 		app.render();
 	},
 	almizanSection: function (section) {
-		if (!(section in almizan_sections))
+		if (_.indexOf(almizan_sections, section) < 0)
 			return;
 
 		app.position.mode = 'tafsir';
