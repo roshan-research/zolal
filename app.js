@@ -23,7 +23,26 @@ var Aya = Backbone.Model.extend({
 
 var Bayan = Backbone.Model.extend({
 	database: zolaldb,
-	storeName: 'bayans'
+	storeName: 'bayans',
+
+	load: function(data) {
+		this.fetch({
+			success: $.proxy(function (bayan) {
+				data.callback(bayan, data);
+			}, {data: data}),
+			error: $.proxy(function (bayan) {
+				$.ajax({
+					url: 'files/almizan/'+ bayan.get('id'),
+					success: function(item){
+						bayan = new Bayan({id: bayan.get('id'), content: item});
+						bayan.save();
+						data.callback(bayan, data);
+					},
+					error: connectionError
+				});
+			}, {data: data})
+		});
+	}
 });
 
 var Quran = Backbone.Collection.extend({
@@ -211,14 +230,14 @@ var TafsirView = Backbone.View.extend({
 	loadSection: function(section, flag) {
 		var tafsir = this;
 
-		var loadBayan = function (bayan, flag) {
+		var loadBayan = function (bayan, data) {
 
 			// retrieve prev section id
 			pid = _.indexOf(tafsir.sections, bayan.get('id'));
 			if (pid > 0) pid = ' prev="'+ tafsir.sections[pid-1] +'"'; else pid = '';
 
 			data = $('<code class="section"'+ pid +'>'+ bayan.get('id') +'</code>'+ bayan.get('content'));
-			append = flag == 'append';
+			append = data.flag == 'append';
 
 			lastKey = 0;
 			order = append ? 1 : -1;
@@ -234,7 +253,7 @@ var TafsirView = Backbone.View.extend({
 				tafsir.elements[String(startKey+i)] = item;
 			});
 
-			tafsir.addElements(lastKey, flag);
+			tafsir.addElements(lastKey, data.flag);
 
 			if (append && lastKey == 0 && tafsir.firstSection > 0)
 				tafsir.addElements(-1, 'prepend');
@@ -243,24 +262,8 @@ var TafsirView = Backbone.View.extend({
 		};
 		
 		tafsir.isLoading = true;
-		bayan = new Bayan({id: this.sections[section]});
-		bayan.fetch({
-			success: function (bayan) {
-				loadBayan(bayan, flag);
-			},
-			error: $.proxy(function (bayan) {
-				$.ajax({
-					context: {section: bayan.get('id'), flag: flag},
-					url: 'files/almizan/'+ bayan.get('id'),
-					success: function(item){
-						bayan = new Bayan({id: this.section, content: item});
-						bayan.save();
-						loadBayan(bayan, this.flag);
-					},
-					error: connectionError
-				});
-			}, {flag: flag})
-		});
+		bayan = new Bayan({'id': this.sections[section]});
+		bayan.load({flag: flag, callback: loadBayan});
 	},
 	findSection: function(quran) {
 		sura = quran.sura; aya = quran.aya;
