@@ -87,6 +87,26 @@ for key in sorted(ayas.keys(), key=key_to_int):
 	ayas[key]['html'] = html.strip()
 
 
+# tafsir
+almizan = open('data/almizan.html').read()
+
+almizan_sections = []
+d = pq(almizan)
+for i, div in enumerate(d('div')):
+	div = pq(div)
+	key = div.attr('rel')
+	if key:
+		almizan_sections.append(key)
+		print(div.html().replace('\n', ''), file=open(files / 'almizan' / key, 'w'))
+
+
+# add translations
+for p in d('p.trans'):
+	p = pq(p)
+	ayas[p.attr('rel')]['trans'] = p.text()
+
+
+# write ayas
 quran_pages, page = {}, 0
 for key in sorted(ayas.keys(), key=key_to_int):
 	aya = ayas[key]
@@ -99,17 +119,5 @@ for key in sorted(ayas.keys(), key=key_to_int):
 	print(json.dumps(aya), file=quran_file)
 
 print('var quran_pages = %s;' % str(quran_pages), file=meta)
-
-# tafsir
-almizan = open('data/almizan.html').read()
-
-almizan_sections = []
-d = pq(almizan)
-for i, div in enumerate(d('div')):
-	div = pq(div)
-	key = div.attr('rel')
-	if key:
-		almizan_sections.append(key)
-		print(div.html().replace('\n', ''), file=open(files / 'almizan' / key, 'w'))
 
 print('var almizan_sections = %s;' % str(almizan_sections), file=meta)
