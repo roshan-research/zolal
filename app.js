@@ -59,9 +59,30 @@ var QuranView = Backbone.View.extend({
 	el: $("#quran"),
 	initialize: function() {
 		this.collection = new Quran();
+		this.renderedPage = -1;
 	},
 	render: function() {
 		var quran = this;
+
+		var updateSelectedAya = function() {
+			if (quran.position.aya !== '') {
+				id = quran.position.sura +'-'+ quran.position.aya;
+				aya = new Aya({id: id});
+				aya.fetch({success: function (aya) {
+					quran.$el.find('.active').removeClass('active');
+					quran.$el.find('.aya[rel='+ aya.get('id') +']').addClass('active');
+					if (aya.get('trans'))
+						app.message(aya.get('trans'), 'block');
+				}});
+			}
+
+			quran.trigger('updateAddress');
+		};
+
+		if (this.position.page == this.renderedPage) {
+			updateSelectedAya();
+			return;
+		}
 
 		var loadPage = function (page) {
 			el = quran.$el;
@@ -75,19 +96,9 @@ var QuranView = Backbone.View.extend({
 				}
 				el.append(ayaView.render().el, ' ');
 			});
-
-			if (quran.position.aya !== '') {
-				id = quran.position.sura +'-'+ quran.position.aya;
-				aya = new Aya({id: id});
-				aya.fetch({success: function (aya) {
-					quran.$el.find('.aya[rel='+ aya.get('id') +']').addClass('active');
-					if (aya.get('trans'))
-						app.message(aya.get('trans'), 'block');
-				}});
-			}
-
+			quran.renderedPage = quran.position.page;
 			quran.position.sura = page.models[0].attributes['sura'];
-			quran.trigger('updateAddress');
+			updateSelectedAya();
 		};
 
 		this.collection.fetch({
@@ -294,7 +305,7 @@ var TafsirView = Backbone.View.extend({
 				focus =focusCode.prev().attr('prev');
 		}
 
-		if (focus != '' && focus != this.position.section) {
+		if (focus !== '' && focus !== this.position.section) {
 			this.position.section = focus;
 			this.trigger('updateAddress');
 		}
@@ -315,7 +326,7 @@ var AddressView = Backbone.View.extend({
 		// clone position
 		position = $.extend(true, {}, this.position);
 		if (position.mode == 'quran') {
-			if (position.quran.aya != '')
+			if (position.quran.aya !== '')
 				app.router.navigate('quran/'+ position.quran.sura +'-'+ position.quran.aya, false);
 			else
 				app.router.navigate('quran/p'+ position.quran.page, false);
@@ -435,7 +446,7 @@ app = new AppView();
 app.router = new AddressRouter();
 Backbone.history.start();
 
-if (Backbone.history.getFragment() == '')
+if (Backbone.history.getFragment() === '')
 	app.render();
 
 });
