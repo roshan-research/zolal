@@ -215,7 +215,7 @@ var TafsirView = Backbone.View.extend({
 					this.$el.prepend(this.elements[String(i)]);
 		}
 				
-		// delete this.elements[i];
+		// todo: delete rendered this.elements[i];
 
 		if (!append && firstChild.length) {
 			extraHeight = firstChild.position().top - firstChildTop;
@@ -356,6 +356,7 @@ var AppView = Backbone.View.extend({
 	},
 	render: function() {
 		$('#message').hide();
+		this.address.position = this.position;
 		if (this.position.mode == 'quran') {
 			this.quran.$el.show();
 			this.tafsir.$el.hide();
@@ -367,7 +368,6 @@ var AppView = Backbone.View.extend({
 			this.tafsir.position = this.position.tafsir;
 			this.tafsir.render();
 		}
-		this.address.position = this.position;
 	},
 	message: function(text, mode) {
 		msg = $('#message');
@@ -375,7 +375,7 @@ var AppView = Backbone.View.extend({
 
 		msg.text(text);
 		msg.addClass('alert-'+ mode);
-		msg.show().dotdotdot();
+		msg.show().dotdotdot().css('margin-top', -(msg.height() + 40));
 	},
 	events: {
 		'keydown': 'navKey',
