@@ -48,14 +48,10 @@ var AyaView = Backbone.View.extend({
 		'click': 'click'
 	},
 	click: function(e) {
-		// add active class
-		this.$el.parent().find('.active').removeClass('active');
-		$(e.currentTarget).addClass('active');
-		
 		// update quran address
 		app.quran.position.aya = this.model.get('aya');
 		app.quran.position.sura = this.model.get('sura');
-		app.quran.trigger('updateAddress');
+		app.quran.render();
 	}
 });
 
@@ -80,8 +76,15 @@ var QuranView = Backbone.View.extend({
 				el.append(ayaView.render().el, ' ');
 			});
 
-			if (quran.position.aya !== '')
-				quran.$el.find('.aya[rel='+ quran.position.sura +'-'+ quran.position.aya +']').addClass('active');
+			if (quran.position.aya !== '') {
+				id = quran.position.sura +'-'+ quran.position.aya;
+				aya = new Aya({id: id});
+				aya.fetch({success: function (aya) {
+					quran.$el.find('.aya[rel='+ aya.get('id') +']').addClass('active');
+					if (aya.get('trans'))
+						app.message(aya.get('trans'), 'block');
+				}});
+			}
 
 			quran.position.sura = page.models[0].attributes['sura'];
 			quran.trigger('updateAddress');
@@ -321,7 +324,7 @@ var AddressView = Backbone.View.extend({
 		else if (position.mode == 'tafsir') {
 			app.router.navigate('almizan/'+ this.position.tafsir.section, false);
 			parts = sectionToAddress(position.tafsir.section);
-			position.tafsir = {'sura': quran_suras[parts[0]-1], 'mi': parts[1], 'ma': parts[2]}
+			position.tafsir = {'sura': quran_suras[parts[0]-1], 'mi': parts[1], 'ma': parts[2]};
 		}
 		
 		this.$el.html(this.template(position));
@@ -341,6 +344,7 @@ var AppView = Backbone.View.extend({
 		this.position = {'mode': 'quran', 'quran': {'page': 1, 'sura': 1, 'aya': 0}, 'tafsir': {'section': '2-1:5'}};
 	},
 	render: function() {
+		$('#message').hide();
 		if (this.position.mode == 'quran') {
 			this.quran.$el.show();
 			this.tafsir.$el.hide();
@@ -353,6 +357,14 @@ var AppView = Backbone.View.extend({
 			this.tafsir.render();
 		}
 		this.address.position = this.position;
+	},
+	message: function(text, mode) {
+		msg = $('#message');
+		msg.removeClass('alert-block alert-error alert-success alert-info');
+
+		msg.text(text);
+		msg.addClass('alert-'+ mode);
+		msg.show().dotdotdot();
 	},
 	events: {
 		'keydown': 'navKey',
@@ -429,7 +441,7 @@ if (Backbone.history.getFragment() == '')
 });
 
 var connectionError = function() {
-	alert('خطا در اتصال به شبکه.');
+	app.message('خطا در اتصال به شبکه.', 'error');
 };
 
 // set heights
