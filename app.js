@@ -441,9 +441,8 @@ var connectionError = function() {
 };
 
 // set heights
-$(window).load(function() {
-	margins = app.quran.$el.outerHeight(true) - app.quran.$el.height();
-	pageHeight = $('#wrap').height() - $('#footer').height() - margins;
-	app.quran.$el.height(pageHeight);
-	app.tafsir.$el.height(pageHeight);
+$(window).on('load resize',  function () {
+	margins = $('#quran').outerHeight(true) - $('#quran').height();
+	pageHeight = document.body.clientHeight - $('#footer').height() - margins;
+	$('#quran, #tafsir').height(pageHeight);
 });
