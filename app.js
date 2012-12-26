@@ -1,41 +1,24 @@
+// aya inverted index
+var quran_ayas = {};
+_.each(quran_pages, function(page, p) {
+	for (aya in page)
+		quran_ayas[page[aya]] = Number(p);
+});
+
 var app;
 
 $(document).ready(function() {
 
-var zolaldb = {
-	id: 'zolaldb',
-	nolog: true,
-	migrations: [{
-		version: '1.0',
-		migrate: function(transaction, next) {
-			var ayas = transaction.db.createObjectStore('ayas');
-			ayas.createIndex('pageIndex', 'page', {unique: false});
-			var bayans = transaction.db.createObjectStore('bayans');
-			next();
-		}
-	}]
-};
-
 var Aya = Backbone.Model.extend({
-	database: zolaldb,
-	storeName: 'ayas'
+	localStorage: new Backbone.LocalStorage('Quran')
 });
 
-var Bayan = Backbone.Model.extend({
-	database: zolaldb,
-	storeName: 'bayans'
-});
-
-var Quran = Backbone.Collection.extend({
-	database: zolaldb,
-	storeName: 'ayas',
+var Page = Backbone.Collection.extend({
 	model: Aya
 });
 
-var Tafsir = Backbone.Collection.extend({
-	database: zolaldb,
-	storeName: 'bayans',
-	model: Bayan
+var Bayan = Backbone.Model.extend({
+	localStorage: new Backbone.LocalStorage('Almizan')
 });
 
 var AyaView = Backbone.View.extend({
@@ -58,7 +41,6 @@ var AyaView = Backbone.View.extend({
 var QuranView = Backbone.View.extend({
 	el: $("#quran"),
 	initialize: function() {
-		this.collection = new Quran();
 		this.renderedPage = -1;
 	},
 	render: function() {
@@ -101,26 +83,30 @@ var QuranView = Backbone.View.extend({
 			updateSelectedAya();
 		};
 
-		this.collection.fetch({
-			conditions: {'page': quran.position.page},
-			success: $.proxy(function(page) {
-				if (page.length === 0) {
-					$.get('files/quran/p'+ this.page, function(data) {
-						_.each(data.split('\n'), function(item) {
-							item = $.parseJSON(item);
-							if (item) {
-								aya = new Aya(item);
-								aya.save();
-								page.add(aya);
-							}
-						});
-	
-						loadPage(page);
-
-					}).error(connectionError);
-				} else
+		ayas = quran_pages[quran.position.page];
+		page = new Page();
+		(new Aya({id: ayas[0]})).fetch({
+			success: function() {
+				for (a in ayas) {
+					aya = new Aya({id: ayas[a]});
+					aya.fetch();
+					page.add(aya);
+				}
+				loadPage(page);
+			},
+			error: function() {
+				$.get('files/quran/p'+ quran.position.page, function(data) {
+					_.each(data.split('\n'), function(item) {
+						item = $.parseJSON(item);
+						if (item) {
+							aya = new Aya(item);
+							aya.save();
+							page.add(aya);
+						}
+					});
 					loadPage(page);
-			}, {'page': quran.position.page})
+				}).error(connectionError);
+			}
 		});
 	},
 	nextPage: function () {
@@ -154,7 +140,6 @@ var sectionToAddress = function(section) {
 var TafsirView = Backbone.View.extend({
 	el: $("#tafsir"),
 	initialize: function() {
-		this.collection = new Tafsir();
 		this.sections = almizan_sections;
 		this.isLoading = false;
 	},
@@ -352,7 +337,7 @@ var AppView = Backbone.View.extend({
 		this.tafsir.on('updateAddress', this.address.render, this.address);
 
 		// set position
-		this.position = {'mode': 'quran', 'quran': {'page': 1, 'sura': 1, 'aya': 0}, 'tafsir': {'section': '2-1:5'}};
+		this.position = {mode: 'quran', quran: {page: 1, sura: 1, aya: ''}, tafsir: {section: '2-1:5'}};
 	},
 	render: function() {
 		$('#message').hide();
@@ -423,11 +408,11 @@ var AddressRouter = Backbone.Router.extend({
 	},
 	quranAya: function (sura, aya) {
 		key = sura +'-'+ aya;
-		if (!(key in quran_pages))
+		if (!(key in quran_ayas))
 			return;
 
 		app.position.mode = 'quran';
-		app.position.quran = {'page': quran_pages[key], 'sura': sura, 'aya': aya};
+		app.position.quran = {'page': quran_ayas[key], 'sura': sura, 'aya': aya};
 		app.render();
 	},
 	almizanSection: function (section) {

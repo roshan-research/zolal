@@ -3,6 +3,7 @@
 
 import re, json
 from pyquery import PyQuery as pq
+from collections import defaultdict
 from path import path
 
 files = path('files')
@@ -107,17 +108,17 @@ for p in d('p.trans'):
 
 
 # write ayas
-quran_pages, page = {}, 0
+quran_pages, page = defaultdict(list), 0
 for key in sorted(ayas.keys(), key=key_to_int):
 	aya = ayas[key]
 	if aya['page'] != page:
 		page = aya['page']
 		quran_file = open(files / 'quran' / ('p%d' % page), 'w')
 
-	quran_pages[key] = aya['page']
+	quran_pages[aya['page']].append(key)
 
 	print(json.dumps(aya), file=quran_file)
 
-print('var quran_pages = %s;' % str(quran_pages), file=meta)
+print('var quran_pages = %s;' % str(dict(quran_pages)), file=meta)
 
 print('var almizan_sections = %s;' % str(almizan_sections), file=meta)
