@@ -375,7 +375,7 @@ var AppView = Backbone.View.extend({
 
 		msg.text(text);
 		msg.addClass('alert-'+ mode);
-		msg.show().dotdotdot();
+		msg.show().dotdotdot().css('margin-top', -(msg.height() + 40));
 	},
 	events: {
 		'keydown': 'navKey',
