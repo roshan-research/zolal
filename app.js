@@ -65,10 +65,10 @@ var QuranView = Backbone.View.extend({
 		this.collection = new Quran();
 	},
 	render: function() {
-		var el = this.$el;
 		var quran = this;
 
 		var loadPage = function (page) {
+			el = quran.$el;
 			el.html('');
 			_.each(page.models, function (item) {
 				var ayaView = new AyaView({model: item});
@@ -80,7 +80,7 @@ var QuranView = Backbone.View.extend({
 				el.append(ayaView.render().el, ' ');
 			});
 
-			if (quran.position.aya != '')
+			if (quran.position.aya !== '')
 				quran.$el.find('.aya[rel='+ quran.position.sura +'-'+ quran.position.aya +']').addClass('active');
 
 			quran.position.sura = page.models[0].attributes['sura'];
@@ -90,7 +90,7 @@ var QuranView = Backbone.View.extend({
 		this.collection.fetch({
 			conditions: {'page': quran.position.page},
 			success: $.proxy(function(page) {
-				if (page.length == 0) {
+				if (page.length === 0) {
 					$.get('files/quran/p'+ this.page, function(data) {
 						_.each(data.split('\n'), function(item) {
 							item = $.parseJSON(item);
@@ -152,7 +152,8 @@ var TafsirView = Backbone.View.extend({
 		this.$el.empty();
 		this.elements = {};
 		this.$el.scrollTop(0);
-	
+
+		this.trigger('updateAddress');
 		this.loadSection(this.lastSection, 'append');
 	},
 	events: {
@@ -352,7 +353,6 @@ var AppView = Backbone.View.extend({
 			this.tafsir.render();
 		}
 		this.address.position = this.position;
-		this.address.render();
 	},
 	events: {
 		'keydown': 'navKey',
