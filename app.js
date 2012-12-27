@@ -1,3 +1,5 @@
+var store = true;
+
 // models
 var Aya = Backbone.Model.extend({
 	localStorage: new Backbone.LocalStorage('Quran')
@@ -35,6 +37,9 @@ var QuranView = Backbone.View.extend({
 		this.renderedPage = -1;
 	},
 	render: function() {
+		this.queuePage(this.position.page);
+	},
+	loadPage: function(page) {
 		var quran = this;
 
 		var updateSelectedAya = function() {
@@ -57,7 +62,7 @@ var QuranView = Backbone.View.extend({
 			return;
 		}
 
-		var loadPage = function (page) {
+		var renderPage = function(page) {
 			el = quran.$el;
 			el.html('');
 			_.each(page.models, function (item) {
@@ -74,7 +79,7 @@ var QuranView = Backbone.View.extend({
 			updateSelectedAya();
 		};
 
-		ayas = quran_pages[quran.position.page];
+		ayas = quran_pages[page];
 		page = new Page();
 		(new Aya({id: ayas[0]})).fetch({
 			success: function() {
@@ -83,7 +88,7 @@ var QuranView = Backbone.View.extend({
 					aya.fetch();
 					page.add(aya);
 				}
-				loadPage(page);
+				renderPage(page);
 			},
 			error: function() {
 				$.get('files/quran/p'+ quran.position.page, function(data) {
@@ -91,13 +96,20 @@ var QuranView = Backbone.View.extend({
 						item = $.parseJSON(item);
 						if (item) {
 							aya = new Aya(item);
-							aya.save();
+							if (store) aya.save();
 							page.add(aya);
 						}
 					});
-					loadPage(page);
+					renderPage(page);
 				}).error(app.connectionError);
 			}
+		});
+	},
+	queuePage: function(page) {
+		var quran = this;
+		this.$el.queue(function() {
+			quran.loadPage(page);
+			quran.$el.dequeue();
 		});
 	},
 	nextPage: function () {
@@ -242,7 +254,7 @@ var TafsirView = Backbone.View.extend({
 					url: 'files/almizan/'+ bayan.get('id'),
 					success: function(item){
 						bayan = new Bayan({id: this.section, content: item});
-						bayan.save();
+						if (store) bayan.save();
 						loadBayan(bayan, this.flag);
 					},
 					error: app.connectionError
