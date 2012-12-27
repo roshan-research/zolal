@@ -136,7 +136,7 @@ var TafsirView = Backbone.View.extend({
 		this.$el.scrollTop(0);
 
 		this.trigger('updateAddress');
-		this.loadSection(this.lastSection, 'append');
+		this.queueSection(this.lastSection, 'append');
 	},
 	events: {
 		'scroll': 'checkScroll'
@@ -155,12 +155,12 @@ var TafsirView = Backbone.View.extend({
 			if (append) {
 				if (this.lastSection < this.sections.length-1) {
 					this.lastSection += 1;
-					this.loadSection(this.lastSection, flag);
+					this.queueSection(this.lastSection, flag);
 				}
 			} else {
 				if (this.firstSection > 0) {
 					this.firstSection -= 1;
-					this.loadSection(this.firstSection, flag);
+					this.queueSection(this.firstSection, flag);
 				}
 			}
 		}
@@ -191,11 +191,17 @@ var TafsirView = Backbone.View.extend({
 				this.$el.scrollTop(topOff + extraHeight);
 		}
 	},
+	queueSection: function(section, flag) {
+		var tafsir = this;
+		this.$el.queue(function() {
+			tafsir.loadSection(section, flag);
+			tafsir.$el.dequeue();
+		});
+	},
 	loadSection: function(section, flag) {
 		var tafsir = this;
 
 		var loadBayan = function (bayan, flag) {
-
 			// retrieve prev section id
 			pid = _.indexOf(tafsir.sections, bayan.get('id'));
 			if (pid > 0) pid = ' prev="'+ tafsir.sections[pid-1] +'"'; else pid = '';
@@ -218,7 +224,6 @@ var TafsirView = Backbone.View.extend({
 			});
 
 			tafsir.addElements(lastKey, flag);
-
 			if (append && lastKey == 0 && tafsir.firstSection > 0)
 				tafsir.addElements(-1, 'prepend');
 
