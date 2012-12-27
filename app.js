@@ -44,14 +44,11 @@ var QuranView = Backbone.View.extend({
 
 		var updateSelectedAya = function() {
 			if (quran.position.aya != '') {
-				id = quran.position.sura +'-'+ quran.position.aya;
-				aya = new Aya({id: id});
-				aya.fetch({success: function (aya) {
-					quran.$el.find('.active').removeClass('active');
-					quran.$el.find('.aya[rel='+ aya.get('id') +']').addClass('active');
-					if (aya.get('trans'))
-						app.message(aya.get('trans'), 'block');
-				}});
+				aya = quran.collection.get(quran.position.sura +'-'+ quran.position.aya);
+				quran.$el.find('.active').removeClass('active');
+				quran.$el.find('.aya[rel='+ aya.get('id') +']').addClass('active');
+				if (aya.get('trans'))
+					app.message(aya.get('trans'), 'block');
 			}
 
 			quran.trigger('updateAddress');
@@ -62,10 +59,10 @@ var QuranView = Backbone.View.extend({
 			return;
 		}
 
-		var renderPage = function(page) {
+		var renderPage = function() {
 			el = quran.$el;
 			el.html('');
-			_.each(page.models, function (item) {
+			_.each(quran.collection.models, function (item) {
 				var ayaView = new AyaView({model: item});
 				if (item.get('aya') == 1) {
 					el.append('<div class="sura"><span>'+ quran_suras[item.get('sura')-1] +'</span></div>');
@@ -75,20 +72,20 @@ var QuranView = Backbone.View.extend({
 				el.append(ayaView.render().el, ' ');
 			});
 			quran.renderedPage = quran.position.page;
-			quran.position.sura = page.models[0].attributes['sura'];
+			quran.position.sura = quran.collection.models[0].attributes['sura'];
 			updateSelectedAya();
 		};
 
 		ayas = quran_pages[page];
-		page = new Page();
+		this.collection = new Page();
 		(new Aya({id: ayas[0]})).fetch({
 			success: function() {
 				for (a in ayas) {
 					aya = new Aya({id: ayas[a]});
 					aya.fetch();
-					page.add(aya);
+					quran.collection.add(aya);
 				}
-				renderPage(page);
+				renderPage();
 			},
 			error: function() {
 				$.get('files/quran/p'+ quran.position.page, function(data) {
@@ -97,10 +94,10 @@ var QuranView = Backbone.View.extend({
 						if (item) {
 							aya = new Aya(item);
 							if (store) aya.save();
-							page.add(aya);
+							quran.collection.add(aya);
 						}
 					});
-					renderPage(page);
+					renderPage();
 				}).error(app.connectionError);
 			}
 		});
