@@ -34,6 +34,7 @@ var AyaView = Backbone.View.extend({
 var QuranView = Backbone.View.extend({
 	el: $("#quran"),
 	initialize: function() {
+		this.collection = new Page();
 		this.renderedPage = -1;
 	},
 	render: function() {
@@ -77,9 +78,9 @@ var QuranView = Backbone.View.extend({
 		};
 
 		ayas = quran_pages[page];
-		this.collection = new Page();
 		(new Aya({id: ayas[0]})).fetch({
 			success: function() {
+				quran.collection.reset();
 				for (a in ayas) {
 					aya = new Aya({id: ayas[a]});
 					aya.fetch();
@@ -89,6 +90,7 @@ var QuranView = Backbone.View.extend({
 			},
 			error: function() {
 				$.get('files/quran/p'+ quran.position.page, function(data) {
+					quran.collection.reset();
 					_.each(data.split('\n'), function(item) {
 						item = $.parseJSON(item);
 						if (item) {
