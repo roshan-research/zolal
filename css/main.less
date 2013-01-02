@@ -50,6 +50,7 @@ select {
 
 #quran {
 	padding: 10px;
+	overflow: hidden;
 	margin: 10px auto;
 	max-width: 600px;
 	font-family: QuranFont;
@@ -104,6 +105,8 @@ select {
 }
 
 #tafsir {
+	text-align: justify;
+	overflow: auto;
 	padding: 0 10px;
 	margin: 20px auto;
 	font-size: 20px;
@@ -143,15 +146,20 @@ select {
 }
 
 #message {
+	position: relative;
 	padding: 8px 15px;
 	text-align: justify;
 	width: 70%;
 	margin: 0 auto;
 	max-height: 60px;
+	box-shadow: 0 0 10px hsl(50, 50%, 80%);
 	display: none;
 }
 
 #footer {
+	#address {
+		display: none;
+	}
 	.quran-address {
 		span.caption {
 			padding-left: 5px;

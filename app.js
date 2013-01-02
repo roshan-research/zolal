@@ -363,6 +363,8 @@ var AddressView = Backbone.View.extend({
 			el.find('#mi').text(position.tafsir['mi']);
 			el.find('#ma').text(position.tafsir['ma']);
 		}
+
+		this.$el.show();
 	}
 });
 
