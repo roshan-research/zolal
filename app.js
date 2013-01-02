@@ -38,6 +38,8 @@ var QuranView = Backbone.View.extend({
 		this.renderedPage = -1;
 	},
 	render: function() {
+		if (this.position.aya != '')
+			this.position.page = quran_ayas[this.position.sura+ '-'+ this.position.aya];
 		this.queuePage(this.position.page);
 	},
 	loadPage: function(page) {
@@ -112,7 +114,7 @@ var QuranView = Backbone.View.extend({
 			quran.$el.dequeue();
 		});
 	},
-	nextPage: function () {
+	nextPage: function() {
 		this.position.aya = '';
 		this.position.page += 1;
 		if (this.position.page > 604) {
@@ -121,13 +123,37 @@ var QuranView = Backbone.View.extend({
 		}
 		return true;
 	},
-	prevPage: function () {
+	prevPage: function() {
 		this.position.aya = '';
 		this.position.page -= 1;
 		if (this.position.page < 1) {
 			this.position.page = 1;
 			return false;
 		}
+		return true;
+	},
+	nextAya: function() {
+		if (this.position.aya == '')
+			this.position.aya = this.collection.models[0].attributes['aya'];
+		else if (this.position.aya < sura_ayas[this.position.sura])
+			this.position.aya += 1;
+		else if (this.position.aya == sura_ayas[this.position.sura] && this.position.sura < quran_suras.length) {
+			this.position.sura += 1;
+			this.position.aya = 1;
+		} else
+			return false;
+		return true;
+	},
+	prevAya: function() {
+		if (this.position.aya == '')
+			this.position.aya = this.collection.models[0].attributes['aya'];
+		else if (this.position.aya > 1)
+			this.position.aya -= 1;
+		else if (this.position.aya == 1 && this.position.sura > 1) {
+			this.position.sura -= 1;
+			this.position.aya = sura_ayas[this.position.sura];
+		} else
+			return false;
 		return true;
 	}
 });
@@ -427,8 +453,12 @@ var AppView = Backbone.View.extend({
 		if (this.position.mode == 'quran') {
 			if(e.keyCode == 37) // left arrow
 				refresh = this.quran.nextPage();
+			else if(e.keyCode == 38) // up arrow
+				refresh = this.quran.prevAya();
 			else if(e.keyCode == 39) // right arrow
 				refresh = this.quran.prevPage();
+			else if(e.keyCode == 40) // down arrow
+				refresh = this.quran.nextAya();
 		}
 
 		if (refresh)
@@ -456,7 +486,7 @@ var AddressRouter = Backbone.Router.extend({
 			return;
 
 		app.position.mode = 'quran';
-		app.position.quran = {'page': quran_ayas[key], 'sura': sura, 'aya': aya};
+		app.position.quran = {'page': '', 'sura': Number(sura), 'aya': Number(aya)};
 		app.render();
 	},
 	almizanSection: function (section) {
