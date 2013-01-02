@@ -19,22 +19,28 @@
 		</div>
 		</div>
 	</div>
-	<div id="footer">
-		<div class="container">
-			<div id="address"></div>
-			<ul id="navigator" class="nav nav-pills pull-right">
-				<li><a rel="tafsir" href="#">تفسیر</a></li>
-				<li><a rel="quran" href="#">قرآن</a></li>
-			</ul>
+	<div id="footer" class="container">
+		<div id="address" class="row">
+			<div class="span3">
+				<div class="quran-address">
+					<span class="caption">سوره</span><select id="sura"></select>
+					<span class="caption">آیه</span><select id="aya"></select>
+				</div>
+				<div class="tafsir-address">
+					تفسیر المیزان، سوره <span id="sura"></span>، آیات <span id="mi"></span> تا <span id="ma"></span>
+				</div>
+			</div>
+			<div class="span3">
+				<div id="page" class="quran-address"><span id="prev">‹</span><span id="text"></span><span id="next">›</span></div>
+			</div>
+			<div class="span3">
+				<ul id="navigator" class="nav nav-pills pull-right">
+					<li><a rel="tafsir" href="#">تفسیر</a></li>
+					<li><a rel="quran" href="#">قرآن</a></li>
+				</ul>
+			</div>
 		</div>
 	</div>
-	<script id="addressTemplate" type="text/template">
-	<% if (mode == 'quran') { %>
-		<span>صفحه <%= quran.page %></span>، <span>سوره <%= quran.sura %></span><% if (quran.aya != '') { %>، <span>آیه <%= quran.aya %></span><% } %>
-	<% } else if (mode == 'tafsir') { %>
-		<span>تفسیر المیزان</span>، <span>سوره <%= tafsir.sura %></span>، <span>آیات <%= tafsir.mi %> تا <%= tafsir.ma %></span>
-	<% } %>
-	</script>
 	<script type="text/javascript" src="js/jquery-dotdotdot.js"></script>
 	<script type="text/javascript" src="files/meta.js"></script>
 	<script type="text/javascript" src="app.js"></script>

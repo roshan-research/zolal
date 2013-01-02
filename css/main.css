@@ -16,6 +16,12 @@ body,
 blockquote p {
   font-size: 18px;
 }
+select {
+  font-family: AppFont;
+  font-size: 18px;
+  padding-top: 5px;
+  margin-bottom: 0;
+}
 #wrap {
   min-height: 100%;
   height: auto !important;
@@ -130,7 +136,54 @@ blockquote p {
   max-height: 60px;
   display: none;
 }
-#address {
-  float: left;
-  padding: 7px 15px;
+#footer .quran-address span.caption {
+  padding-left: 5px;
+  color: #777;
+}
+#footer .quran-address #sura {
+  width: 90px;
+  margin-left: 10px;
+}
+#footer .quran-address #aya {
+  width: 60px;
+}
+#footer .quran-address#page {
+  padding: 5px 55px;
+}
+#footer .quran-address#page #text {
+  width: 32px;
+  display: inline-block;
+  text-align: center;
+  font-size: 20px;
+}
+#footer .quran-address#page #next,
+#footer .quran-address#page #prev {
+  padding: 0 5px 3px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 20px;
+  font-family: Arial;
+  color: #888;
+}
+#footer .quran-address#page #next:hover,
+#footer .quran-address#page #prev:hover {
+  color: #222;
+  background: #eee;
+}
+#footer .tafsir-address {
+  padding: 5px 0;
+  display: none;
+  color: #777;
+}
+#footer .tafsir-address span {
+  font-weight: bold;
+  font-size: .85em;
+  color: #666;
+}
+.nav {
+  margin-bottom: 0;
+}
+.span3 {
+  margin-left: 0;
+  width: 262px;
 }
