@@ -449,7 +449,6 @@ var AppView = Backbone.View.extend({
 			this.render();
 	},
 	navKey: function(e) {
-		e.preventDefault();
 		refresh = false;
 
 		if (this.position.mode == 'quran') {
@@ -462,9 +461,11 @@ var AppView = Backbone.View.extend({
 			else if(e.keyCode == 40) // down arrow
 				refresh = this.quran.nextAya();
 		}
-
-		if (refresh)
+		
+		if (refresh) {
+			e.preventDefault();
 			this.render();
+		}
 	}
 });
 
