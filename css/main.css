@@ -87,7 +87,7 @@ select {
 #quran span.mark {
   color: #3A87AD;
   font-family: AppFont;
-  word-spacing: 5px;
+  margin-right: 5px;
 }
 #quran span.number {
   font-family: AppFont;

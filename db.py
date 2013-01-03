@@ -65,8 +65,7 @@ for key in sorted(ayas.keys(), key=key_to_int):
 	html, parts = '', []
 	text = ayas[key]['text']
 	text = text.replace('۞ ', '')  # remove hizb sign
-	text = re.sub('( ['+ symbols +'])', '\\1', text)
-	text = re.sub('(['+ symbols +'])', '<span class="mark">\\1 </span>', text)
+	text = re.sub('[ ]*(['+ symbols +'])[ ]*', '<span class="mark">\\1 </span>', text)
 	aya_parts = text.split(' ')
 	aya_parts.append('<span class="number">(%d)</span>' % ayas[key]['aya'])
 	for part in aya_parts:
