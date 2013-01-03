@@ -196,6 +196,13 @@ select {
 .nav {
   margin-bottom: 0;
 }
+.nav li a {
+  color: #555;
+  border-radius: 0;
+}
+.nav li a:hover {
+  color: #222;
+}
 .span3 {
   margin-left: 0;
   width: 262px;
