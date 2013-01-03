@@ -449,6 +449,7 @@ var AppView = Backbone.View.extend({
 			this.render();
 	},
 	navKey: function(e) {
+		e.preventDefault();
 		refresh = false;
 
 		if (this.position.mode == 'quran') {
