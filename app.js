@@ -342,6 +342,7 @@ var AddressView = Backbone.View.extend({
 			number = sura_ayas[sura_select.val()];
 			for(i = 1; i <= number; i++)
 				aya_select.append('<option value="'+ i +'">'+ i +'</option>');
+			aya_select.val('1');
 		});
 		sura_select.change(function() {
 			if (sura_select.val() != app.position.quran.sura)
