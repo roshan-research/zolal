@@ -85,6 +85,7 @@ for key in sorted(ayas.keys(), key=key_to_int):
 		parts = []
 
 	ayas[key]['html'] = html.strip()
+	del ayas[key]['text']
 
 
 # tafsir
