@@ -186,6 +186,7 @@ select {
 #footer .quran-address#page #prev:hover {
   color: #222;
   background: #eee;
+  border-radius: 5px;
 }
 #footer .tafsir-address {
   padding: 5px 0;
@@ -202,7 +203,6 @@ select {
 }
 .nav li a {
   color: #555;
-  border-radius: 0;
 }
 .nav li a:hover {
   color: #222;
