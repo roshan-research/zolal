@@ -15,6 +15,7 @@
 }
 
 body {
+	min-width: 800px;
 	direction: rtl;
 	font-family: AppFont;
 }
@@ -43,7 +44,7 @@ select {
 }
 
 .container {
-	max-width: 800px;
+	width: 800px;
 }
 
 #quran, #tafsir {
@@ -86,11 +87,13 @@ select {
 		background-position-y: 26px;
 		background-size: 100% 4px;
 
+		@hcolor: hsl(45, 100%, 85%);
+		@acolor: darken(@hcolor, 10%);
 		&:hover {
-			background-image: -webkit-linear-gradient(top, hsl(45, 100%, 85%), hsl(45, 100%, 85%));
+			background-image: -webkit-linear-gradient(top, @hcolor, @hcolor);
 		}
 		&.active {
-			background-image: -webkit-linear-gradient(top, hsl(45, 100%, 75%), hsl(45, 100%, 75%));
+			background-image: -webkit-linear-gradient(top, @acolor, @acolor);
 		}
 	}
 
@@ -180,7 +183,8 @@ select {
 			background: #eee;
 		}
 		&#page {
-			padding: 5px 70px;
+			padding: 5px;
+			text-align: center;
 
 			#text {
 				width: 32px;
@@ -218,6 +222,8 @@ select {
 
 .nav {
 	margin-bottom: 0;
+	float: right;
+	margin-right: 60px;
 
 	li a {
 		color: #555;
@@ -228,6 +234,10 @@ select {
 	}
 }
 .span3 {
+	float: right;
 	margin-left: 0;
-	width: 262px;
+	width: 266px;
+}
+.row {
+	margin-left: 0;
 }
