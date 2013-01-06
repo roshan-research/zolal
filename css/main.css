@@ -153,6 +153,9 @@ select option {
 #footer #address {
   display: none;
 }
+#footer .quran-address {
+  margin-top: 2px;
+}
 #footer .quran-address span.caption {
   padding-left: 5px;
   color: #777;
@@ -194,7 +197,7 @@ select option {
   border-radius: 5px;
 }
 #footer .tafsir-address {
-  padding: 5px 0;
+  padding: 8px 0;
   display: none;
   color: #777;
 }
