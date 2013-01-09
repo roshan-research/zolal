@@ -52,11 +52,29 @@ select {
 	overflow: auto;
 }
 
+@page-width: 600px;
+@page-padding: 10px;
 #quran {
-	padding: 10px;
-	overflow: hidden;
 	margin: 10px auto;
-	max-width: 600px;
+	width: @page-width;
+	overflow: hidden;
+	direction: ltr;
+
+	#pages {
+		height: inherit;
+		width: 100000px;
+
+		.page {
+			height: inherit;
+			padding: @page-padding;
+			width: @page-width - 2*@page-padding;
+			float: left;
+			direction: rtl;
+		}
+	}
+}
+
+#quran .page {
 	font-family: QuranFont;
 	word-spacing: 3px;
 	font-size: 20px;
@@ -223,9 +241,11 @@ select {
 
 .nav {
 	margin-bottom: 0;
-	float: right;
 	margin-right: 60px;
 
+	li {
+		float: right;
+	}
 	li a {
 		color: #555;
 
@@ -241,4 +261,14 @@ select {
 }
 .row {
 	margin-left: 0;
+}
+
+.loading {
+	background: url(loading.gif) no-repeat center center;
+}
+#wait {
+	display: inline-block;
+	margin: 0 5px;
+	width: 34px;
+	height: 34px;
 }

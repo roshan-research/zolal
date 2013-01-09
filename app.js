@@ -5,7 +5,7 @@ var Aya = Backbone.Model.extend({
 	localStorage: new Backbone.LocalStorage('Quran')
 });
 
-var Page = Backbone.Collection.extend({
+var Quran = Backbone.Collection.extend({
 	model: Aya
 });
 
@@ -34,84 +34,108 @@ var AyaView = Backbone.View.extend({
 var QuranView = Backbone.View.extend({
 	el: $("#quran"),
 	initialize: function() {
-		this.collection = new Page();
-		this.renderedPage = -1;
+		this.collection = new Quran();
 	},
 	render: function() {
 		if (this.position.aya != '')
 			this.position.page = quran_ayas[this.position.sura+ '-'+ this.position.aya];
-		this.queuePage(this.position.page);
-	},
-	loadPage: function(page) {
-		var quran = this;
+		page = this.position.page;
 
+		var quran = this;
+		pages = this.$el.find('#pages');
+
+		// functions
+		var doesExist = function(p) {
+			return quran.$el.find('.page[rel='+ p +']').length > 0;
+		};
+		var showPage = function(page) {
+			el = quran.$el.find('.page[rel='+ page +']');
+			pages.find('.page').removeClass('front');
+			el.addClass('front');
+			quran.$el.animate({ scrollLeft: el.offset().left - pages.position().left });
+		};
 		var updateSelectedAya = function() {
+			quran.$el.find('.active').removeClass('active');
 			if (quran.position.aya != '') {
 				aya = quran.collection.get(quran.position.sura +'-'+ quran.position.aya);
-				quran.$el.find('.active').removeClass('active');
 				quran.$el.find('.aya[rel='+ aya.get('id') +']').addClass('active');
 				if (aya.get('trans'))
 					app.message(aya.get('trans'), 'block');
-			}
+			} else
+				quran.position.sura = Number(quran_pages[quran.position.page][0].split('-')[0]);
 
 			quran.trigger('updateAddress');
 		};
 
-		if (this.position.page == this.renderedPage) {
+		// show loaded page
+		if (doesExist(page)) {
+			showPage(page);
 			updateSelectedAya();
 			return;
 		}
+		
+		// add new page
+		newPage = $('<div class="page loading" rel="'+ page +'"></div>');
+		if (doesExist(page + 1)) {
+			pages.append(newPage);
+		} else if (doesExist(page - 1)) {
+			first = pages.children().first();
+			off = first.offset().left;
+			pages.prepend(newPage);
+			this.$el.scrollLeft(this.$el.scrollLeft() + first.offset().left - off);
+		} else {
+			pages.empty();
+			pages.append(newPage);
+		}
 
-		var renderPage = function() {
-			el = quran.$el;
-			el.html('');
+		showPage(page);
+
+		var renderPage = function(page) {
+			el = quran.$el.find('.page[rel='+ page +']');
+			el.removeClass('loading');
 			_.each(quran.collection.models, function (item) {
-				var ayaView = new AyaView({model: item});
-				if (item.get('aya') == 1) {
-					el.append('<div class="sura"><span>'+ quran_suras[item.get('sura')-1] +'</span></div>');
-					if (item.get('sura') != 1 && item.get('sura') != 9)
-						el.append('<div class="bism"><span>بِسمِ اللَّهِ الرَّحمٰنِ الرَّحيمِ</span></div>');
+				if (item.get('page') == page) {
+					var ayaView = new AyaView({model: item});
+					if (item.get('aya') == 1) {
+						el.append('<div class="sura"><span>'+ quran_suras[item.get('sura')-1] +'</span></div>');
+						if (item.get('sura') != 1 && item.get('sura') != 9)
+							el.append('<div class="bism"><span>بِسمِ اللَّهِ الرَّحمٰنِ الرَّحيمِ</span></div>');
+					}
+					el.append(ayaView.render().el, ' ');
 				}
-				el.append(ayaView.render().el, ' ');
 			});
-			quran.renderedPage = quran.position.page;
-			if (quran.position.aya == '')
-				quran.position.sura = quran.collection.models[0].attributes['sura'];
+			el.children().hide().fadeIn();
 			updateSelectedAya();
 		};
 
 		ayas = quran_pages[page];
 		(new Aya({id: ayas[0]})).fetch({
 			success: function() {
-				quran.collection.reset();
 				for (a in ayas) {
 					aya = new Aya({id: ayas[a]});
 					aya.fetch();
 					quran.collection.add(aya);
 				}
-				renderPage();
+				renderPage(page);
 			},
-			error: function() {
-				$.get('files/quran/p'+ quran.position.page, function(data) {
-					quran.collection.reset();
-					_.each(data.split('\n'), function(item) {
-						item = $.parseJSON(item);
-						if (item) {
-							aya = new Aya(item);
-							if (store) aya.save();
-							quran.collection.add(aya);
-						}
-					});
-					renderPage();
-				}).error(app.connectionError);
+			error: function () {
+				$.ajax({
+					context: {page: page},
+					url: server +'files/quran/p'+ page,
+					success: function(data){
+						_.each(data.split('\n'), function(item) {
+							item = $.parseJSON(item);
+							if (item) {
+								aya = new Aya(item);
+								if (store) aya.save();
+								quran.collection.add(aya);
+							}
+						});
+						renderPage(this.page);
+					},
+					error: app.connectionError
+				});
 			}
-		});
-	},
-	queuePage: function(page) {
-		var quran = this;
-		this.$el.queue(function() {
-			quran.loadPage(page);
-			quran.$el.dequeue();
 		});
 	},
 	nextPage: function() {
@@ -277,7 +301,7 @@ var TafsirView = Backbone.View.extend({
 			error: $.proxy(function (bayan) {
 				$.ajax({
 					context: {section: bayan.get('id'), flag: flag},
-					url: 'files/almizan/'+ bayan.get('id'),
+					url: server +'files/almizan/'+ bayan.get('id'),
 					success: function(item){
 						bayan = new Bayan({id: this.section, content: item});
 						if (store) bayan.save();
@@ -431,6 +455,7 @@ var AppView = Backbone.View.extend({
 		msg.show().dotdotdot().css('margin-top', -(msg.height() + 40));
 	},
 	connectionError: function() {
+		$('#wait').removeClass('loading');
 		app.message('خطا در اتصال به شبکه.', 'error');
 	},
 	events: {

@@ -50,10 +50,23 @@ select option {
   overflow: auto;
 }
 #quran {
-  padding: 10px;
-  overflow: hidden;
   margin: 10px auto;
-  max-width: 600px;
+  width: 600px;
+  overflow: hidden;
+  direction: ltr;
+}
+#quran #pages {
+  height: inherit;
+  width: 100000px;
+}
+#quran #pages .page {
+  height: inherit;
+  padding: 10px;
+  width: 580px;
+  float: left;
+  direction: rtl;
+}
+#quran .page {
   font-family: QuranFont;
   word-spacing: 3px;
   font-size: 20px;
@@ -61,20 +74,20 @@ select option {
   text-shadow: 0.5px 0.5px 1px #eee;
   cursor: pointer;
 }
-#quran div.bism {
+#quran .page div.bism {
   text-align: center;
   font-size: .9em;
 }
-#quran div.sura {
+#quran .page div.sura {
   margin: 12px 0 5px;
   text-align: center;
   background: #eee;
 }
-#quran div.sura span {
+#quran .page div.sura span {
   text-shadow: 1px 1px 2px #999;
   line-height: 20px;
 }
-#quran span.aya {
+#quran .page span.aya {
   margin-left: 4px;
   padding-right: 2px;
   margin-right: -2px;
@@ -82,18 +95,18 @@ select option {
   background-position-y: 26px;
   background-size: 100% 4px;
 }
-#quran span.aya:hover {
+#quran .page span.aya:hover {
   background-image: -webkit-linear-gradient(top, #ffecb3, #ffecb3);
 }
-#quran span.aya.active {
+#quran .page span.aya.active {
   background-image: -webkit-linear-gradient(top, #ffdf80, #ffdf80);
 }
-#quran span.mark {
+#quran .page span.mark {
   color: #3A87AD;
   font-family: AppFont;
   margin-right: 5px;
 }
-#quran span.number {
+#quran .page span.number {
   font-family: AppFont;
   font-weight: bold;
   font-size: .9em;
@@ -208,8 +221,10 @@ select option {
 }
 .nav {
   margin-bottom: 0;
-  float: right;
   margin-right: 60px;
+}
+.nav li {
+  float: right;
 }
 .nav li a {
   color: #555;
@@ -224,4 +239,13 @@ select option {
 }
 .row {
   margin-left: 0;
+}
+.loading {
+  background: url(loading.gif) no-repeat center center;
+}
+#wait {
+  display: inline-block;
+  margin: 0 5px;
+  width: 34px;
+  height: 34px;
 }
