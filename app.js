@@ -1,4 +1,5 @@
 var store = true;
+var server = '';
 
 // models
 var Aya = Backbone.Model.extend({
@@ -39,42 +40,53 @@ var QuranView = Backbone.View.extend({
 	render: function() {
 		if (this.position.aya != '')
 			this.position.page = quran_ayas[this.position.sura+ '-'+ this.position.aya];
-		page = this.position.page;
 
-		var quran = this;
+		this.loadPage(this.position.page);
+
+		// update address
+		if (this.position.aya == '')
+			this.position.sura = Number(quran_pages[this.position.page][0].split('-')[0]);
+		this.trigger('updateAddress');
+
+		// prepare pages
+		this.loadPage(this.position.page-1);
+		this.loadPage(this.position.page+1);
+
+		// show page
+		el = this.$el.find('.page[rel='+ this.position.page +']');
 		pages = this.$el.find('#pages');
+		pages.find('.page').removeClass('front');
+		el.addClass('front');
+		this.$el.animate({ scrollLeft: el.offset().left - pages.position().left });
+	},
+	loadPage: function(page) {
+		if (page > 604 || page < 1)
+			return;
 
 		// functions
+		var quran = this;
 		var doesExist = function(p) {
 			return quran.$el.find('.page[rel='+ p +']').length > 0;
 		};
-		var showPage = function(page) {
-			el = quran.$el.find('.page[rel='+ page +']');
-			pages.find('.page').removeClass('front');
-			el.addClass('front');
-			quran.$el.animate({ scrollLeft: el.offset().left - pages.position().left });
-		};
 		var updateSelectedAya = function() {
+			// todo: check for previous selected
 			quran.$el.find('.active').removeClass('active');
 			if (quran.position.aya != '') {
 				aya = quran.collection.get(quran.position.sura +'-'+ quran.position.aya);
 				quran.$el.find('.aya[rel='+ aya.get('id') +']').addClass('active');
 				if (aya.get('trans'))
 					app.message(aya.get('trans'), 'block');
-			} else
-				quran.position.sura = Number(quran_pages[quran.position.page][0].split('-')[0]);
-
-			quran.trigger('updateAddress');
+			}
 		};
 
 		// show loaded page
 		if (doesExist(page)) {
-			showPage(page);
 			updateSelectedAya();
 			return;
 		}
 		
 		// add new page
+		pages = this.$el.find('#pages');
 		newPage = $('<div class="page loading" rel="'+ page +'"></div>');
 		if (doesExist(page + 1)) {
 			pages.append(newPage);
@@ -87,8 +99,6 @@ var QuranView = Backbone.View.extend({
 			pages.empty();
 			pages.append(newPage);
 		}
-
-		showPage(page);
 
 		var renderPage = function(page) {
 			el = quran.$el.find('.page[rel='+ page +']');
