@@ -50,7 +50,7 @@ select option {
   overflow: auto;
 }
 #quran {
-  margin: 10px auto;
+  margin: 10px auto 30px;
   width: 600px;
   overflow: hidden;
   direction: ltr;
