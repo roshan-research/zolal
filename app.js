@@ -1,9 +1,11 @@
 var store = true;
 var server = '/';
+var refineNums = true;
 
-var chars = {'0': '۰', '1': '۱', '2': '۲', '3': '۳', '4': '۴', '5': '۵', '6': '۶', '7': '۷', '8': '۸', '9': '۹'};
+var numchars = {'0': '۰', '1': '۱', '2': '۲', '3': '۳', '4': '۴', '5': '۵', '6': '۶', '7': '۷', '8': '۸', '9': '۹'};
 var refine = function(str) {
-	return String(str).replace(/[0-9]/g, function(c) { return chars[c]; });
+	if (!refineNums) return str;
+	return String(str).replace(/[0-9]/g, function(c) { return numchars[c]; });
 };
 
 // models
@@ -295,7 +297,7 @@ var TafsirView = Backbone.View.extend({
 			pid = _.indexOf(tafsir.sections, bayan.get('id'));
 			if (pid > 0) pid = ' prev="'+ tafsir.sections[pid-1] +'"'; else pid = '';
 
-			data = $('<code class="section"'+ pid +'>'+ bayan.get('id') +'</code>'+ refine(bayan.get('content')));
+			data = $('<code class="section"'+ pid +'>'+ bayan.get('id') +'</code>'+ bayan.get('content'));
 			append = flag == 'append';
 
 			lastKey = 0;
@@ -315,6 +317,9 @@ var TafsirView = Backbone.View.extend({
 			tafsir.addElements(lastKey, flag);
 			if (append && lastKey == 0 && tafsir.firstSection > 0)
 				tafsir.addElements(-1, 'prepend');
+
+			if (refineNums)
+				tafsir.$el.find(':not(code)').replaceText(/[0-9]/g, function(c) { return numchars[c]; });
 
 			tafsir.isLoading = false;
 		};
