@@ -55,9 +55,11 @@ var QuranView = Backbone.View.extend({
 		// show page
 		el = this.$el.find('.page[rel='+ this.position.page +']');
 		pages = this.$el.find('#pages');
-		pages.find('.page').removeClass('front');
-		el.addClass('front');
-		this.$el.animate({ scrollLeft: el.offset().left - pages.position().left });
+		if (pages.find('.front').attr('rel') != this.position.page) {
+			pages.find('.page').removeClass('front');
+			el.addClass('front');
+			this.$el.animate({ scrollLeft: el.offset().left - pages.position().left });
+		}
 	},
 	loadPage: function(page) {
 		if (page > 604 || page < 1)
@@ -69,14 +71,22 @@ var QuranView = Backbone.View.extend({
 			return quran.$el.find('.page[rel='+ p +']').length > 0;
 		};
 		var updateSelectedAya = function() {
-			// todo: check for previous selected
-			quran.$el.find('.active').removeClass('active');
+			active = quran.$el.find('.active');
+
 			if (quran.position.aya != '') {
-				aya = quran.collection.get(quran.position.sura +'-'+ quran.position.aya);
-				quran.$el.find('.aya[rel='+ aya.get('id') +']').addClass('active');
+				id = quran.position.sura +'-'+ quran.position.aya;
+
+				// don't update it
+				if (active.length && active.attr('rel') == id)
+					return;
+
+				aya = quran.collection.get(id);
+				active.removeClass('active');
+				quran.$el.find('.aya[rel='+ id +']').addClass('active');
 				if (aya.get('trans'))
 					app.message(aya.get('trans'), 'block');
-			}
+			} else
+				active.removeClass('active');
 		};
 
 		// show loaded page
