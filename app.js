@@ -185,7 +185,7 @@ var QuranView = Backbone.View.extend({
 	},
 	nextAya: function() {
 		if (this.position.aya == '')
-			this.position.aya = this.collection.models[0].attributes['aya'];
+			this.position.aya = Number(this.$el.find('.front .aya').first().attr('rel').split('-')[1]);
 		else if (this.position.aya < sura_ayas[this.position.sura])
 			this.position.aya += 1;
 		else if (this.position.aya == sura_ayas[this.position.sura] && this.position.sura < quran_suras.length) {
@@ -197,7 +197,7 @@ var QuranView = Backbone.View.extend({
 	},
 	prevAya: function() {
 		if (this.position.aya == '')
-			this.position.aya = this.collection.models[0].attributes['aya'];
+			this.position.aya = Number(this.$el.find('.front .aya').first().attr('rel').split('-')[1]);
 		else if (this.position.aya > 1)
 			this.position.aya -= 1;
 		else if (this.position.aya == 1 && this.position.sura > 1) {
