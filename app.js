@@ -1,5 +1,10 @@
 var store = true;
-var server = '';
+var server = '/';
+
+var chars = {'0': '۰', '1': '۱', '2': '۲', '3': '۳', '4': '۴', '5': '۵', '6': '۶', '7': '۷', '8': '۸', '9': '۹'};
+var refine = function(str) {
+	return String(str).replace(/[0-9]/g, function(c) { return chars[c]; });
+};
 
 // models
 var Aya = Backbone.Model.extend({
@@ -18,7 +23,9 @@ var Bayan = Backbone.Model.extend({
 var AyaView = Backbone.View.extend({
 	template: _.template('<span class="aya" rel="<%= sura %>-<%= aya %>"><%= html %></span>'),
 	render: function () {
-		this.setElement(this.template(this.model.toJSON()));
+		data = this.model.toJSON();
+		data['html'] = refine(data['html']);
+		this.setElement(this.template(data));
 		return this;
 	},
 	events: {
@@ -288,7 +295,7 @@ var TafsirView = Backbone.View.extend({
 			pid = _.indexOf(tafsir.sections, bayan.get('id'));
 			if (pid > 0) pid = ' prev="'+ tafsir.sections[pid-1] +'"'; else pid = '';
 
-			data = $('<code class="section"'+ pid +'>'+ bayan.get('id') +'</code>'+ bayan.get('content'));
+			data = $('<code class="section"'+ pid +'>'+ bayan.get('id') +'</code>'+ refine(bayan.get('content')));
 			append = flag == 'append';
 
 			lastKey = 0;
@@ -379,13 +386,13 @@ var AddressView = Backbone.View.extend({
 	initialize: function() {
 		var sura_select = this.$el.find('select#sura'), aya_select = sura_select.parent().find('select#aya');
 		_.each(quran_suras, function(item, i) {
-			sura_select.append('<option value="'+ (i+1) +'">&nbsp'+ item +'</option>');
+			sura_select.append('<option value="'+ (i+1) +'">'+ item +'</option>');
 		});
 		sura_select.change(function() {
 			aya_select.html('<option value=""></option>');
 			number = sura_ayas[sura_select.val()];
 			for(i = 1; i <= number; i++)
-				aya_select.append('<option value="'+ i +'">'+ i +'</option>');
+				aya_select.append('<option value="'+ i +'">'+ refine(i) +'</option>');
 			aya_select.val('1');
 		});
 		sura_select.change(function() {
@@ -420,7 +427,7 @@ var AddressView = Backbone.View.extend({
 			
 			el.find('#sura').val(position.quran.sura).change();
 			el.find('#aya').val(position.quran.aya);
-			el.find('#text').text(position.quran.page);
+			el.find('#text').text(refine(position.quran.page));
 		}
 		else if (position.mode == 'tafsir') {
 			app.router.navigate('almizan/'+ this.position.tafsir.section, false);
@@ -431,8 +438,8 @@ var AddressView = Backbone.View.extend({
 			el = this.$el.find('.tafsir-address');
 			el.show();
 			el.find('#sura').text(position.tafsir['sura']);
-			el.find('#mi').text(position.tafsir['mi']);
-			el.find('#ma').text(position.tafsir['ma']);
+			el.find('#mi').text(refine(position.tafsir['mi']));
+			el.find('#ma').text(refine(position.tafsir['ma']));
 		}
 
 		this.$el.show();
@@ -470,12 +477,12 @@ var AppView = Backbone.View.extend({
 		msg = $('#message');
 		msg.removeClass('alert-block alert-error alert-success alert-info');
 
-		msg.text(text);
+		msg.text(refine(text));
 		msg.addClass('alert-'+ mode);
 		msg.show().dotdotdot().css('margin-top', -(msg.height() + 40));
 	},
 	connectionError: function() {
-		$('#wait').removeClass('loading');
+		this.$el.find('.loading').removeClass('loading');
 		app.message('خطا در اتصال به شبکه.', 'error');
 	},
 	events: {
