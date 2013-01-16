@@ -24,12 +24,17 @@ body, blockquote p {
 }
 select {
 	font-family: AppFont;
-	font-size: 18px;
-	padding-top: 5px;
-	margin-bottom: 0;
+	-webkit-appearance: button;
+	-moz-appearance: button;
+	appearance: button;
 	option {
 		background: white;
 	}
+}
+select.btn {
+	font-size: 18px;
+	border: none;
+	background: #eee;
 }
 
 @footer: 60px;
@@ -196,10 +201,7 @@ select {
 		}
 		#aya {
 			width: 55px;
-		}
-		select {
-			border: none;
-			background: #eee;
+			// padding-top: 6px;
 		}
 		&#page {
 			padding: 5px;
@@ -221,7 +223,7 @@ select {
 				&:hover {
 					color: #222;
 					background: #eee;
-					border-radius: 5px;
+					border-radius: 4px;
 				}
 			}
 		}
@@ -248,6 +250,7 @@ select {
 	}
 	li a {
 		color: #555;
+		border-radius: 4px;
 
 		&:hover {
 			color: #222;
@@ -265,10 +268,4 @@ select {
 
 .loading {
 	background: url(loading.gif) no-repeat center center;
-}
-#wait {
-	display: inline-block;
-	margin: 0 5px;
-	width: 34px;
-	height: 34px;
 }

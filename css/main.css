@@ -24,12 +24,17 @@ blockquote p {
 }
 select {
   font-family: AppFont;
-  font-size: 18px;
-  padding-top: 5px;
-  margin-bottom: 0;
+  -webkit-appearance: button;
+  -moz-appearance: button;
+  appearance: button;
 }
 select option {
   background: white;
+}
+select.btn {
+  font-size: 18px;
+  border: none;
+  background: #eee;
 }
 #wrap {
   min-height: 100%;
@@ -180,10 +185,6 @@ select option {
 #footer .quran-address #aya {
   width: 55px;
 }
-#footer .quran-address select {
-  border: none;
-  background: #eee;
-}
 #footer .quran-address#page {
   padding: 5px;
   text-align: center;
@@ -207,7 +208,7 @@ select option {
 #footer .quran-address#page #prev:hover {
   color: #222;
   background: #eee;
-  border-radius: 5px;
+  border-radius: 4px;
 }
 #footer .tafsir-address {
   padding: 8px 0;
@@ -228,6 +229,7 @@ select option {
 }
 .nav li a {
   color: #555;
+  border-radius: 4px;
 }
 .nav li a:hover {
   color: #222;
@@ -242,10 +244,4 @@ select option {
 }
 .loading {
   background: url(loading.gif) no-repeat center center;
-}
-#wait {
-  display: inline-block;
-  margin: 0 5px;
-  width: 34px;
-  height: 34px;
 }
