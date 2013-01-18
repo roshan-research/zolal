@@ -250,10 +250,10 @@ var TafsirView = Backbone.View.extend({
 		toLoad = 20;
 		append = flag == 'append';
 
-		if (append)
-			lastId = currentId + toLoad;
-		else
-			lastId = currentId - toLoad;
+		if (this.$el.hasClass('loading'))
+			this.$el.removeClass('loading');
+
+		lastId = currentId + (append ? toLoad : -toLoad);
 
 		if (!append) this.pushScroll();
 
@@ -296,12 +296,8 @@ var TafsirView = Backbone.View.extend({
 		var tafsir = this;
 
 		// show loading element
-		if (flag == 'append')
-			this.$el.append('<div class="loading"></div>');
-		else
-			this.$el.prepend('<div class="loading"></div>');
-		if (this.$el.children().length == 1)
-			this.$el.find('.loading').height('100%');
+		if (this.$el.children().length == 0)
+			this.$el.addClass('loading');
 
 		// queue section
 		this.$el.queue(function() {
@@ -333,6 +329,10 @@ var TafsirView = Backbone.View.extend({
 				item = $(item).attr('i', startKey+i);
 				tafsir.elements[String(startKey+i)] = item;
 			});
+
+			// add loading element
+			tafsir.elements[String(startKey + (append ? data.length : -1))] = $('<div class="loading"></div>');
+
 
 			tafsir.addElements(lastKey, flag);
 			if (append && lastKey == 0 && tafsir.firstSection > 0)
