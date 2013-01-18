@@ -232,6 +232,19 @@ var TafsirView = Backbone.View.extend({
 	events: {
 		'scroll': 'checkScroll'
 	},
+	pushScroll: function() {
+		this.topOff = this.$el.scrollTop();
+		this.firstChild = this.$el.children().first().next().next();
+		if (this.firstChild.length)
+			this.firstChildTop = this.firstChild.position().top;
+	},
+	popScroll: function() {
+		if (this.firstChild.length) {
+			extraHeight = this.firstChild.position().top - this.firstChildTop;
+			if (extraHeight > 0)
+				this.$el.scrollTop(this.topOff + extraHeight);
+		}
+	},
 	addElements: function(currentId, flag) {
 		currentId = Number(currentId);
 		toLoad = 20;
@@ -242,6 +255,27 @@ var TafsirView = Backbone.View.extend({
 		else
 			lastId = currentId - toLoad;
 
+		if (!append) this.pushScroll();
+
+		var loadingElm;
+		if (append) {
+			loadingElm = this.$el.children().last();
+			for (i = currentId; i < lastId; i++)
+				if (i in this.elements)
+					this.$el.append(this.elements[String(i)]);
+		} else {
+			loadingElm = this.$el.children().first();
+			if (currentId == 0) currentId = -1;
+			for (i = currentId; i > lastId; i--)
+				if (i in this.elements)
+					this.$el.prepend(this.elements[String(i)]);
+		}
+		if (loadingElm.hasClass('loading'))
+			loadingElm.remove();
+
+		// todo: delete rendered this.elements[i];
+
+		// queue new sections
 		if (!(lastId in this.elements)) {
 			if (append) {
 				if (this.lastSection < this.sections.length-1) {
@@ -256,34 +290,20 @@ var TafsirView = Backbone.View.extend({
 			}
 		}
 
-		if (!append) {
-			topOff = this.$el.scrollTop();
-			firstChild = this.$el.children().first().next();
-			if (firstChild.length)
-				firstChildTop = firstChild.position().top;
-		}
-
-		if (append) {
-			for (i = currentId; i < lastId; i++)
-				if (i in this.elements)
-					this.$el.append(this.elements[String(i)]);
-		} else {
-			if (currentId == 0) currentId = -1;
-			for (i = currentId; i > lastId; i--)
-				if (i in this.elements)
-					this.$el.prepend(this.elements[String(i)]);
-		}
-				
-		// todo: delete rendered this.elements[i];
-
-		if (!append && firstChild.length) {
-			extraHeight = firstChild.position().top - firstChildTop;
-			if (extraHeight > 0)
-				this.$el.scrollTop(topOff + extraHeight);
-		}
+		if (!append) this.popScroll();
 	},
 	queueSection: function(section, flag) {
 		var tafsir = this;
+
+		// show loading element
+		if (flag == 'append')
+			this.$el.append('<div class="loading"></div>');
+		else
+			this.$el.prepend('<div class="loading"></div>');
+		if (this.$el.children().length == 1)
+			this.$el.find('.loading').height('100%');
+
+		// queue section
 		this.$el.queue(function() {
 			tafsir.loadSection(section, flag);
 			tafsir.$el.dequeue();
