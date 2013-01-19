@@ -1,7 +1,7 @@
 @font-face {
 	font-family: QuranFont;
 	font-weight: normal;
-	src: url('../font/QuranFont.ttf') format('truetype');
+	src: url('../font/QuranFont.woff') format('woff'), url('../font/QuranFont.ttf') format('truetype');
 }
 @font-face {
 	font-family: AppFont;
@@ -110,13 +110,12 @@ select.btn {
 		background-position-y: 26px;
 		background-size: 100% 4px;
 
-		@hcolor: hsl(45, 100%, 85%);
-		@acolor: darken(@hcolor, 10%);
+		@color: #777;
 		&:hover {
-			background-image: -webkit-linear-gradient(top, @hcolor, @hcolor);
+			text-shadow: 0px 1px 3px lighten(@color, 30%);
 		}
 		&.active {
-			background-image: -webkit-linear-gradient(top, @acolor, @acolor);
+			text-shadow: 0px 1px 3px lighten(@color, 10%);
 		}
 	}
 
