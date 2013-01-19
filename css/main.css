@@ -186,18 +186,27 @@ select.btn {
   width: 55px;
 }
 #footer .quran-address#page {
-  padding: 5px;
+  direction: ltr;
   text-align: center;
 }
+#footer .quran-address#page input {
+  font-family: AppFont;
+  font-size: 20px;
+  height: 30px;
+  text-align: center;
+  padding-top: 5px;
+}
 #footer .quran-address#page #text {
-  width: 32px;
-  display: inline-block;
+  width: 40px;
   text-align: center;
   font-size: 20px;
 }
 #footer .quran-address#page #next,
 #footer .quran-address#page #prev {
-  padding: 0 5px 3px;
+  padding-top: 0;
+  padding-bottom: 0;
+  height: 30px;
+  line-height: 27px;
   cursor: pointer;
   font-weight: bold;
   font-size: 20px;
@@ -207,8 +216,6 @@ select.btn {
 #footer .quran-address#page #next:hover,
 #footer .quran-address#page #prev:hover {
   color: #222;
-  background: #eee;
-  border-radius: 4px;
 }
 #footer .tafsir-address {
   padding: 8px 0;
@@ -220,12 +227,22 @@ select.btn {
   font-size: .85em;
   color: #666;
 }
+#footer .control {
+  background: #eee;
+  border: none;
+  box-shadow: 0px 0px 5px #eee;
+}
+#footer .control:hover,
+#footer .control:active {
+  background: #e0e0e0;
+}
 .nav {
   margin-bottom: 0;
   margin-right: 60px;
 }
 .nav li {
   float: right;
+  margin-left: 5px;
 }
 .nav li a {
   color: #555;

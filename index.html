@@ -25,17 +25,21 @@
 		<div id="address" class="row">
 			<div class="span3">
 				<ul id="navigator" class="nav nav-pills">
-					<li><a rel="quran" href="#">قرآن</a></li>
-					<li><a rel="tafsir" href="#">تفسیر</a></li>
+					<li><a rel="quran" href="#" class="control">قرآن</a></li>
+					<li><a rel="tafsir" href="#" class="control">تفسیر</a></li>
 				</ul>
 			</div>
 			<div class="span3">
-				<div id="page" class="quran-address"><span id="prev">‹</span><span id="text"></span><span id="next">›</span></div>
+				<div id="page" class="quran-address input-prepend input-append">
+					<span id="prev" class="add-on control">‹</span>
+					<input id="text" class="control input-mini" type="text">
+					<span id="next" class="add-on control">›</span>
+				</div>
 			</div>
 			<div class="span3">
 				<div class="quran-address">
-					<span class="caption">سوره</span><select id="sura" class="btn"></select>
-					<span class="caption">آیه</span><select id="aya" class="btn"></select>
+					<span class="caption">سوره</span><select id="sura" class="btn control"></select>
+					<span class="caption">آیه</span><select id="aya" class="btn control"></select>
 				</div>
 				<div class="tafsir-address">
 					تفسیر المیزان، سوره <span id="sura"></span>، آیات <span id="mi"></span> تا <span id="ma"></span>

@@ -436,6 +436,11 @@ var AddressView = Backbone.View.extend({
 			app.quran.prevPage();
 			app.render();
 		});
+		this.$el.find('#text').change(function() {
+			page = $(this).val();
+			if (page >= 1 && page <= 604)
+				app.router.navigate('quran/p'+ page, true);
+		});
 	},
 	render: function() {
 		// clone position
@@ -452,7 +457,7 @@ var AddressView = Backbone.View.extend({
 			
 			el.find('#sura').val(position.quran.sura).change();
 			el.find('#aya').val(position.quran.aya);
-			el.find('#text').text(refine(position.quran.page));
+			el.find('#text').val(refine(position.quran.page));
 		}
 		else if (position.mode == 'tafsir') {
 			app.router.navigate('almizan/'+ this.position.tafsir.section, false);
