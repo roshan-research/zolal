@@ -506,7 +506,7 @@ var AppView = Backbone.View.extend({
 
 		msg.text(refine(text));
 		msg.addClass('alert-'+ mode);
-		msg.show().dotdotdot().css('margin-top', -(msg.height() + 40));
+		msg.show().dotdotdot();
 	},
 	connectionError: function() {
 		this.$el.find('.loading').removeClass('loading');
