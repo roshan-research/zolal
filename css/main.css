@@ -1,7 +1,7 @@
 @font-face {
   font-family: QuranFont;
   font-weight: normal;
-  src: url('../font/QuranFont.woff') format('woff'), url('../font/QuranFont.ttf') format('truetype');
+  src: url('../font/QuranFont.ttf') format('truetype');
 }
 @font-face {
   font-family: AppFont;
