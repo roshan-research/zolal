@@ -35,6 +35,7 @@ select.btn {
   font-size: 18px;
   border: none;
   background: #eee;
+  padding: 3px 6px;
 }
 #wrap {
   min-height: 100%;
@@ -178,17 +179,19 @@ select.btn {
 }
 #footer .quran-address {
   margin-top: 2px;
+  text-align: left;
 }
 #footer .quran-address span.caption {
   padding-left: 5px;
   color: #777;
 }
 #footer .quran-address #sura {
-  width: 90px;
+  width: 80px;
   margin-left: 10px;
 }
 #footer .quran-address #aya {
-  width: 55px;
+  width: 50px;
+  margin-left: 60px;
 }
 #footer .quran-address#page {
   direction: ltr;
