@@ -235,15 +235,12 @@ var TafsirView = Backbone.View.extend({
 	pushScroll: function() {
 		this.topOff = this.$el.scrollTop();
 		this.firstChild = this.$el.children().first().next().next();
-		if (this.firstChild.length)
-			this.firstChildTop = this.firstChild.position().top;
+		this.firstChildTop = this.firstChild.position().top;
 	},
 	popScroll: function() {
-		if (this.firstChild.length) {
-			extraHeight = this.firstChild.position().top - this.firstChildTop;
-			if (extraHeight > 0)
-				this.$el.scrollTop(this.topOff + extraHeight);
-		}
+		extraHeight = this.firstChild.position().top - this.firstChildTop;
+		if (extraHeight > 0)
+			this.$el.scrollTop(this.topOff + extraHeight);
 	},
 	addElements: function(currentId, flag) {
 		currentId = Number(currentId);

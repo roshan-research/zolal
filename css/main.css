@@ -55,7 +55,7 @@ select.btn {
   overflow: auto;
 }
 #quran {
-  margin: 10px auto 30px;
+  margin: 20px auto;
   width: 600px;
   overflow: hidden;
   direction: ltr;
@@ -66,10 +66,12 @@ select.btn {
 }
 #quran #pages .page {
   height: inherit;
-  padding: 10px;
+  margin: 0 10px;
+  padding: 0 10px;
   width: 580px;
   float: left;
   direction: rtl;
+  overflow-y: auto;
 }
 #quran .page {
   font-family: QuranFont;
@@ -101,10 +103,10 @@ select.btn {
   background-size: 100% 4px;
 }
 #quran .page span.aya:hover {
-  text-shadow: 0px 1px 3px #c3c3c3;
+  text-shadow: 0px 2px 3px #c3c3c3;
 }
 #quran .page span.aya.active {
-  text-shadow: 0px 1px 3px #919191;
+  text-shadow: 0px 2px 3px #919191;
 }
 #quran .page span.mark {
   color: #3A87AD;
