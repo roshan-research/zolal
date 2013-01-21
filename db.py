@@ -91,10 +91,24 @@ for key in sorted(ayas.keys(), key=key_to_int):
 # tafsir
 almizan = open('data/almizan.html').read()
 
+phrases = defaultdict(dict)
 almizan_sections = []
 d = pq(almizan)
-for i, div in enumerate(d('div')):
+for div in d('div'):
 	div = pq(div)
+
+	# add `i` attribute to each part to be addressable
+	for i, part in enumerate(div.children()):
+		pq(part).attr('i', str(i))
+
+	# phrase index
+	for em in div.find('em'):
+		em = pq(em)
+		if em.attr('rel') and em.parent().attr('i'):
+			addr = em.attr('rel').split('/')
+			phrases[addr[0]][addr[1]] = (div.attr('rel') +'/'+ em.parent().attr('i'), em.parent().outerHtml())
+			# todo: store first header before this
+
 	key = div.attr('rel')
 	if key:
 		almizan_sections.append(key)
@@ -115,6 +129,7 @@ for key in sorted(ayas.keys(), key=key_to_int):
 		page = aya['page']
 		quran_file = open(files / 'quran' / ('p%d' % page), 'w')
 
+	aya['phrases'] = phrases.get(key, {})
 	quran_pages[aya['page']].append(key)
 
 	print(json.dumps(aya), file=quran_file)
