@@ -105,20 +105,29 @@ select.btn {
 		}
 	}
 
+	.underline(@color) {
+		background-repeat: no-repeat;
+		background-image: -webkit-linear-gradient(top, white 80%, @color, white, white);
+	}
+
 	span.aya {
 		margin-left: 4px;
 		padding-right: 2px;
 		margin-right: -2px;
-		background-repeat: no-repeat;
-		background-position-y: 26px;
-		background-size: 100% 4px;
 
-		@color: #777;
 		&:hover {
-			text-shadow: 0px 2px 3px lighten(@color, 30%);
+			.underline(lighten(#f89406, 40%));
 		}
 		&.active {
-			text-shadow: 0px 2px 3px lighten(@color, 10%);
+			.underline(lighten(#f89406, 30%));
+
+			.phrase {
+				text-shadow: 0px 1px 3px #777;
+
+				&:hover, &.active {
+					color: DarkCyan;
+				}
+			}
 		}
 	}
 
@@ -166,14 +175,14 @@ select.btn {
 	p {
 		margin-bottom: 8px;
 	}
-	em {
-		font-style: normal;
-		font-weight: bold;
-		font-size: .85em;
-	}
 	code {
 		display: none;
 	}
+}
+em {
+	font-style: normal;
+	font-weight: bold;
+	font-size: .85em;
 }
 
 #message-container {
@@ -182,12 +191,25 @@ select.btn {
 	width: 100%;
 }
 #message {
+	cursor: default;
 	padding: 8px 15px;
 	text-align: justify;
 	width: 600px;
-	max-height: 60px;
+	// max-height: 60px;
 	box-shadow: 0 0 10px hsl(50, 50%, 80%);
 	display: none;
+
+	a {
+		color: inherit;
+		text-decoration: none;
+		&:hover {
+			color: DarkCyan;
+		}
+	}
+	em.active {
+		color: DarkCyan;
+		text-shadow: 1px 1px 3px;
+	}
 }
 
 #footer {
