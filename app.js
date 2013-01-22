@@ -442,7 +442,6 @@ var TafsirView = Backbone.View.extend({
 
 		if (focus != '' && focus != this.position.section) {
 			this.position.section = focus;
-			this.position.part = '';
 			this.trigger('updateAddress');
 		}
 		
@@ -546,7 +545,9 @@ var AppView = Backbone.View.extend({
 	},
 	render: function() {
 		$('#message').hide();
+		this.quran.lastPosition = '';
 		this.address.position = this.position;
+
 		if (this.position.mode == 'quran') {
 			this.quran.$el.show();
 			this.tafsir.$el.hide();
