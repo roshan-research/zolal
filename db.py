@@ -99,14 +99,14 @@ for div in d('div'):
 
 	# add `i` attribute to each part to be addressable
 	for i, part in enumerate(div.children()):
-		pq(part).attr('i', str(i))
+		pq(part).attr('p', str(i+1))
 
 	# phrase index
 	for em in div.find('em'):
 		em = pq(em)
-		if em.attr('rel') and em.parent().attr('i'):
+		if em.attr('rel') and em.parent().attr('p'):
 			addr = em.attr('rel').split('/')
-			phrases[addr[0]][addr[1]] = (div.attr('rel') +'/'+ em.parent().attr('i'), em.parent().outerHtml())
+			phrases[addr[0]][addr[1]] = (div.attr('rel') +'/'+ em.parent().attr('p'), em.parent().outerHtml())
 			# todo: store first header before this
 
 	key = div.attr('rel')

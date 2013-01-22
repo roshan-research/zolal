@@ -181,7 +181,7 @@ em {
   display: none;
 }
 #message a {
-  color: inherit;
+  color: CadetBlue;
   text-decoration: none;
 }
 #message a:hover {

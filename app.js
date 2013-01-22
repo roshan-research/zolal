@@ -120,10 +120,10 @@ var QuranView = Backbone.View.extend({
 				if (quran.position.phrase != '' && quran.position.phrase in aya.get('phrases')) {
 					quran.$el.find('.aya[rel='+ id +'] .phrase[rel='+ quran.position.phrase +']').addClass('active');
 
-					app.message(aya.get('phrases')[quran.position.phrase][1], 'block');
+					html = aya.get('phrases')[quran.position.phrase][1] + '<a href="#almizan/'+ aya.get('phrases')[quran.position.phrase][0] +'">تفسیر</a>';
+					app.message(html, 'block');
 
 					msg = $('#message');
-
 					msg.find('em').each(function() {
 						rel = $(this).attr('rel');
 						if (rel) $(this).wrap('<a href="#quran/'+ rel +'">');
@@ -131,7 +131,6 @@ var QuranView = Backbone.View.extend({
 
 					// activate selected phrase
 					msg.find('em[rel="'+ aya.get('id') +'/'+ quran.position.phrase +'"]').addClass('active');
-
 
 				} else if (aya.get('trans'))
 					app.message(aya.get('trans'), 'block');
@@ -267,10 +266,9 @@ var TafsirView = Backbone.View.extend({
 		sectionIndex = _.indexOf(this.sections, this.position.section);
 		this.firstSection = sectionIndex;
 		this.lastSection = sectionIndex;
-
+		this.topStack = [];
+		this.bottomStack = [];
 		this.$el.empty();
-		this.elements = {};
-		this.$el.scrollTop(0);
 
 		this.trigger('updateAddress');
 		this.queueSection(this.lastSection, 'append');
@@ -288,38 +286,37 @@ var TafsirView = Backbone.View.extend({
 		if (extraHeight > 0)
 			this.$el.scrollTop(this.topOff + extraHeight);
 	},
-	addElements: function(currentId, flag) {
-		currentId = Number(currentId);
+	addElements: function(flag) {
 		toLoad = 20;
 		append = flag == 'append';
 
 		if (this.$el.hasClass('loading'))
 			this.$el.removeClass('loading');
 
-		lastId = currentId + (append ? toLoad : -toLoad);
-
 		if (!append) this.pushScroll();
 
-		var loadingElm;
+		var elm;
 		if (append) {
-			loadingElm = this.$el.children().last();
-			for (i = currentId; i < lastId; i++)
-				if (i in this.elements)
-					this.$el.append(this.elements[String(i)]);
+			for (i = 0; i < toLoad; i++) {
+				if (elm = this.bottomStack.shift())
+					this.$el.append(elm);
+				else break;
+			}
 		} else {
-			loadingElm = this.$el.children().first();
-			if (currentId == 0) currentId = -1;
-			for (i = currentId; i > lastId; i--)
-				if (i in this.elements)
-					this.$el.prepend(this.elements[String(i)]);
+			for (i = 0; i < toLoad; i++) {
+				if (elm = this.topStack.pop())
+					this.$el.prepend(elm);
+				else break;
+			}
 		}
-		if (loadingElm.hasClass('loading'))
-			loadingElm.remove();
 
-		// todo: delete rendered this.elements[i];
+		this.$el.find('.loading').each(function() {
+			if ($(this).next() && $(this).prev())
+				$(this).remove();
+		});
 
 		// queue new sections
-		if (!(lastId in this.elements)) {
+		if (!elm) {
 			if (append) {
 				if (this.lastSection < this.sections.length-1) {
 					this.lastSection += 1;
@@ -358,28 +355,36 @@ var TafsirView = Backbone.View.extend({
 
 			data = $('<code class="section"'+ pid +'>'+ bayan.get('id') +'</code>'+ bayan.get('content'));
 			append = flag == 'append';
+			empty = append && tafsir.$el.children().length == 0;
 
-			lastKey = 0;
-			order = append ? 1 : -1;
-
-			for (key in tafsir.elements)
-				if ((append && (Number(key) > lastKey)) || (!append && (Number(key) < lastKey)))
-					lastKey = Number(key);
-
-			startKey = append ? lastKey : lastKey - data.length;
-
-			data.each(function(i, item) {
-				item = $(item).attr('i', startKey+i);
-				tafsir.elements[String(startKey+i)] = item;
-			});
+			if (empty) {
+				part = tafsir.position.part ? Number(tafsir.position.part) : 0;
+				data.each(function(i, item) {
+					if (part <= Number($(item).attr('p')))
+						tafsir.bottomStack.push(item);
+					else
+						tafsir.topStack.push(item);
+				});
+			} else {
+				stack = append ? tafsir.bottomStack : tafsir.topStack;
+				data.each(function(i, item) {
+					stack.push(item);
+				});
+			}
 
 			// add loading element
-			tafsir.elements[String(startKey + (append ? data.length : -1))] = $('<div class="loading"></div>');
+			function addLoading(stack) {
+				last = stack.pop();
+				if (last || !last.hasClass('loading'))
+					stack.push($('<div class="loading"></div>'));
+			}
+			addLoading(tafsir.topStack);
+			addLoading(tafsir.bottomStack);
 
+			tafsir.addElements(flag);
 
-			tafsir.addElements(lastKey, flag);
-			if (append && lastKey == 0 && tafsir.firstSection > 0)
-				tafsir.addElements(-1, 'prepend');
+			if (empty)
+				tafsir.addElements('prepend');
 
 			if (refineNums)
 				tafsir.$el.find(':not(code)').replaceText(/[0-9]/g, function(c) { return numchars[c]; });
@@ -437,15 +442,16 @@ var TafsirView = Backbone.View.extend({
 
 		if (focus != '' && focus != this.position.section) {
 			this.position.section = focus;
+			this.position.part = '';
 			this.trigger('updateAddress');
 		}
 		
 		// scroll event
 		if(!this.isLoading && this.el.scrollTop < triggerOff)
-			this.addElements(this.$el.children().first().attr('i'), 'prepend');
+			this.addElements('prepend');
 
 		if(!this.isLoading && this.el.scrollTop + this.el.clientHeight + triggerOff > this.el.scrollHeight)
-			this.addElements(this.$el.children().last().attr('i'), 'append');
+			this.addElements('append');
 	}
 });
 
@@ -507,7 +513,10 @@ var AddressView = Backbone.View.extend({
 			el.find('#text').val(refine(position.quran.page));
 		}
 		else if (position.mode == 'tafsir') {
-			app.router.navigate('almizan/'+ this.position.tafsir.section, false);
+			slug = this.position.tafsir.section;
+			if (position.tafsir.part)
+				slug += '/'+ position.tafsir.part;
+			app.router.navigate('almizan/'+ slug, false);
 			parts = sectionToAddress(position.tafsir.section);
 			position.tafsir = {'sura': quran_suras[parts[0]-1], 'mi': parts[1], 'ma': parts[2]};
 
@@ -571,8 +580,10 @@ var AppView = Backbone.View.extend({
 
 		lastMode = this.position.mode;
 		this.position.mode = $(e.target).attr('rel');
-		if (lastMode == 'quran' && this.position.mode == 'tafsir')
+		if (lastMode == 'quran' && this.position.mode == 'tafsir') {
 			this.position.tafsir.section = this.tafsir.findSection(this.position.quran);
+			this.position.tafsir.part = '';
+		}
 
 		if (lastMode != this.position.mode)
 			this.render();
@@ -603,7 +614,8 @@ var AddressRouter = Backbone.Router.extend({
 		'quran/p:page': 'quranPage',
 		'quran/:sura-:aya': 'quranAya',
 		'quran/:sura-:aya/:phrase': 'quranPhrase',
-		'almizan/:section': 'almizanSection'
+		'almizan/:section': 'almizanSection',
+		'almizan/:section/:part': 'almizanPart'
 	},
 	quranPage: function(page) {
 		if (isNaN(page) || page < 0 || page > 605)
@@ -626,11 +638,14 @@ var AddressRouter = Backbone.Router.extend({
 		app.render();
 	},
 	almizanSection: function(section) {
+		this.almizanPart(section, '');
+	},
+	almizanPart: function(section, part) {
 		if (_.indexOf(almizan_sections, section) < 0)
 			return;
 
 		app.position.mode = 'tafsir';
-		app.position.tafsir.section = section;
+		app.position.tafsir = {'section': section, 'part': part};
 		app.render();
 	}
 });
