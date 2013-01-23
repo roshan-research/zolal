@@ -289,6 +289,7 @@ var TafsirView = Backbone.View.extend({
 	addElements: function(flag) {
 		toLoad = 20;
 		append = flag == 'append';
+		this.isLoading = true;
 
 		if (this.$el.hasClass('loading'))
 			this.$el.removeClass('loading');
@@ -311,7 +312,7 @@ var TafsirView = Backbone.View.extend({
 		}
 
 		this.$el.find('.loading').each(function() {
-			if ($(this).next() && $(this).prev())
+			if ($(this).next().length && $(this).prev().length)
 				$(this).remove();
 		});
 
@@ -331,6 +332,7 @@ var TafsirView = Backbone.View.extend({
 		}
 
 		if (!append) this.popScroll();
+		this.isLoading = false;
 	},
 	queueSection: function(section, flag) {
 		var tafsir = this;
@@ -353,7 +355,7 @@ var TafsirView = Backbone.View.extend({
 			pid = _.indexOf(tafsir.sections, bayan.get('id'));
 			if (pid > 0) pid = ' prev="'+ tafsir.sections[pid-1] +'"'; else pid = '';
 
-			data = $('<code class="section"'+ pid +'>'+ bayan.get('id') +'</code>'+ bayan.get('content'));
+			data = $('<code p="0" class="section"'+ pid +'>'+ bayan.get('id') +'</code>'+ bayan.get('content'));
 			append = flag == 'append';
 			empty = append && tafsir.$el.children().length == 0;
 
@@ -375,7 +377,7 @@ var TafsirView = Backbone.View.extend({
 			// add loading element
 			function addLoading(stack) {
 				last = stack.pop();
-				if (last || !last.hasClass('loading'))
+				if (last && !$(last).hasClass('loading'))
 					stack.push($('<div class="loading"></div>'));
 			}
 			addLoading(tafsir.topStack);
@@ -383,13 +385,13 @@ var TafsirView = Backbone.View.extend({
 
 			tafsir.addElements(flag);
 
-			if (empty)
+			if (empty) {
 				tafsir.addElements('prepend');
+				this.isLoading = true;
+			}
 
 			if (refineNums)
 				tafsir.$el.find(':not(code)').replaceText(/[0-9]/g, function(c) { return numchars[c]; });
-
-			tafsir.isLoading = false;
 		};
 		
 		tafsir.isLoading = true;
@@ -442,6 +444,7 @@ var TafsirView = Backbone.View.extend({
 
 		if (focus != '' && focus != this.position.section) {
 			this.position.section = focus;
+			this.position.part = '';
 			this.trigger('updateAddress');
 		}
 		
