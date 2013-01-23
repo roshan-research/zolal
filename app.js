@@ -120,7 +120,7 @@ var QuranView = Backbone.View.extend({
 				if (quran.position.phrase != '' && quran.position.phrase in aya.get('phrases')) {
 					quran.$el.find('.aya[rel='+ id +'] .phrase[rel='+ quran.position.phrase +']').addClass('active');
 
-					html = aya.get('phrases')[quran.position.phrase][1] + '<a href="#almizan/'+ aya.get('phrases')[quran.position.phrase][0] +'">تفسیر</a>';
+					html = aya.get('phrases')[quran.position.phrase][1] + '<a href="#almizan/'+ aya.get('phrases')[quran.position.phrase][0] +'" class="continue">ادامه...</a>';
 					app.message(html, 'block');
 
 					msg = $('#message');

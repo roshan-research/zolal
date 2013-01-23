@@ -191,6 +191,10 @@ em {
   color: DarkCyan;
   text-shadow: 1px 1px 3px;
 }
+#message a.continue {
+  float: left;
+  margin-top: -20px;
+}
 #footer #address {
   display: none;
 }
