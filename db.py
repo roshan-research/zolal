@@ -106,8 +106,15 @@ for div in d('div'):
 		em = pq(em)
 		if em.attr('rel') and em.parent().attr('p'):
 			addr = em.attr('rel').split('/')
-			phrases[addr[0]][addr[1]] = (div.attr('rel') +'/'+ em.parent().attr('p'), em.parent().outerHtml())
-			# todo: store first header before this
+			phrases[addr[0]][addr[1]] = {'rel': div.attr('rel') +'/'+ em.parent().attr('p'), 'html': em.parent().outerHtml()}
+
+			# store first h3 before em
+			item = em.parent()
+			while item[0].tag not in ['h1', 'h2', 'h3']:
+				item = item.prev()
+				if item[0].tag == 'h3':
+					phrases[addr[0]][addr[1]]['head'] = item.text()
+
 
 	key = div.attr('rel')
 	if key:
