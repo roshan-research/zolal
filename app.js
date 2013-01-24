@@ -127,7 +127,7 @@ var QuranView = Backbone.View.extend({
 
 					app.message(html, 'block');
 
-					msg = $('#message');
+					msg = $('#message #content');
 					msg.find('em').each(function() {
 						rel = $(this).attr('rel');
 						if (rel) $(this).wrap('<a href="#quran/'+ rel +'">');
@@ -547,6 +547,11 @@ var AppView = Backbone.View.extend({
 		this.quran.on('updateAddress', this.address.render, this.address);
 		this.tafsir.on('updateAddress', this.address.render, this.address);
 
+		// message
+		$('#message .close').click(function() {
+			$('#message').hide();
+		});
+
 		// set position
 		this.position = {mode: 'quran', quran: {page: 1, sura: 1, aya: ''}, tafsir: {section: '2-1:5'}};
 	},
@@ -568,12 +573,12 @@ var AppView = Backbone.View.extend({
 		}
 	},
 	message: function(html, mode) {
-		msg = $('#message');
+		msg = $('#message #content');
 		msg.removeClass('alert-block alert-error alert-success alert-info');
 
 		msg.html(refine(html));
 		msg.addClass('alert-'+ mode);
-		msg.show(); //.dotdotdot();
+		$('#message').show();
 	},
 	connectionError: function() {
 		this.$el.find('.loading').removeClass('loading');

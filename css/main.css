@@ -167,39 +167,48 @@ em {
   font-weight: bold;
   font-size: .85em;
 }
-#message-container {
+#message {
   position: absolute;
   bottom: 60px;
   width: 100%;
+  display: none;
 }
-#message {
+#message .container {
+  width: 600px;
+}
+#message .close {
+  margin-top: -8px;
+  margin-right: -8px;
+  background: #aaa;
+  border-radius: 15px;
+  width: 20px;
+}
+#message #content {
   cursor: default;
   padding: 8px 15px;
   text-align: justify;
-  width: 600px;
   box-shadow: 0 0 10px #e6ddb3;
-  display: none;
 }
-#message a {
+#message #content a {
   color: CadetBlue;
   text-decoration: none;
 }
-#message a:hover {
+#message #content a:hover {
   color: DarkCyan;
 }
-#message em.active {
+#message #content em.active {
   color: DarkCyan;
   text-shadow: 1px 1px 3px #aaa;
 }
-#message .continue {
+#message #content .continue {
   margin-right: 5px;
 }
-#message h3 {
+#message #content h3 {
   font-size: 15px;
   line-height: initial;
   margin: 0;
 }
-#message .header {
+#message #content .header {
   color: #777;
   padding: 0 16px;
   margin: 0 -16px;
