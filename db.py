@@ -113,7 +113,7 @@ for div in d('div'):
 			while item[0].tag not in ['h1', 'h2', 'h3']:
 				item = item.prev()
 				if item[0].tag == 'h3':
-					phrases[addr[0]][addr[1]]['head'] = item.text()
+					phrases[addr[0]][addr[1]]['head'] = item.outerHtml()
 
 
 	key = div.attr('rel')

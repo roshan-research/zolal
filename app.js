@@ -120,7 +120,11 @@ var QuranView = Backbone.View.extend({
 				if (quran.position.phrase != '' && quran.position.phrase in aya.get('phrases')) {
 					quran.$el.find('.aya[rel='+ id +'] .phrase[rel='+ quran.position.phrase +']').addClass('active');
 
-					html = aya.get('phrases')[quran.position.phrase][1] + '<a href="#almizan/'+ aya.get('phrases')[quran.position.phrase][0] +'" class="continue">ادامه...</a>';
+					phr = aya.get('phrases')[quran.position.phrase];
+					html = phr['html'];
+					if ('head' in phr)
+						html = phr['head'] + html;
+
 					app.message(html, 'block');
 
 					msg = $('#message');
@@ -128,6 +132,10 @@ var QuranView = Backbone.View.extend({
 						rel = $(this).attr('rel');
 						if (rel) $(this).wrap('<a href="#quran/'+ rel +'">');
 					});
+					msg.children().last().append('<a class="continue" href="#almizan/'+ phr['rel'] +'">ادامه...</a>');
+
+					if (msg.children().length == 2)
+						msg.children().first().addClass('header');
 
 					// activate selected phrase
 					msg.find('em[rel="'+ aya.get('id') +'/'+ quran.position.phrase +'"]').addClass('active');
@@ -385,10 +393,8 @@ var TafsirView = Backbone.View.extend({
 
 			tafsir.addElements(flag);
 
-			if (empty) {
+			if (empty)
 				tafsir.addElements('prepend');
-				this.isLoading = true;
-			}
 
 			if (refineNums)
 				tafsir.$el.find(':not(code)').replaceText(/[0-9]/g, function(c) { return numchars[c]; });
