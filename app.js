@@ -28,7 +28,7 @@ var AyaView = Backbone.View.extend({
 		data = this.model.toJSON();
 		html = refine(data['html']);
 		text = $('<p>'+ data['html'] +'</p>').text();
-		parts = text.replace(/[ۖۗۚۛۙ]/g, '').split(' ');
+		parts = text.replace(/[ۖۗۚۛۙۘ]/g, '').split(' ');
 		for (key in data['phrases']) {
 			f = Number(key.split('-')[0]);
 			b = html.indexOf(parts[f]);
@@ -383,16 +383,14 @@ var TafsirView = Backbone.View.extend({
 			}
 
 			// add loading element
-			function addLoading(stack) {
-				last = stack.pop();
-				if (last && !$(last).hasClass('loading'))
-					stack.push($('<div class="loading"></div>'));
-			}
-			addLoading(tafsir.topStack);
-			addLoading(tafsir.bottomStack);
+			loadingElm = $('<div class="loading"></div>');
+			if (empty || append)
+				tafsir.bottomStack.push(loadingElm.clone());
+			if (empty || !append)
+				tafsir.topStack.unshift(loadingElm.clone());
 
+			// add elements
 			tafsir.addElements(flag);
-
 			if (empty)
 				tafsir.addElements('prepend');
 
