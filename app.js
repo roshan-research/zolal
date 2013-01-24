@@ -34,7 +34,7 @@ var AyaView = Backbone.View.extend({
 			b = html.indexOf(parts[f]);
 			t = Number(key.split('-')[1])-1;
 			e = html.indexOf(parts[t]);
-			if (t > 0) e += parts[t].length;
+			if (t > 0 && t in parts) e += parts[t].length;
 			if (b >= 0 && e >= 0)
 				html = [html.slice(0, b), '<span class="phrase" rel="'+ key +'">', html.slice(b, e), '</span>', html.slice(e)].join('');
 			else {
