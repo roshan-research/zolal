@@ -186,11 +186,11 @@ em {
   box-shadow: 0 0 10px #e6ddb3;
 }
 #message #content a {
-  color: #c21d1d;
+  color: #7b9ba2;
   text-decoration: none;
 }
 #message #content a:hover {
-  color: #961616;
+  color: #618289;
 }
 #message #content em.active {
   text-shadow: 1px 1px 2px #bbb;
@@ -207,10 +207,8 @@ em {
   margin-bottom: 0;
 }
 #message #content .header {
-  padding: 0 16px;
-  margin: 0 -16px;
-  margin-top: -5px;
-  margin-bottom: 3px;
+  margin-bottom: 2px;
+  line-height: inherit;
 }
 #message .alert-note {
   background-color: #FFFDC1;
