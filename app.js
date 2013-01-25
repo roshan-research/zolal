@@ -23,7 +23,7 @@ var Bayan = Backbone.Model.extend({
 
 // views
 var AyaView = Backbone.View.extend({
-	template: _.template('<span class="aya" rel="<%= sura %>-<%= aya %>"><%= html %></span>'),
+	template: _.template('<span class="aya" rel="<%= sura %>-<%= aya %>"><span class="text"><%= html %></span><span class="number">(<%= aya %>)</span></span>'),
 	render: function () {
 		data = this.model.toJSON();
 		html = refine(data['html']);
@@ -125,7 +125,7 @@ var QuranView = Backbone.View.extend({
 					if ('head' in phr)
 						html = phr['head'] + html;
 
-					app.message(html, 'block');
+					app.message(html, 'note');
 
 					msg = $('#message #content');
 					msg.find('em').each(function() {
@@ -141,7 +141,7 @@ var QuranView = Backbone.View.extend({
 					msg.find('em[rel="'+ aya.get('id') +'/'+ quran.position.phrase +'"]').addClass('active');
 
 				} else if (aya.get('trans'))
-					app.message(aya.get('trans'), 'block');
+					app.message(aya.get('trans'), 'note');
 
 			} else
 				active.removeClass('active');

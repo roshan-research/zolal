@@ -73,7 +73,7 @@ select.btn {
 		.page {
 			height: inherit;
 			margin: 0 10px;
-			padding: 0 @page-padding;
+			padding: @page-padding;
 			width: @page-width - 2*@page-padding;
 			float: left;
 			direction: rtl;
@@ -105,27 +105,24 @@ select.btn {
 		}
 	}
 
-	.underline(@color) {
-		background-repeat: no-repeat;
-		background-image: -webkit-linear-gradient(top, white 80%, @color, white, white);
-	}
-
 	span.aya {
-		margin-left: 4px;
-		padding-right: 2px;
-		margin-right: -2px;
-
+		.text {
+			padding: 0 3px;
+		}
 		&:hover {
-			.underline(lighten(#f89406, 40%));
 		}
 		&.active {
-			.underline(lighten(#f89406, 30%));
+			.text {
+				background: hsl(0, 0%, 97%);
+				box-shadow: 0 0 4px 1px hsl(0, 0%, 97%);
+				padding-top: 3px;
+			}
 
 			.phrase {
-				text-shadow: 0px 1px 3px #777;
+				text-shadow: 0px 1px 3px #999;
 
 				&:hover, &.active {
-					color: DarkCyan;
+					color: #758486;
 				}
 			}
 		}
@@ -137,6 +134,7 @@ select.btn {
 		margin-right: 5px;
 	}
 	span.number {
+		margin-right: 5px;
 		font-family: AppFont;
 		font-weight: bold;
 		font-size: .9em;
@@ -198,7 +196,7 @@ em {
 	.close {
 		margin-top: -8px;
 		margin-right: -8px;
-		background: #aaa;
+		background: #D9CEB2;
 		border-radius: 15px;
 		width: 20px;
 	}
@@ -211,15 +209,14 @@ em {
 		box-shadow: 0 0 10px hsl(50, 50%, 80%);
 
 		a {
-			color: CadetBlue;
+			color: lighten(#961616, 10%);
 			text-decoration: none;
 			&:hover {
-				color: DarkCyan;
+				color: #961616;
 			}
 		}
 		em.active {
-			color: DarkCyan;
-			text-shadow: 1px 1px 3px #aaa;
+			text-shadow: 1px 1px 2px #bbb;
 		}
 		.continue {
 			margin-right: 5px;
@@ -229,14 +226,24 @@ em {
 			line-height: initial;
 			margin: 0;
 		}
+		p {
+			margin-bottom: 0;
+		}
 		.header {
-			color: #777;
+			// color: #777;
 			padding: 0 16px;
 			margin: 0 -16px;
-			margin-top: -6px;
-			margin-bottom: 5px;
-			border-bottom: 2px solid #eee;
+			margin-top: -5px;
+			margin-bottom: 3px;
+			// border-bottom: 2px solid #D9CEB2;
 		}
+	}
+
+	.alert-note {
+		background-color: #FFFDC1; // #F5EDBC;
+		border-color: #FFFC99;
+		color: #7A6A53;
+		box-shadow: 0 0 10px #FFFC99;
 	}
 }
 

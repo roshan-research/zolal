@@ -68,7 +68,7 @@ select.btn {
 #quran #pages .page {
   height: inherit;
   margin: 0 10px;
-  padding: 0 10px;
+  padding: 10px;
   width: 580px;
   float: left;
   direction: rtl;
@@ -95,25 +95,20 @@ select.btn {
   text-shadow: 1px 1px 2px #999;
   line-height: 20px;
 }
-#quran .page span.aya {
-  margin-left: 4px;
-  padding-right: 2px;
-  margin-right: -2px;
+#quran .page span.aya .text {
+  padding: 0 3px;
 }
-#quran .page span.aya:hover {
-  background-repeat: no-repeat;
-  background-image: -webkit-linear-gradient(top, #ffffff 80%, #fee9cc, #ffffff, #ffffff);
-}
-#quran .page span.aya.active {
-  background-repeat: no-repeat;
-  background-image: -webkit-linear-gradient(top, #ffffff 80%, #fdd49a, #ffffff, #ffffff);
+#quran .page span.aya.active .text {
+  background: #f7f7f7;
+  box-shadow: 0 0 4px 1px #f7f7f7;
+  padding-top: 3px;
 }
 #quran .page span.aya.active .phrase {
-  text-shadow: 0px 1px 3px #777;
+  text-shadow: 0px 1px 3px #999;
 }
 #quran .page span.aya.active .phrase:hover,
 #quran .page span.aya.active .phrase.active {
-  color: DarkCyan;
+  color: #758486;
 }
 #quran .page span.mark {
   color: #3A87AD;
@@ -121,6 +116,7 @@ select.btn {
   margin-right: 5px;
 }
 #quran .page span.number {
+  margin-right: 5px;
   font-family: AppFont;
   font-weight: bold;
   font-size: .9em;
@@ -179,7 +175,7 @@ em {
 #message .close {
   margin-top: -8px;
   margin-right: -8px;
-  background: #aaa;
+  background: #D9CEB2;
   border-radius: 15px;
   width: 20px;
 }
@@ -190,15 +186,14 @@ em {
   box-shadow: 0 0 10px #e6ddb3;
 }
 #message #content a {
-  color: CadetBlue;
+  color: #c21d1d;
   text-decoration: none;
 }
 #message #content a:hover {
-  color: DarkCyan;
+  color: #961616;
 }
 #message #content em.active {
-  color: DarkCyan;
-  text-shadow: 1px 1px 3px #aaa;
+  text-shadow: 1px 1px 2px #bbb;
 }
 #message #content .continue {
   margin-right: 5px;
@@ -208,13 +203,20 @@ em {
   line-height: initial;
   margin: 0;
 }
+#message #content p {
+  margin-bottom: 0;
+}
 #message #content .header {
-  color: #777;
   padding: 0 16px;
   margin: 0 -16px;
-  margin-top: -6px;
-  margin-bottom: 5px;
-  border-bottom: 2px solid #eee;
+  margin-top: -5px;
+  margin-bottom: 3px;
+}
+#message .alert-note {
+  background-color: #FFFDC1;
+  border-color: #FFFC99;
+  color: #7A6A53;
+  box-shadow: 0 0 10px #FFFC99;
 }
 #footer #address {
   display: none;
