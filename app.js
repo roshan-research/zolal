@@ -125,14 +125,13 @@ var QuranView = Backbone.View.extend({
 					if ('head' in phr)
 						html = phr['head'] + html;
 
-					app.message(html, 'note');
+					app.message(html, 'note', '#almizan/'+ phr['rel']);
 
 					msg = $('#message #content');
 					msg.find('em').each(function() {
 						rel = $(this).attr('rel');
 						if (rel) $(this).wrap('<a href="#quran/'+ rel +'">');
 					});
-					msg.children().last().append('<a class="continue" href="#almizan/'+ phr['rel'] +'">ادامه...</a>');
 
 					if (msg.children().length == 2)
 						msg.children().first().addClass('header');
@@ -141,7 +140,7 @@ var QuranView = Backbone.View.extend({
 					msg.find('em[rel="'+ aya.get('id') +'/'+ quran.position.phrase +'"]').addClass('active');
 
 				} else if (aya.get('trans'))
-					app.message(aya.get('trans'), 'note');
+					app.message(aya.get('trans'), 'note', '');
 
 			} else
 				active.removeClass('active');
@@ -341,6 +340,8 @@ var TafsirView = Backbone.View.extend({
 
 		if (!append) this.popScroll();
 		this.isLoading = false;
+
+		// this.scrollTop((this.$el.find('[p='+ this.position.part +']').scrollTop()));
 	},
 	queueSection: function(section, flag) {
 		var tafsir = this;
@@ -572,17 +573,27 @@ var AppView = Backbone.View.extend({
 			this.tafsir.render();
 		}
 	},
-	message: function(html, mode) {
+	message: function(html, mode, link) {
 		msg = $('#message #content');
 		msg.removeClass('alert-block alert-error alert-success alert-info');
 
 		msg.html(refine(html));
 		msg.addClass('alert-'+ mode);
+
+		if (link) {
+			msg.parent().attr('href', link);
+			msg.parent().addClass('link');
+		}
+		else {
+			msg.parent().removeAttr('href');
+			msg.parent().removeClass('link');
+		}
+
 		$('#message').show();
 	},
 	connectionError: function() {
 		this.$el.find('.loading').removeClass('loading');
-		app.message('خطا در اتصال به شبکه.', 'error');
+		app.message('خطا در اتصال به شبکه.', 'error', '');
 	},
 	events: {
 		'keydown': 'navKey',

@@ -184,7 +184,6 @@ h3 em {
   width: 20px;
 }
 #message #content {
-  cursor: default;
   padding: 8px 15px;
   text-align: justify;
   box-shadow: 0 0 10px #e6ddb3;
@@ -217,8 +216,14 @@ h3 em {
 #message .alert-note {
   background-color: #FFFDC1;
   border-color: #FFFC99;
-  color: #7A6A53;
+  color: #6b5d49;
   box-shadow: 0 0 10px #FFFC99;
+}
+#message a.link:hover .alert-note {
+  background-color: #fffca7;
+}
+#message a {
+  text-decoration: none;
 }
 #footer #address {
   display: none;
