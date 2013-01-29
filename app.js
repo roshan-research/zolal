@@ -36,7 +36,7 @@ var AyaView = Backbone.View.extend({
 			e = html.indexOf(parts[t]);
 			if (t > 0 && t in parts) e += parts[t].length;
 			if (b >= 0 && e >= 0)
-				html = [html.slice(0, b), '<span class="phrase" rel="'+ key +'">', html.slice(b, e), '</span>', html.slice(e)].join('');
+				html = [html.slice(0, b), '<span class="phrase" rel="'+ key +'">', html.slice(b, e), '</span> ', html.slice(e)].join('').trim();
 			else {
 				// phrase display error
 				// console.log(data['id'] +'/'+ key);
