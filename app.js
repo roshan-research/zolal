@@ -303,7 +303,7 @@ var TafsirView = Backbone.View.extend({
 
 		if (!append) this.pushScroll();
 
-		var elm, prepended = false;
+		var elm;
 		if (append) {
 			for (i = 0; i < toLoad; i++) {
 				if (elm = this.bottomStack.shift())
@@ -316,7 +316,6 @@ var TafsirView = Backbone.View.extend({
 					this.$el.prepend(elm);
 				else break;
 			}
-			prepended = i > 1;
 		}
 
 		this.$el.find('.loading').each(function() {
@@ -339,7 +338,7 @@ var TafsirView = Backbone.View.extend({
 			}
 		}
 
-		if (prepended) this.popScroll();
+		if (!append) this.popScroll();
 		this.isLoading = false;
 	},
 	queueSection: function(section, flag) {
@@ -436,7 +435,7 @@ var TafsirView = Backbone.View.extend({
 				focusCode = $(this).next();
 		});
 
-		triggerOff = 300;
+		triggerOff = 100;
 		focus = '';
 
 		if (focusCode.length) {
