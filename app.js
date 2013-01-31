@@ -532,8 +532,18 @@ var AddressView = Backbone.View.extend({
 			el.find('#mi').text(refine(position.tafsir['mi']));
 			el.find('#ma').text(refine(position.tafsir['ma']));
 		}
-
 		this.$el.show();
+
+		// set page title
+		title = '';
+		if (position.mode == 'quran') {
+			if (position.quran.aya != '')
+				title = 'سوره '+ quran_suras[position.quran.sura-1] +'، آیه '+ refine(position.quran.aya);
+			else
+				title = 'صفحه '+ refine(position.quran.page);
+		} else if (position.mode == 'tafsir')
+			title = 'تفسیر سوره '+ position.tafsir.sura  +'، آیات '+ refine(position.tafsir.mi) +' تا '+ refine(position.tafsir.ma);
+		$(document).attr('title', 'زلال' +' | '+ title);
 	}
 });
 
