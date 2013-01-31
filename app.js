@@ -401,7 +401,7 @@ var TafsirView = Backbone.View.extend({
 			error: $.proxy(function (bayan) {
 				$.ajax({
 					context: {section: bayan.get('id'), flag: flag},
-					url: server +'files/almizan/'+ bayan.get('id'),
+					url: server +'files/almizan/'+ bayan.get('id').replace('-', '_').replace(':', '-'),
 					success: function(item){
 						bayan = new Bayan({id: this.section, content: item});
 						if (store) bayan.save();

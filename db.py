@@ -118,7 +118,7 @@ for div in d('div'):
 	key = div.attr('rel')
 	if key:
 		almizan_sections.append(key)
-		print(div.html().replace('\n', ''), file=open(files / 'almizan' / key, 'w'))
+		print(div.html().replace('\n', ''), file=open(files / 'almizan' / key.replace('-', '_').replace(':', '-'), 'w'))
 
 
 # add translations
