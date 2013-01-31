@@ -1,10 +1,8 @@
 var store = false;
-var refineNums = false;
 var server = '/';
 
 var numchars = {'0': '۰', '1': '۱', '2': '۲', '3': '۳', '4': '۴', '5': '۵', '6': '۶', '7': '۷', '8': '۸', '9': '۹'};
 var refine = function(str) {
-	if (!refineNums) return str;
 	return String(str).replace(/[0-9]/g, function(c) { return numchars[c]; });
 };
 
@@ -26,7 +24,7 @@ var AyaView = Backbone.View.extend({
 	template: _.template('<span class="aya" rel="<%= sura %>-<%= aya %>"><span class="text"><%= html %></span><span class="number">(<%= aya %>)</span></span>'),
 	render: function () {
 		data = this.model.toJSON();
-		html = refine(data['html']);
+		html = data['html'];
 		text = $('<p>'+ data['html'] +'</p>').text();
 		parts = text.replace(/[ۖۗۚۛۙۘ]/g, '').split(' ');
 		for (key in data['phrases']) {
@@ -392,9 +390,6 @@ var TafsirView = Backbone.View.extend({
 			tafsir.addElements(flag);
 			if (empty)
 				tafsir.addElements('prepend');
-
-			if (refineNums)
-				tafsir.$el.find(':not(code)').replaceText(/[0-9]/g, function(c) { return numchars[c]; });
 		};
 		
 		tafsir.isLoading = true;
@@ -471,7 +466,7 @@ var AddressView = Backbone.View.extend({
 			aya_select.html('<option value=""></option>');
 			number = sura_ayas[sura_select.val()];
 			for(i = 1; i <= number; i++)
-				aya_select.append('<option value="'+ i +'">'+ refine(i) +'</option>');
+				aya_select.append('<option value="'+ i +'">'+ i +'</option>');
 			aya_select.val('1');
 		});
 		sura_select.change(function() {
@@ -515,7 +510,7 @@ var AddressView = Backbone.View.extend({
 			
 			el.find('#sura').val(position.quran.sura).change();
 			el.find('#aya').val(position.quran.aya);
-			el.find('#text').val(refine(position.quran.page));
+			el.find('#text').val(position.quran.page);
 		}
 		else if (position.mode == 'tafsir') {
 			slug = this.position.tafsir.section;
@@ -529,8 +524,8 @@ var AddressView = Backbone.View.extend({
 			el = this.$el.find('.tafsir-address');
 			el.show();
 			el.find('#sura').text(position.tafsir['sura']);
-			el.find('#mi').text(refine(position.tafsir['mi']));
-			el.find('#ma').text(refine(position.tafsir['ma']));
+			el.find('#mi').text(position.tafsir['mi']);
+			el.find('#ma').text(position.tafsir['ma']);
 		}
 		this.$el.show();
 
@@ -585,7 +580,7 @@ var AppView = Backbone.View.extend({
 		msg = $('#message #content');
 		msg.removeClass('alert-block alert-error alert-success alert-info');
 
-		msg.html(refine(html));
+		msg.html(html);
 		msg.addClass('alert-'+ mode);
 
 		if (link) {
