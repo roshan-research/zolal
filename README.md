@@ -12,8 +12,12 @@ Then execute following command to fill `files` folder with `quran` and `almizan`
 
 	python3 db.py
 
-## Run
+## Local Server
 Start a simple server for hosting whole directory:
 
 	python -m SimpleHTTPServer 8000
 
+## Desktop
+Use `zolal` as a standalone desktop application with [app.js](http://appjs.org), just use following command:
+
+	node --harmony app.js
