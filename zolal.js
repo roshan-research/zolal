@@ -28,12 +28,10 @@ var AyaView = Backbone.View.extend({
 		text = $('<p>'+ data['html'] +'</p>').text();
 		parts = text.replace(/[ۖۗۚۛۙۘ]/g, '').split(' ');
 		for (key in data['phrases']) {
-			f = Number(key.split('-')[0]);
-			b = html.indexOf(parts[f]);
-			t = Number(key.split('-')[1])-1;
-			e = html.indexOf(parts[t]);
+			f = Number(key.split('-')[0]); t = Number(key.split('-')[1])-1;
+			b = html.indexOf(parts[f]); e = html.indexOf(parts[t], b);
 			if (t > 0 && t in parts) e += parts[t].length;
-			if (b >= 0 && e >= 0)
+			if (b >= 0 && e > b)
 				html = [html.slice(0, b), '<span class="phrase" rel="'+ key +'">', html.slice(b, e), '</span> ', html.slice(e)].join('').trim();
 			else {
 				// phrase display error
