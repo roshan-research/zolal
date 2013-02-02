@@ -54,7 +54,7 @@ var AyaView = Backbone.View.extend({
 		// update quran address
 		app.quran.position.aya = this.model.get('aya');
 		app.quran.position.sura = this.model.get('sura');
-		if (target.hasClass('phrase'))
+		if (target.hasClass('phrase') && target.parent().parent().hasClass('active'))
 			app.quran.position.phrase = target.attr('rel');
 		else
 			app.quran.position.phrase = '';
