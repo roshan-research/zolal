@@ -539,6 +539,24 @@ var AddressView = Backbone.View.extend({
 		} else if (position.mode == 'tafsir')
 			title = 'تفسیر سوره '+ position.tafsir.sura  +'، آیات '+ refine(position.tafsir.mi) +' تا '+ refine(position.tafsir.ma);
 		$(document).attr('title', 'زلال' +' | '+ title);
+
+		// metrics
+		position = this.position;
+		if (position.mode == 'quran') {
+			if (position.quran.aya) {
+				if (position.quran.phrase)
+					mixpanel.track('Quran Phrase');
+				else
+					mixpanel.track('Quran Aya');
+			} else
+				mixpanel.track('Quran');
+		}
+		else if (position.mode == 'tafsir') {
+			if (position.tafsir.part)
+				mixpanel.track('Almizan Part');
+			else
+				mixpanel.track('Almizan');
+		}
 	}
 });
 
