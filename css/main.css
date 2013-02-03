@@ -1,7 +1,7 @@
 @font-face {
   font-family: QuranFont;
   font-weight: normal;
-  src: url('../font/QuranFont.ttf') format('truetype');
+  src: url('../font/QuranFont.woff') format('woff'), url('../font/QuranFont.ttf') format('truetype');
 }
 @font-face {
   font-family: AppFont;
@@ -101,7 +101,6 @@ select.btn {
 #quran .page span.aya.active .text {
   background: #f7f7f7;
   box-shadow: 0 0 4px 1px #f7f7f7;
-  padding-top: 3px;
 }
 #quran .page span.aya.active .phrase {
   text-shadow: 0px 1px 3px #999;
@@ -177,6 +176,7 @@ h3 em {
   width: 600px;
 }
 #message .close {
+  font-family: Arial;
   margin-top: -8px;
   margin-right: -8px;
   background: #D9CEB2;

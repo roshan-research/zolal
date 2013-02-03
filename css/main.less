@@ -1,7 +1,7 @@
 @font-face {
 	font-family: QuranFont;
 	font-weight: normal;
-	src: url('../font/QuranFont.ttf') format('truetype');
+	src: url('../font/QuranFont.woff') format('woff'), url('../font/QuranFont.ttf') format('truetype');
 }
 @font-face {
 	font-family: AppFont;
@@ -115,7 +115,6 @@ select.btn {
 			.text {
 				background: hsl(0, 0%, 97%);
 				box-shadow: 0 0 4px 1px hsl(0, 0%, 97%);
-				padding-top: 3px;
 			}
 
 			.phrase {
@@ -198,6 +197,7 @@ h3 em {
 	}
 
 	.close {
+		font-family: Arial;
 		margin-top: -8px;
 		margin-right: -8px;
 		background: #D9CEB2;
