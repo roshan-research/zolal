@@ -379,10 +379,12 @@ var TafsirView = Backbone.View.extend({
 
 			// add loading element
 			loadingElm = $('<div class="loading"></div>');
-			if (empty || append)
-				tafsir.bottomStack.push(loadingElm.clone());
-			if (empty || !append)
-				tafsir.topStack.unshift(loadingElm.clone());
+			if (bayan.get('id') != almizan_sections[0] && bayan.get('id') != almizan_sections[almizan_sections.length-1]) {
+				if (empty || append)
+					tafsir.bottomStack.push(loadingElm.clone());
+				if (empty || !append)
+					tafsir.topStack.unshift(loadingElm.clone());
+			}
 
 			// add elements
 			tafsir.addElements(flag);
