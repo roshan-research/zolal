@@ -728,4 +728,6 @@ $(document).ready(function() {
 
 	if (Backbone.history.getFragment() == '')
 		app.render();
+
+	mixpanel.track('Zolal');
 });
