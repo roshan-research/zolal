@@ -315,14 +315,6 @@ var TafsirView = Backbone.View.extend({
 		}
 
 		if (!append) this.popScroll();
-
-		if (this.position.part) {
-			part = this.$el.find('[p='+ this.position.part +']');
-			this.$el.scrollTop(part.offset().top - this.$el.offset().top + this.$el.scrollTop());
-			part.css('background', '#ddd').animate({backgroundColor: 'none'}, 'slow');
-		} else
-			this.$el.scrollTop(0);
-
 		this.isLoading = false;
 	},
 	loadSection: function(section, flag) {
@@ -360,6 +352,14 @@ var TafsirView = Backbone.View.extend({
 			tafsir.addElements(flag);
 			if (empty)
 				tafsir.addElements('prepend');
+
+			if (tafsir.position.part) {
+				container = tafsir.$el;
+				part = container.find('[p='+ tafsir.position.part +']');
+				container.scrollTop(part.offset().top - container.offset().top + container.scrollTop());
+				part.css('background', '#ddd').animate({backgroundColor: 'none'}, 'slow');
+			} else
+				tafsir.$el.scrollTop(0);
 		};
 		
 		tafsir.isLoading = true;
