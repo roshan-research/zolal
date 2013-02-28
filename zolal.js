@@ -274,7 +274,7 @@ var TafsirView = Backbone.View.extend({
 		this.$el.empty();
 
 		this.trigger('updateAddress');
-		this.queueSection(this.lastSection, 'append');
+		this.loadSection(this.lastSection, 'append');
 	},
 	events: {
 		'scroll': 'checkScroll'
@@ -314,44 +314,23 @@ var TafsirView = Backbone.View.extend({
 			}
 		}
 
-		this.$el.find('.loading').each(function() {
-			if ($(this).next().length && $(this).prev().length)
-				$(this).remove();
-		});
-
-		// queue new sections
-		if (!elm) {
-			if (append) {
-				if (this.lastSection < this.sections.length-1) {
-					this.lastSection += 1;
-					this.queueSection(this.lastSection, flag);
-				}
-			} else {
-				if (this.firstSection > 0) {
-					this.firstSection -= 1;
-					this.queueSection(this.firstSection, flag);
-				}
-			}
-		}
-
 		if (!append) this.popScroll();
+
+		if (this.position.part) {
+			part = this.$el.find('[p='+ this.position.part +']');
+			this.$el.scrollTop(part.offset().top - this.$el.offset().top + this.$el.scrollTop());
+			part.css('background', '#ddd').animate({backgroundColor: 'none'}, 'slow');
+		} else
+			this.$el.scrollTop(0);
+
 		this.isLoading = false;
 	},
-	queueSection: function(section, flag) {
+	loadSection: function(section, flag) {
 		var tafsir = this;
 
 		// show loading element
 		if (this.$el.children().length == 0)
 			this.$el.addClass('loading');
-
-		// queue section
-		this.$el.queue(function() {
-			tafsir.loadSection(section, flag);
-			tafsir.$el.dequeue();
-		});
-	},
-	loadSection: function(section, flag) {
-		var tafsir = this;
 
 		var loadBayan = function (bayan, flag) {
 			// retrieve prev section id
@@ -375,15 +354,6 @@ var TafsirView = Backbone.View.extend({
 				data.each(function(i, item) {
 					stack.push(item);
 				});
-			}
-
-			// add loading element
-			loadingElm = $('<div class="loading"></div>');
-			if (bayan.get('id') != almizan_sections[0] && bayan.get('id') != almizan_sections[almizan_sections.length-1]) {
-				if (empty || append)
-					tafsir.bottomStack.push(loadingElm.clone());
-				if (empty || !append)
-					tafsir.topStack.unshift(loadingElm.clone());
 			}
 
 			// add elements
