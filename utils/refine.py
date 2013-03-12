@@ -45,6 +45,12 @@ def process(text):
 	for key, value in expressions:
 		text = re.sub(key, value, text)
 
+	# html structure
+	text += '<h3'
+	text = text.replace('<code class="section">', '</div><div><code class="section">')
+	text = re.sub(r'</h3>([^h]+?)(?=(<h[23])|(</div>))', r'</h3><p>\1</p>', text)
+	text = text[:-3]
+
 	for key, value in replacements:
 		text = text.replace(key, value)
 
@@ -56,4 +62,4 @@ for book in ['BOK01909', 'WEB01908', 'WEB01910']:
 	for item in sorted((data / book).walk('*.txt'), key=lambda s: int(path(s).basename()[1:-4])):
 		content += process(codecs.open(item, encoding='windows-1256').read()) + '\n'
 
-	codecs.open(data / (book + '.html'), 'w', 'utf8').write(content)
+	codecs.open(data / (book + '.html'), 'w', 'utf8').write('<html><div>'+ content +'</div></html>')
