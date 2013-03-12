@@ -1,4 +1,3 @@
-#coding=utf8
 
 import re, codecs
 from path import path
@@ -9,8 +8,8 @@ data = path('data/')
 def process(text):
 	expressions = [
 		# aya
-		(ur'«([^«]+?)»?(\d+-\d+:[\d-]+)»?', r'"\1"\2'),
-		(ur'C?[\("]([^C\("\d-]{5,}?)[\)"]?[،\.-]?(\d+-\d+:[\d-]+)', ur'<span class="aya" rel="\2">\1</span>'),
+		(r'«([^«]+?)»?(\d+-\d+:[\d-]+)»?', r'"\1"\2'),
+		(r'C?[\("]([^C\("\d-]{5,}?)[\)"]?[،\.-]?(\d+-\d+:[\d-]+)', r'<span class="aya" rel="\2">\1</span>'),
 		(r'C([^C\("\d-]+?)["-]?(\d+-\d+:[\d-]+)', r'<span class="aya" rel="\2">\1</span>'),
 
 		# address
@@ -23,13 +22,13 @@ def process(text):
 
 		# heading
 		(r'{a(.*)a}', r'<h2>\1</h2>'),
-		(r'\[h[ABCDEFG]\]([^\[]+)\[/h[ABCDEFG]\]', r'<h4>\1</h4>'),
+		(r'\[h[ABCDEFG]\]([^\[]+)\[/h[ABCDEFG]\]', r'<h3>\1</h3>'),
 
 		# footnote
 		(r'{P([\d]+)P}', r'<span class="footnote" rel="\1"></span>'),
-		(ur'{P\(([\d،و -]+)\)([^P]+)P}', r'<span class="footnote-content" rel="\1">\2</span>'),
-		(r'{R([^R]+)R}', r'<span class="hadith">\1</span>'),
-		
+		(r'{P\(([\d،و -]+)\)([^P]+)P}', r'<span class="footnote-content" rel="\1">\2</span>'),
+		(r'{R([^R]+)R}', r'<span class="quote">\1</span>'),
+
 		# refinement
 		(r'\d+\\[\d\\]*\d*', ''),
 	]
@@ -39,8 +38,8 @@ def process(text):
 		('(1)-', ''),
 		('*', '<br />'),
 		('&', ''),
-		(u'ي', u'ی'),
-		(u'ك', u'ک'),
+		('ي', 'ی'),
+		('ك', 'ک'),
 	]
 
 	for key, value in expressions:
