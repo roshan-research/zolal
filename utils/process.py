@@ -16,15 +16,45 @@ def refine(text):
 	result = result.replace('ك', 'ک').replace('ي', 'ی').replace('‏ ', ' ').replace('‏', '‌')  # chracters
 
 	# punctuations
-	result = re.sub(r'([،\):؟])(?=[^ \.\d])', r'\1 ', result)
+	result = re.sub(r'([،\):؟])(?=[^ \.\d،])', r'\1 ', result)
 	result = re.sub(r'(?=[^ ])([\(])', r' \1', result)
 
 	return result
+
+
+def refineNote(text):
+	result = text
+	if result.startswith('-'):
+		result = result[1:]
+	return result.strip()
+
 
 almizan_sections = []
 for section in d.children().children():
 	section = pq(section)
 
+	# footnote replacement
+	for footnote in section.find('.footnote'):
+		footnote = pq(footnote)
+		content = section.find('.footnote-content[rel="%s"]' % footnote.attr('rel'))
+		if content:
+			content = pq(content[0])
+			footnote.attr('title', refineNote(content.html()))
+			content.remove()
+
+	for footnote in section.find('.footnote-content'):
+		footnote = pq(footnote)
+		for rel in re.split(' +', re.sub(r'[^ \d]', ' ', footnote.attr('rel'))):
+			ref = section.find('.footnote:not([title])[rel="%s"]' % rel)
+			if len(ref) == 1:
+				ref.attr('title', refineNote(footnote.html()))
+			else:
+				# todo fix ambigous multiple footnotes
+				pass
+
+		footnote.remove()
+
+	# refinement
 	for item in section.children():
 		item = pq(item)
 		item.html(refine(item.html()))
