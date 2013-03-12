@@ -46,11 +46,8 @@ for section in d.children().children():
 		footnote = pq(footnote)
 		for rel in re.split(' +', re.sub(r'[^ \d]', ' ', footnote.attr('rel'))):
 			ref = section.find('.footnote:not([title])[rel="%s"]' % rel)
-			if len(ref) == 1:
-				ref.attr('title', refineNote(footnote.html()))
-			else:
-				# todo fix ambigous multiple footnotes
-				pass
+			pq(ref[0]).attr('title', refineNote(footnote.html()))
+			# todo check ambigous multiple footnotes
 
 		footnote.remove()
 
