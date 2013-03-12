@@ -38,8 +38,6 @@ def process(text):
 		('(1)-', ''),
 		('*', '<br />'),
 		('&', ''),
-		('ي', 'ی'),
-		('ك', 'ک'),
 	]
 
 	for key, value in expressions:
