@@ -31,12 +31,12 @@ def process(text):
 
 		# refinement
 		(r'\d+\\[\d\\]*\d*', ''),
+		(r'،? *` *', '، '),
 	]
 
 	replacements = [
 		('X...X', '...'),
 		('(1)-', ''),
-		('*', '<br />'),
 		('&', ''),
 	]
 
@@ -47,6 +47,7 @@ def process(text):
 	text += '<h3'
 	text = text.replace('<code class="section">', '</div><div><code class="section">')
 	text = re.sub(r'</h3>([^h]+?)(?=(<h[23])|(</div>))', r'</h3><p>\1</p>', text)
+	text = text.replace('*', '</p><p>')
 	text = text[:-3]
 
 	for key, value in replacements:
