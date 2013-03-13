@@ -324,3 +324,53 @@ h3 em {
 #tafsir .loading {
   height: 100px;
 }
+span.footnote {
+  font-size: .55em;
+  display: inline-block;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 10px;
+  margin-bottom: 9px;
+  font-weight: bold;
+  color: #555;
+  text-shadow: 1px 0 2px #aaa;
+  cursor: pointer;
+}
+span.footnote:hover {
+  color: #049cdb;
+}
+#tafsir {
+  text-shadow: 0 1px 0 #efefef;
+  margin-right: -5%;
+  padding-right: 5%;
+}
+#tafsir span.aya {
+  color: teal;
+}
+#tafsir li {
+  list-style: none;
+  line-height: 24px;
+}
+#tafsir code.page {
+  display: initial;
+  float: right;
+  font-family: AppFont;
+  font-size: 18px;
+  line-height: 24px;
+  border-radius: 0;
+  color: #555;
+  padding: 0;
+  width: 105%;
+  margin-right: -5%;
+  margin-left: -100%;
+  border: none;
+  background: #eee;
+}
+#tafsir code.page span {
+  background: #777;
+  text-shadow: none;
+  color: #fff;
+  width: 30px;
+  display: inline-block;
+  text-align: center;
+}
