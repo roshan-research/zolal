@@ -96,9 +96,15 @@ for section in d.children().children():
 		html = '<h2>آیات %s تا %s سوره %s</h2>' % (first, second, refineName(quran_suras[int(sura)-1]))
 		for a in range(int(first), int(second)+1):
 			aya = '%s-%d' % (sura, a)
-			html += '<li class="aya" rel="%s">%d. %s</li>' % (aya, a, refineAya(ayas[aya]['text']))
+			html += '<span class="aya" rel="%s">%s «%d» </span>' % (aya, refineAya(ayas[aya]['text']), a)
 
 		section.prepend(html)
+
+	# fix translations
+	for trans in section.find('.trans'):
+		trans = pq(trans)
+		text = re.sub(r' *\(\d+\) *', '', trans.text())
+		trans.text(text + ' «%s» ' % trans.attr('rel').split('-')[1])
 
 	# refinement
 	for item in section.children():
