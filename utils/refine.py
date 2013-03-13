@@ -12,13 +12,13 @@ def process(text):
 		(r'C?[\("]([^C\("\d-]{5,}?)[\)"]?[،\.-]?(\d+-\d+:[\d-]+)', r'<span class="aya" rel="\2">\1</span>'),
 		(r'C([^C\("\d-]+?)["-]?(\d+-\d+:[\d-]+)', r'<span class="aya" rel="\2">\1</span>'),
 
+		# translation
+		(r'(\d+)\\(\d+)([^\\\[C\*"]{5,}?)(?=(\d+\\\d+)|\[)', r'<span class="trans" rel="\1-\2">\3</span>'),
+
 		# address
 		(r'{"(.*)"}', r'<code class="book">\1</code>'),
 		(r'{\$(\d+)\$}', r'<code class="page">\1</code>'),
 		(r'\[hC\](\d+)\\(\d+)-(\d+)\[/hC\]', r'<code class="section">\1-\3:\2</code>'),
-
-		# translation
-		(r'(\d+)\\(\d+)([^\\\[C"]{5,}?)(?=(\d+\\\d+)|\[)', r'<li class="trans" rel="\1-\2">\3</li>'),
 
 		# heading
 		(r'{a(.*)a}', r'<h2>\1</h2>'),

@@ -103,8 +103,16 @@ for section in d.children().children():
 	# fix translations
 	for trans in section.find('.trans'):
 		trans = pq(trans)
-		text = re.sub(r' *\(\d+\) *', '', trans.text())
-		trans.text(text + ' «%s» ' % trans.attr('rel').split('-')[1])
+		html = re.sub(r'[ -]*\(\d+\) *', '', str(trans.html()))
+		if trans.attr('rel') in ayas:
+			text = pq(html)
+			text.find('code').remove()
+			ayas[trans.attr('rel')]['trans'] = text.text()
+
+		# add aya number
+		aya = trans.attr('rel').split('-')[1]
+		if int(aya): html = html + ' «%s»' % aya
+		trans.html(html + ' ')
 
 	# refinement
 	for item in section.children():
