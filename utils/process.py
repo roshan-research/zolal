@@ -126,11 +126,6 @@ for section in d.children().children():
 			item.remove()
 		item.html(refine(item.html()))
 
-	# page element
-	for page in section.find('code.page'):
-		page = pq(page)
-		page.html('<span>%s</span>' % page.text())
-
 	# store section
 	if not key: key = '0'
 	almizan_sections.append(key)
