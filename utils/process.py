@@ -35,6 +35,11 @@ def refine(text):
 
 	result = refineAya(result)
 
+	# fix spaces
+	result = re.sub(r'</span>(?=[^ ،.])', '</span> ', result)
+	result = re.sub(r'(?=[^ ])<span', ' <span', result)
+	result = re.sub(r' +<span class="footnote"', '<span class="footnote"', result)
+
 	return result
 
 
