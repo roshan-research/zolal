@@ -7,6 +7,9 @@ data = path('data/')
 
 def process(text):
 	expressions = [
+		# fix quotation space
+		(r'([^C{])" *([^{"]+?) *"', r'\1 "\2" '),
+
 		# aya
 		(r'«([^«]+?)»?(\d+-\d+:[\d-]+)»?', r'"\1"\2'),
 		(r'C?[\("]([^C\("\d-]{5,}?)[\)"]?[،\.-]?(\d+-\d+:[\d-]+)', r'<span class="aya" rel="\2">\1</span>'),
@@ -17,7 +20,7 @@ def process(text):
 
 		# address
 		(r'{"(.*)"}', r'<code class="book">\1</code>'),
-		(r'{\$(\d+)\$}', r'<code class="page"><span>\1</span></code>'),
+		(r'{\$(\d+)\$}', r'<code class="page" rel="\1"><span>\1</span></code>'),
 		(r'\[hC\](\d+)\\(\d+)-(\d+)\[/hC\]', r'<code class="section">\1-\3:\2</code>'),
 
 		# heading
