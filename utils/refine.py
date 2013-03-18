@@ -27,6 +27,7 @@ def process(text):
 		(r'{"(.*)"}', r'<code class="book">\1</code>'),
 		(r'{\$(\d+)\$}', r'<code class="page" rel="\1"><span>\1</span></code>'),
 		(r'\[hC\](\d+)\\(\d+)-(\d+)\[/hC\]', r'<code class="section">\1-\3:\2</code>'),
+		(r'\[hC\](\d+)\\(\d+)\[/hC\]', r'<code class="section">\1-\2:\2</code>'),
 
 		# heading
 		(r'{a(.*)a}', r'<h2>\1</h2>'),
