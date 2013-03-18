@@ -7,8 +7,11 @@ data = path('data/')
 
 def process(text):
 	expressions = [
-		# fix quotation space
+		# fixtures
+		(r'\.(.{0,10}?)\n', r'.\1</p>\n<p>'),
 		(r'}\(1\)-', '}'),
+
+		# fix quotation space
 		(r'([^C{])" *([^{"]+?) *"', r'\1 "\2" '),
 
 		# aya
