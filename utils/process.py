@@ -15,7 +15,13 @@ bismillah = 'بِسمِ اللَّهِ الرَّحمٰنِ الرَّحيمِ'
 
 
 def refineAya(text):
+	# remove tashkeels
 	text = re.sub('[۞۩'+ symbols + tashkeels +']', '', text)
+
+	# remove aya separator
+	text = re.sub(r'([،؟:]) *` *', r'\1 ', text)
+	text = re.sub(r' *` *', '، ', text)
+
 	return text
 
 
@@ -37,7 +43,7 @@ def refine(text):
 
 	# fix spaces
 	result = re.sub(r'</span>(?=[^ ،.\)؟])', '</span> ', result)
-	result = re.sub(r'(?=[^ \(])<span', ' <span', result)
+	result = re.sub(r'([^ \(])<span', r'\1 <span', result)
 	result = re.sub(r' +<span class="footnote"', '<span class="footnote"', result)
 
 	return result

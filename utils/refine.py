@@ -8,11 +8,13 @@ data = path('data/')
 def process(text):
 	expressions = [
 		# fix quotation space
+		(r'}\(1\)-', '}'),
 		(r'([^C{])" *([^{"]+?) *"', r'\1 "\2" '),
 
 		# aya
 		(r'«([^«]+?)»?(\d+-\d+:[\d-]+)»?', r'"\1"\2'),
-		(r'C?[\("]([^C\("\d-]{5,}?)[\)"]?[،\.-]?(\d+-\d+:[\d-]+)', r'<span class="aya" rel="\2">\1</span>'),
+		(r'C?\(([^\(\)]+?)(\d+-\d+:[\d-]+)([^\)]+?)\)', r'(<span class="aya" rel="\2">\1</span>\3)'),
+		(r'C?[\("]([^C=\("\d-]{5,}?)[\)"]?[،\.-]?(\d+-\d+:[\d-]+)', r'<span class="aya" rel="\2">\1</span>'),
 		(r'C([^C\("\d-]+?)["-]?(\d+-\d+:[\d-]+)', r'<span class="aya" rel="\2">\1</span>'),
 
 		# translation
@@ -34,14 +36,15 @@ def process(text):
 
 		# refinement
 		(r'\d+\\[\d\\]*\d*', ''),
-		(r'،? *` *', '، '),
+		(r'[XC&#]', '')
 	]
 
 	replacements = [
 		('X...X', '...'),
-		('(1)-', ''),
-		('&', ''),
 	]
+
+	for key, value in replacements:
+		text = text.replace(key, value)
 
 	for key, value in expressions:
 		text = re.sub(key, value, text)
@@ -52,9 +55,6 @@ def process(text):
 	text = re.sub(r'</h3>([^h]+?)(?=(<h[23])|(</div>))', r'</h3><p>\1</p>', text)
 	text = text.replace('*', '</p><p>')
 	text = text[:-3]
-
-	for key, value in replacements:
-		text = text.replace(key, value)
 
 	return text
 
