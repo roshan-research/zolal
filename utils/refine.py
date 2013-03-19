@@ -12,13 +12,17 @@ def process(text):
 		(r'}\(1\)-', '}'),
 
 		# fix quotation space
-		(r'([^C{])" *([^{"]+?) *"', r'\1 "\2" '),
+		(r'([^C{])" *([^{"\n]+?) *"(?=[^\d])', r'\1 "\2" '),
 
 		# aya
 		(r'«([^«]+?)»?(\d+-\d+:[\d-]+)»?', r'"\1"\2'),
 		(r'C?\(([^\(\)]+?)(\d+-\d+:[\d-]+)([^\)]+?)\)', r'(<span class="aya" rel="\2">\1</span>\3)'),
-		(r'C?[\("]([^C=\("\d-]{5,}?)[\)"]?[،\.-]?(\d+-\d+:[\d-]+)', r'<span class="aya" rel="\2">\1</span>'),
+		(r'C?[\("]([^C=\("\d-]{5,}?)[\)"]? ?[،\.-]?(\d+-\d+:[\d-]+)', r'<span class="aya" rel="\2">\1</span>'),
 		(r'C([^C\("\d-]+?)["-]?(\d+-\d+:[\d-]+)', r'<span class="aya" rel="\2">\1</span>'),
+
+		# section
+		(r'\[hC\](\d+)\\(\d+)-(\d+)\[/hC\]', r'<code class="section">\1-\3:\2</code>'),
+		(r'\[hC\](\d+)\\(\d+)\[/hC\]', r'<code class="section">\1-\2:\2</code>'),
 
 		# translation
 		(r'(\d+)\\(\d+)([^\\\[C\*"]{5,}?)(?=(\d+\\\d+)|\[)', r'<span class="trans" rel="\1-\2">\3</span>'),
@@ -26,8 +30,6 @@ def process(text):
 		# address
 		(r'{"(.*)"}', r'<code class="book">\1</code>'),
 		(r'{\$(\d+)\$}', r'<code class="page" rel="\1"><span>\1</span></code>'),
-		(r'\[hC\](\d+)\\(\d+)-(\d+)\[/hC\]', r'<code class="section">\1-\3:\2</code>'),
-		(r'\[hC\](\d+)\\(\d+)\[/hC\]', r'<code class="section">\1-\2:\2</code>'),
 
 		# heading
 		(r'{a(.*)a}', r'<h2>\1</h2>'),
