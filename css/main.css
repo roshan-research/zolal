@@ -15,8 +15,11 @@
 }
 body {
   min-width: 800px;
-  direction: rtl;
   font-family: AppFont;
+}
+#wrap,
+#footer {
+  direction: rtl;
 }
 body,
 blockquote p {
@@ -152,6 +155,7 @@ select.btn {
   margin-bottom: 1px;
 }
 #tafsir p {
+  min-height: 15px;
   margin-bottom: 8px;
 }
 #tafsir code {
@@ -228,95 +232,89 @@ h3 em {
 #footer #address {
   display: none;
 }
-#footer .quran-address {
-  margin-top: 2px;
-  text-align: center;
+#footer.container {
+  max-width: 600px;
 }
-#footer .quran-address span.caption {
-  padding-left: 5px;
+#footer #current {
   color: #777;
-}
-#footer .quran-address #sura {
-  width: 80px;
-  margin-left: 10px;
-}
-#footer .quran-address #aya {
-  width: 50px;
-  margin-left: 40px;
-}
-#footer .quran-address#page {
-  direction: ltr;
-  text-align: center;
-}
-#footer .quran-address#page input {
-  font-family: AppFont;
-  font-size: 20px;
-  height: 30px;
-  text-align: center;
-  padding-top: 5px;
-}
-#footer .quran-address#page #text {
-  width: 40px;
-  text-align: center;
-  font-size: 20px;
-}
-#footer .quran-address#page #next,
-#footer .quran-address#page #prev {
-  padding-top: 0;
-  padding-bottom: 0;
-  height: 30px;
-  line-height: 27px;
-  cursor: pointer;
-  font-weight: bold;
-  font-size: 20px;
-  font-family: Arial;
-  color: #888;
-}
-#footer .quran-address#page #next:hover,
-#footer .quran-address#page #prev:hover {
-  color: #222;
-}
-#footer .tafsir-address {
   padding: 8px 0;
-  display: none;
-  color: #777;
 }
-#footer .tafsir-address span {
+#footer #current .quran-address #sura {
+  width: 60px;
+}
+#footer #current .quran-address #aya {
+  width: 30px;
+}
+#footer #current .quran-address #page {
+  width: 30px;
+}
+#footer #current .quran-address {
+  margin-top: -4px;
+}
+#footer #current .quran-address input {
+  margin-top: 2px;
+}
+#footer .nav {
+  float: left;
+  margin-bottom: 0;
+}
+#footer .control {
+  background: #eee;
+  box-shadow: 0px 0px 5px #eee;
+  margin-right: 5px;
+  min-width: 28px;
+  text-align: center;
+  color: #555;
+}
+#footer .control:hover,
+#footer .control:active {
+  color: #222;
+  background: #e0e0e0;
+}
+#footer input {
+  border: none;
+  font-family: AppFont, "B Mitra", Arial;
+  text-align: right;
+}
+#footer input:focus {
+  outline: none;
+}
+#footer .bold {
   font-weight: bold;
   font-size: .85em;
   color: #666;
 }
-#footer .control {
-  background: #eee;
-  border: none;
-  box-shadow: 0px 0px 5px #eee;
+.twitter-typeahead {
+  display: inline !important;
 }
-#footer .control:hover,
-#footer .control:active {
-  background: #e0e0e0;
+.twitter-typeahead .tt-query {
+  vertical-align: middle !important;
 }
-.nav {
-  margin-bottom: 0;
-  margin-right: 60px;
+.twitter-typeahead .tt-dropdown-menu {
+  top: initial !important;
+  bottom: 100% !important;
 }
-.nav li {
-  float: right;
-  margin-left: 5px;
+.twitter-typeahead .tt-hint {
+  display: none;
 }
-.nav li a {
-  color: #555;
-  border-radius: 4px;
+.twitter-typeahead .tt-dropdown-menu {
+  padding: 8px 0;
+  background-color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 }
-.nav li a:hover {
-  color: #222;
+.twitter-typeahead .tt-suggestion {
+  padding: 3px 20px;
+  font-size: 18px;
+  line-height: 24px;
 }
-.span3 {
-  float: right;
-  margin-left: 0;
-  width: 266px;
+.twitter-typeahead .tt-suggestion.tt-is-under-cursor {
+  color: #fff;
+  background-color: #0097cf;
 }
-.row {
-  margin-left: 0;
+.twitter-typeahead .tt-suggestion p {
+  margin: 0;
 }
 .loading {
   background: url(loading.gif) no-repeat center center;

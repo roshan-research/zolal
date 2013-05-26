@@ -5,6 +5,11 @@ var numchars = {'0': '۰', '1': '۱', '2': '۲', '3': '۳', '4': '۴', '5': '۵'
 var refine = function(str) {
 	return String(str).replace(/[0-9]/g, function(c) { return numchars[c]; });
 };
+var renumchars = {'۰': '0', '۱': '1', '۲': '2', '۳': '3', '۴': '4', '۵': '5', '۶': '6', '۷': '7', '۸': '8', '۹': '9'};
+var rerefine = function(str) {
+	return String(str).replace(/[۰-۹]/g, function(c) { return renumchars[c]; });
+};
+
 
 // models
 var Aya = Backbone.Model.extend({
@@ -199,8 +204,8 @@ var QuranView = Backbone.View.extend({
 					url: server +'files/quran/p'+ page,
 					success: function(data){
 						_.each(data.split('\n'), function(item) {
-							item = $.parseJSON(item);
 							if (item) {
+								item = $.parseJSON(item);
 								aya = new Aya(item);
 								if (store) aya.save();
 								quran.collection.add(aya);
@@ -428,40 +433,71 @@ var TafsirView = Backbone.View.extend({
 var AddressView = Backbone.View.extend({
 	el: $("#address"),
 	initialize: function() {
-		var sura_select = this.$el.find('select#sura'), aya_select = sura_select.parent().find('select#aya');
+
+		var sura_select = this.$el.find('.quran-address #sura'), aya_select = this.$el.find('.quran-address #aya'), page_select = this.$el.find('.quran-address #page');
+		numberData = function(num) {
+			items = [];
+			for (i = 1; i <= num; i++)
+				items.push({value: i, tokens: [refine(String(i)), String(i)]});
+			return items;
+		};
+
+		// sura selector
+		sura_items = [];
 		_.each(quran_suras, function(item, i) {
-			sura_select.append('<option value="'+ (i+1) +'">'+ item +'</option>');
+			name = item;
+			tokens = [name, name.replace('أ', 'ا').replace('إ', 'ا')];
+			if (item.indexOf('ال') == 0) {
+				name = name.substr(2);
+				tokens.push(name); tokens.push(name.replace('أ', 'ا').replace('إ', 'ا'));
+			}
+			sura_items.push({value: item, tokens: tokens});
 		});
-		sura_select.change(function() {
-			aya_select.html('<option value=""></option>');
-			number = sura_ayas[sura_select.val()];
-			for(i = 1; i <= number; i++)
-				aya_select.append('<option value="'+ i +'">'+ i +'</option>');
-			aya_select.val('1');
-		});
-		sura_select.change(function() {
-			if (sura_select.val() != app.position.quran.sura)
-				app.router.navigate('quran/'+ sura_select.val() +'-'+ aya_select.val(), true);
-		});
-		aya_select.change(function() {
-			app.router.navigate('quran/'+ sura_select.val() +'-'+ aya_select.val(), true);
+		this.$el.find('.quran-address #sura').typeahead({
+			name: 'sura',
+			local: sura_items
 		});
 
-		this.$el.find('#next').click(function() {
-			app.quran.nextPage();
-			app.render();
+		// page selector
+		this.$el.find('.quran-address #page').typeahead({
+			name: 'page',
+			local: numberData(604)
 		});
-		this.$el.find('#prev').click(function() {
-			app.quran.prevPage();
-			app.render();
+
+		// selector events
+		menus = this.$el.find('.tt-dropdown-menu');
+		sura_select.bind('change typeahead:selected', function() {
+			id = quran_suras.indexOf(sura_select.val())+1;
+			if (id > 0) {
+				aya_select.typeahead('destroy').typeahead({
+					local: numberData(sura_ayas[id])
+				});
+				if (id != app.position.quran.sura)
+					app.router.navigate('quran/'+ id +'-1', true);
+			}
+			menus.hide();
 		});
-		this.$el.find('#text').change(function() {
-			page = $(this).val();
-			if (page >= 1 && page <= 604)
+		aya_select.bind('change typeahead:selected', function() {
+			aya = rerefine($(this).val());
+			if (aya >= 1 && aya <= sura_ayas[app.position.quran.sura] && aya != app.position.quran.aya)
+				app.router.navigate('quran/'+ app.position.quran.sura +'-'+ aya, true);
+			menus.hide();
+		});
+		page_select.bind('change typeahead:selected', function() {
+			page = rerefine($(this).val());
+			if (page >= 1 && page <= 604 && page != app.position.quran.page)
 				app.router.navigate('quran/p'+ page, true);
+			menus.hide();
+		});
+
+		this.$el.find('input').click(function() {
+			$(this).select();
 		});
 	},
 	render: function() {
+		controls = [];
+		this.$el.find('#navigator li').hide();
+
 		// clone position
 		position = $.extend(true, {}, this.position);
 		if (position.mode == 'quran') {
@@ -474,13 +510,14 @@ var AddressView = Backbone.View.extend({
 			else
 				app.router.navigate('quran/p'+ position.quran.page, false);
 
+			controls.push('tafsir');
 			this.$el.find('.tafsir-address').hide();
 			el = this.$el.find('.quran-address');
 			el.show();
-			
-			el.find('#sura').val(position.quran.sura).change();
-			el.find('#aya').val(position.quran.aya);
-			el.find('#text').val(position.quran.page);
+
+			el.find('#sura').val(quran_suras[position.quran.sura-1]).change();
+			el.find('#page').val(position.quran.page);
+			el.find('#aya').val(position.quran.aya ? position.quran.aya : '...');
 		}
 		else if (position.mode == 'tafsir') {
 			slug = this.position.tafsir.section;
@@ -490,6 +527,7 @@ var AddressView = Backbone.View.extend({
 			parts = sectionToAddress(position.tafsir.section);
 			position.tafsir = {'sura': quran_suras[parts[0]-1], 'mi': parts[1], 'ma': parts[2]};
 
+			controls.push('quran');
 			this.$el.find('.quran-address').hide();
 			el = this.$el.find('.tafsir-address');
 			el.show();
@@ -498,6 +536,11 @@ var AddressView = Backbone.View.extend({
 			el.find('#ma').text(position.tafsir['ma']);
 		}
 		this.$el.show();
+
+		// show controls
+		_.each(controls, function(item) {
+			$('#navigator .'+ item).show();
+		});
 
 		// set page title
 		title = '';
@@ -604,8 +647,11 @@ var AppView = Backbone.View.extend({
 			this.render();
 	},
 	navKey: function(e) {
-		refresh = false;
 
+		if (e.target.tagName == 'INPUT')
+			return;
+
+		refresh = false;
 		if (this.position.mode == 'quran') {
 			if(e.keyCode == 37) // left arrow
 				refresh = this.quran.nextPage();
@@ -616,7 +662,7 @@ var AppView = Backbone.View.extend({
 			else if(e.keyCode == 40) // down arrow
 				refresh = this.quran.nextAya();
 		}
-		
+
 		if (refresh) {
 			e.preventDefault();
 			this.render();
