@@ -157,7 +157,7 @@ var QuranView = Backbone.View.extend({
 		
 		// add new page
 		pages = this.$el.find('#pages');
-		newPage = $('<div class="page loading" rel="'+ page +'"></div>');
+		newPage = $('<div class="page loading" rel="'+ page +'"><div class="ayas"></div></div>');
 		if (doesExist(page + 1)) {
 			pages.append(newPage);
 		} else if (doesExist(page - 1)) {
@@ -171,8 +171,8 @@ var QuranView = Backbone.View.extend({
 		}
 
 		var renderPage = function(page) {
-			el = quran.$el.find('.page[rel='+ page +']');
-			el.removeClass('loading');
+			el = quran.$el.find('.page[rel='+ page +'] .ayas');
+			el.parent().removeClass('loading');
 			_.each(quran.collection.models, function (item) {
 				if (item.get('page') == page) {
 					var ayaView = new AyaView({model: item});
