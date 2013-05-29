@@ -193,6 +193,7 @@ h3 em {
   box-shadow: 0 0 10px #e6ddb3;
 }
 #message #content a {
+  outline: none;
   color: #7b9ba2;
   text-decoration: none;
 }
