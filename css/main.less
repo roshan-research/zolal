@@ -15,7 +15,6 @@
 }
 
 body {
-	min-width: 800px;
 	font-family: AppFont;
 }
 #wrap, #footer {
@@ -52,7 +51,7 @@ select.btn {
 }
 
 .container {
-	width: 800px;
+	max-width: 800px;
 }
 
 #quran, #tafsir {
@@ -60,11 +59,9 @@ select.btn {
 	overflow: auto;
 }
 
-@page-width: 600px;
-@page-padding: 10px;
 #quran {
 	margin: 20px auto;
-	width: @page-width;
+	max-width: 600px;
 	overflow: hidden;
 	direction: ltr;
 
@@ -75,8 +72,7 @@ select.btn {
 		.page {
 			height: inherit;
 			margin-right: 20px;
-			padding: @page-padding;
-			width: @page-width - 2*@page-padding;
+			padding: 10px;
 			float: left;
 			direction: rtl;
 			overflow-y: auto;
@@ -190,11 +186,13 @@ h3 em {
 #message {
 	position: absolute;
 	bottom: 60px;
-	width: 100%;
+	left: 20px;
+	width: -webkit-calc(~"100% - 40px");
+	width: calc(~"100% - 40px");
 	display: none;
 
 	.container {
-		width: 600px;
+		max-width: 600px;
 	}
 
 	.close {

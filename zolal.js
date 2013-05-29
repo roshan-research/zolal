@@ -732,6 +732,10 @@ $(window).resize(function() {
 	margins = $('#quran').outerHeight(true) - $('#quran').height();
 	pageHeight = document.body.clientHeight - $('#footer').height() - margins;
 	$('#quran, #tafsir').height(pageHeight);
+
+	$('#page-style').html('#quran .page {width: '+ ($('#quran').width() - 20) +'px}');
+	if ($('#quran .front').length)
+		$('#quran').scrollLeft($('#quran .front').offset().left - $('#pages').position().left);
 });
 
 var app;

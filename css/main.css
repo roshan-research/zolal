@@ -14,7 +14,6 @@
   src: url('../font/AppFontBd.ttf') format('truetype');
 }
 body {
-  min-width: 800px;
   font-family: AppFont;
 }
 #wrap,
@@ -51,7 +50,7 @@ select.btn {
   height: 60px;
 }
 .container {
-  width: 800px;
+  max-width: 800px;
 }
 #quran,
 #tafsir {
@@ -60,7 +59,7 @@ select.btn {
 }
 #quran {
   margin: 20px auto;
-  width: 600px;
+  max-width: 600px;
   overflow: hidden;
   direction: ltr;
 }
@@ -72,7 +71,6 @@ select.btn {
   height: inherit;
   margin-right: 20px;
   padding: 10px;
-  width: 580px;
   float: left;
   direction: rtl;
   overflow-y: auto;
@@ -173,11 +171,13 @@ h3 em {
 #message {
   position: absolute;
   bottom: 60px;
-  width: 100%;
+  left: 20px;
+  width: -webkit-calc(100% - 40px);
+  width: calc(100% - 40px);
   display: none;
 }
 #message .container {
-  width: 600px;
+  max-width: 600px;
 }
 #message .close {
   font-family: Arial;
