@@ -2,7 +2,7 @@
 import re, codecs
 from path import path
 
-data = path('data/')
+data = path('data')
 
 
 def process(text):
@@ -22,10 +22,10 @@ def process(text):
 		(r'{/B([^Iw]+){w([\d-]+)w}{I([\d:-]+)I}([^}/]{0,2})/}', r'<span class="aya" rel="\3 \2">\1\4</span>'),
 		(r'{\?([^I]+){I([\d:-]+)I}([^\?]{0,2})\?}', r'<span class="aya" rel="\2">\1\3</span>'),
 
-		(r'{BC{EC(\d+)\\(\d+)EC}([^}]*)BC}', r'<span class="translation" rel="\1-\2">\3</span>'),
+		(r'{BC{EC(\d+)\\(\d+)EC}([^}]*)BC}', r'<span class="trans" rel="\1-\2">\3</span>'),
 
 		# header
-		(r'{J{GC(\d+)\\([\d-]+)GC}.?J}', r'</div><div><code class="section">\1-\2</code>'),
+		(r'{J{GC(\d+)\\([\d-]+)GC}.?J}', r'</div><div><code class="section">\1 \2</code>'),
 		(r'{J{C[ \d\(\)]*([^\(]+)[ \d\(\)]*C}J}', r'<h2 class="sura">\1</h2>'),
 		(r'{J{H{C([^C]+)C}H}J}', r'<h2 class="sura">\1</h2>'),
 		(r'{H([^H]+)H}', r'<span class="meta">\1</span>'),
@@ -35,7 +35,7 @@ def process(text):
 		(r'{L([^{]+)L}', r'<span class="latin">\1</span>'),
 		(r'{P([\d]+)P}', r'<span class="footnote" rel="\1"></span>'),
 		(r'{P\(([\d،و -]+)\)([^P]+)P}', r'<span class="footnote-content" rel="\1">\2</span>'),
-		(r':([^{\d\na-zA-Z]{1,10})[ :-]([0-9]{1,3})', r'<span class="footnote" content="*">\1، \2</span>'),
+		(r':([^{\d\na-zA-Z]{1,10})[ :-]([0-9]{1,3})', r'<span class="footnote" content="\1، \2">*</span>'),
 
 		# hadith
 		(r'{R([^R]+)R}', r'<span class="hadith">\1</span>'),
@@ -54,7 +54,7 @@ def process(text):
 	replacements = [
 		('=', ' '),
 		('>', ' '),
-		('‏', ''),
+		('‏\n', '\n'),
 		('ك', 'ک'),
 		('ي', 'ی'),
 		('ى', 'ی'),
