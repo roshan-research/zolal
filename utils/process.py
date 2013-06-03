@@ -1,5 +1,6 @@
 
 import re, json
+from collections import defaultdict
 from pyquery import PyQuery as pq
 from path import path
 
@@ -11,7 +12,6 @@ quran = open(data / 'quran-text.txt')
 quran_suras = ['الفاتحة', 'البقرة', 'آل‌عمران', 'النساء', 'المائدة', 'الأنعام', 'الأعراف', 'الأنفال', 'التوبة', 'یونس', 'هود', 'یوسف', 'الرعد', 'ابراهیم', 'الحجر', 'النحل', 'الإسراء', 'الکهف', 'مریم', 'طه', 'الأنبیاء', 'الحج', 'المؤمنون', 'النور', 'الفرقان', 'الشعراء', 'النمل', 'القصص', 'العنکبوت', 'الروم', 'لقمان', 'السجدة', 'الأحزاب', 'سبإ', 'فاطر', 'یس', 'الصافات', 'ص', 'الزمر', 'غافر', 'فصلت', 'الشورى', 'الزخرف', 'الدخان', 'الجاثیة', 'الأحقاف', 'محمد', 'الفتح', 'الحجرات', 'ق', 'الذاریات', 'الطور', 'النجم', 'القمر', 'الرحمن', 'الواقعة', 'الحدید', 'المجادلة', 'الحشر', 'الممتحنة', 'الصف', 'الجمعة', 'المنافقون', 'التغابن', 'الطلاق', 'التحریم', 'الملک', 'القلم', 'الحاقة', 'المعارج', 'نوح', 'الجن', 'المزمل', 'المدثر', 'القیامة', 'الانسان', 'المرسلات', 'النبإ', 'النازعات', 'عبس', 'التکویر', 'الإنفطار', 'المطففین', 'الإنشقاق', 'البروج', 'الطارق', 'الأعلى', 'الغاشیة', 'الفجر', 'البلد', 'الشمس', 'اللیل', 'الضحى', 'الشرح', 'التین', 'العلق', 'القدر', 'البینة', 'الزلزلة', 'العادیات', 'القارعة', 'التکاثر', 'العصر', 'الهمزة', 'الفیل', 'قریش', 'الماعون', 'الکوثر', 'الکافرون', 'النصر', 'المسد', 'الإخلاص', 'الفلق', 'الناس']
 symbols = 'ۖۗۚۛۙۘ'
 tashkeels = 'ًٌٍَُِّْٰ'
-bismillah = 'بِسمِ اللَّهِ الرَّحمٰنِ الرَّحيمِ'
 
 
 def refineAya(text):
@@ -26,23 +26,19 @@ def refineAya(text):
 
 
 def refine(text):
-	if not text:
-		return ''
+	if not text: return ''
 
 	# spaces
 	result = re.sub(r'[\n ]+', r' ', text)
 
-	# chracters
-	result = result.replace('ك', 'ک').replace('ي', 'ی').replace('‏ ', ' ').replace('‏', '‌')
-
 	# punctuations
-	result = re.sub(r'([،\):؟])(?=[^ :\.\d،])', r'\1 ', result)
+	result = re.sub(r'([\.،؛\):؟])(?=[^ :\.\d،؛])', r'\1 ', result)
 	result = re.sub(r'(?=[^ ])([\(])', r' \1', result)
 
 	result = refineAya(result)
 
 	# fix spaces
-	result = re.sub(r'</span>(?=[^ ،.\)؟])', '</span> ', result)
+	result = re.sub(r'</span>(?=[^ ،؛.\)؟])', '</span> ', result)
 	result = re.sub(r'([^ \(])<span', r'\1 <span', result)
 	result = re.sub(r' +<span class="footnote"', '<span class="footnote"', result)
 
@@ -63,21 +59,85 @@ def refineNote(text):
 	return result.strip()
 
 
-# ayas
-ayas = {}
-for line in quran:
-	line = line.split('|')
+def refineTranslation(text):
+	if not text: return ''
 
-	if len(line) == 3:
-		if line[1] == '1' and line[0] != '1' and line[0] != '9':
-			line[2] = line[2][len(bismillah):]
-
-		key = '%s-%s' % (line[0], line[1])
-		ayas[key] = {'id': '%s-%s' % (line[0], line[1]), 'sura': int(line[0]), 'aya': int(line[1]), 'text': line[2].strip()}
+	text = re.sub(r'([\.،؟:])(?=[^ :\.\d،؛])', r'\1 ', text)
+	text = text.strip()
+	if text[-1] not in '.؟!':
+		text += '.'
+	return text
 
 
-for book in ['almizan_ar', 'almizan_fa']:
+def aya_to_int(k):
+	l = k.split('-')
+	return int(l[0])*10000+int(l[1])
 
+
+def read_ayas():
+	ayas = {}
+	bismillah = 'بِسمِ اللَّهِ الرَّحمٰنِ الرَّحیمِ'
+	for line in quran:
+		line = line.split('|')
+
+		if len(line) == 3:
+			if line[1] == '1' and line[0] != '1' and line[0] != '9':
+				line[2] = line[2][len(bismillah):]
+
+			key = '%s-%s' % (line[0], line[1])
+			ayas[key] = {'id': '%s-%s' % (line[0], line[1]), 'sura': int(line[0]), 'aya': int(line[1]), 'text': line[2].strip()}
+
+	pages, quran_lines = {}, {}
+	with open(data / 'quran-lines.txt') as lines:
+		lines.readline()
+		for line in lines:
+			line = line.split(', ')
+			if line:
+				if line[3] != 'S':
+					pages['%s-%s' % (line[2], line[3])] = line[0]
+					quran_lines['%s-%s' % (line[0], line[1])] = line[4].count(';')
+
+
+	line_words = iter(sorted(quran_lines.keys(), key=aya_to_int))
+	current_line = quran_lines[line_words.__next__()]
+	page = 0
+	for key in sorted(ayas.keys(), key=aya_to_int):
+
+		if key in pages:
+			if page != int(pages[key]):
+				page = int(pages[key])
+				count = 0
+
+		ayas[key]['page'] = page
+
+		# todo care about hizb and sajde characters
+		html, parts = '', []
+		text = ayas[key]['text']
+		text = text.replace('۞ ', '')  # remove hizb sign
+		text = re.sub('[ ]*(['+ symbols +'])[ ]*', '<span class="mark">\\1 </span>', text)
+		aya_parts = text.split(' ')
+		for part in aya_parts:
+			parts.append(part)
+			count += 1
+			if (count >= current_line):
+				html += ' '.join(parts) + ' '  # use <br> for line breaks
+				count, parts = 0, []
+
+				try:
+					current_line = quran_lines[line_words.__next__()]
+				except:
+					pass
+
+		if parts:
+			html += ' '.join(parts)
+			parts = []
+
+		ayas[key]['html'] = html.strip()
+
+	return ayas
+
+
+def process_tafsir(ayas, book):
 	almizan_sections = []
 	errors = open(data / ('errors_process_'+ book + '.txt'), 'w')
 	d = pq(open(data / (book + '.html')).read())
@@ -129,11 +189,17 @@ for book in ['almizan_ar', 'almizan_fa']:
 			# fix translations
 			for trans in section.find('.trans'):
 				trans = pq(trans)
-				html = re.sub(r'[ -]*\(\d+\) *', '', str(trans.html()))
-				if trans.attr('rel') in ayas:
-					text = pq(html)
-					text.find('code').remove()
-					ayas[trans.attr('rel')]['trans'] = text.text()
+				html = trans.html()
+				if not html:
+					html = ''
+					if trans.attr('rel') in ayas:
+						ayas[trans.attr('rel')]['trans'] = ''
+				else:
+					html = re.sub(r'[ -]*\(\d+\) *', '', str(html))
+					if trans.attr('rel') in ayas:
+						text = pq(html)
+						text.find('code').remove()
+						ayas[trans.attr('rel')]['trans'] = refineTranslation(text.text())
 
 				# add aya number
 				aya = trans.attr('rel').split('-')[1]
@@ -152,13 +218,35 @@ for book in ['almizan_ar', 'almizan_fa']:
 		# store section
 		print(section.html(), file=open(files / book / key.replace('-', '_').replace(':', '-'), 'w'))
 
-# write meta.js
-meta = open(files / 'meta.js', 'w')
-print('var quran_suras = %s;' % str([sura for sura in quran_suras]), file=meta)
-# print('var quran_pages = %s;' % str(dict(quran_pages)), file=meta)
-print('var almizan_sections = %s;' % str(almizan_sections), file=meta)
+	return almizan_sections
 
 
-## postprocess
-# find quoted phrases
-# check section completeness
+if __name__ == '__main__':
+	print('ayas')
+	ayas = read_ayas()
+	print('almizan_ar')
+	almizan_sections = process_tafsir(ayas, 'almizan_ar')
+	print('almizan_fa')
+	process_tafsir(ayas, 'almizan_fa')
+
+	# write ayas
+	quran_pages, page = defaultdict(list), 0
+	for key in sorted(ayas.keys(), key=aya_to_int):
+		aya = ayas[key]
+		del aya['text']
+		if aya['page'] != page:
+			page = aya['page']
+			quran_file = open(files / 'quran' / ('p%d' % page), 'w')
+
+		quran_pages[aya['page']].append(key)
+		print(json.dumps(aya, ensure_ascii=False), file=quran_file)
+
+	# write meta.js
+	meta = open(files / 'meta.js', 'w')
+	print('var quran_suras = %s;' % str([sura for sura in quran_suras]), file=meta)
+	print('var quran_pages = %s;' % str(dict(quran_pages)), file=meta)
+	print('var almizan_sections = %s;' % str(almizan_sections), file=meta)
+
+	## postprocess
+	# find quoted phrases
+	# check section completeness
