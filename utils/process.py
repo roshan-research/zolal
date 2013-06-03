@@ -123,7 +123,7 @@ for book in ['almizan_ar', 'almizan_fa']:
 		if key not in almizan_sections:
 			almizan_sections.append(key)
 		else:
-			print(key)
+			print('multiple section', key, file=errors)
 
 		if book == 'almizan_fa':
 			# fix translations
@@ -145,6 +145,8 @@ for book in ['almizan_ar', 'almizan_fa']:
 			item = pq(item)
 			if item[0].tag == 'p' and not item.text():
 				item.remove()
+			if item[0].tag == 'code':
+				item.wrap('<p>')
 			item.html(refine(item.html()))
 
 		# store section
