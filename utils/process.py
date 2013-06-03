@@ -38,8 +38,9 @@ def refine(text):
 	result = refineAya(result)
 
 	# fix spaces
-	result = re.sub(r'</span>(?=[^ ،؛.\)؟])', '</span> ', result)
-	result = re.sub(r'([^ \(])<span', r'\1 <span', result)
+	for elm in ['span', 'em']:
+		result = re.sub(r'</'+ elm +'>(?=[^ ،؛.\)؟])', '</'+ elm +'> ', result)
+		result = re.sub(r'([^ \(])<'+ elm, r'\1 <'+ elm, result)
 	result = re.sub(r' +<span class="footnote"', '<span class="footnote"', result)
 
 	return result
@@ -166,7 +167,7 @@ def process_tafsir(ayas, book):
 			footnote.remove()
 
 		# add ayas
-		key = section('code.section').text()
+		key = section.find('code.section').text()
 		if key:
 			sura, aya = key.split(' ')
 			second, first = aya.split('-') if '-' in aya else (aya, aya)

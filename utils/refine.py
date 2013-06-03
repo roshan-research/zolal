@@ -35,7 +35,7 @@ def process(text):
 		(r'{L([^{]+)L}', r'<span class="latin">\1</span>'),
 		(r'{P([\d]+)P}', r'<span class="footnote" rel="\1"></span>'),
 		(r'{P\(([\d،و -]+)\)([^P]+)P}', r'<span class="footnote-content" rel="\1">\2</span>'),
-		(r':([^{\d\na-zA-Z]{1,10})[ :-]([0-9]{1,3})', r'<span class="footnote" content="\1، \2">*</span>'),
+		(r':([^{\d\na-zA-Z]{1,10})[ :،-]([0-9، ]*\d)', r'<span class="footnote" content="\1، \2">*</span>'),
 
 		# hadith
 		(r'{R([^R]+)R}', r'<span class="hadith">\1</span>'),
