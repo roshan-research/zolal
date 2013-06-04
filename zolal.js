@@ -14,6 +14,14 @@ var rerefine = function(str) {
 
 // models
 var Aya = Backbone.Model.extend({
+	defaults: {'phrases': {}},
+	insertPhrase: function(phrase) {
+		key = phrase['lang'] +'_'+ phrase['words'];
+		if (! (key in this.get('phrases'))) {
+			item = {}; item[key] = phrase;
+			this.set('phrases', $.extend(item, this.get('phrases')));
+		}
+	},
 	localStorage: new Backbone.LocalStorage('Quran')
 });
 
@@ -28,24 +36,36 @@ var Bayan = Backbone.Model.extend({
 // views
 var AyaView = Backbone.View.extend({
 	template: _.template('<span class="aya" rel="<%= sura %>-<%= aya %>"><span class="text"><%= html %></span><span class="number">(<%= aya %>)</span></span>'),
+	initialize: function () {
+		this.model.on('change', this.render, this);
+	},
 	render: function () {
 		data = this.model.toJSON();
-		html = data['html'];
-		text = $('<p>'+ data['html'] +'</p>').text();
-		parts = text.replace(/[ۖۗۚۛۙۘ]/g, '').split(' ');
-		for (key in data['phrases']) {
-			f = Number(key.split('-')[0]); t = Number(key.split('-')[1])-1;
-			b = html.indexOf(parts[f]); e = html.indexOf(parts[t], b);
-			if (t > 0 && t in parts) e += parts[t].length;
-			if (b >= 0 && e > b)
-				html = [html.slice(0, b), '<span class="phrase" rel="'+ key +'">', html.slice(b, e), '</span> ', html.slice(e)].join('').trim();
-			else {
-				// phrase display error
-				// console.log(data['id'] +'/'+ key);
+
+		if (Object.keys(data['phrases']).length) {
+			html = data['html'];
+			text = $('<p>'+ html +'</p>').text();
+			parts = text.replace(/[ۖۗۚۛۙۘ]/g, '').split(' ');
+
+			_.each(data['phrases'], function (phrase) {
+				if (phrase['lang'] != language)
+					return;
+
+				key = phrase['words'].split(':');
+				f = Number(key[0])-1; t = Number(key[1])-1;
+				b = html.indexOf(parts[f]); e = html.indexOf(parts[t], b);
+				if (t >= 0 && t in parts) e += parts[t].length;
+				if (b >= 0 && e > b)
+					html = [html.slice(0, b), '<span class="phrase" rel="'+ phrase['lang'] +'_'+ phrase['words'] +'">', html.slice(b, e), '</span> ', html.slice(e)].join('').trim();
+				// else console.log(data['id'] +'/'+ key);
+			});
+
+			data['html'] = html;
+			if (this.el.tagName == 'SPAN') {
+				this.$el.find('.text').html(html);
+				return this;
 			}
 		}
-
-		data['html'] = html;
 		this.setElement(this.template(data));
 		return this;
 	},
@@ -120,14 +140,14 @@ var QuranView = Backbone.View.extend({
 				quran.$el.find('.aya[rel='+ id +']').addClass('active');
 
 				if (quran.position.phrase != '' && quran.position.phrase in aya.get('phrases')) {
-					quran.$el.find('.aya[rel='+ id +'] .phrase[rel='+ quran.position.phrase +']').addClass('active');
+					quran.$el.find('.aya[rel='+ id +'] .phrase[rel="'+ quran.position.phrase +'"]').addClass('active');
 
 					phr = aya.get('phrases')[quran.position.phrase];
 					html = phr['html'];
 					if ('head' in phr)
 						html = phr['head'] + html;
 
-					app.message(html, 'note', '#almizan/'+ phr['rel']);
+					app.message(html, 'note', '#'+ phr['link']);
 
 					msg = $('#message #content');
 					msg.find('em').each(function() {
@@ -290,7 +310,10 @@ var TafsirView = Backbone.View.extend({
 
 		var loadBayan = function (bayan) {
 
-			tafsir.$el.html(bayan.get('content'));
+			// content
+			content = $(bayan.get('content'));
+			tafsir.$el.html(content);
+			tafsir.$el.removeClass('loading');
 			if (position.tafsir.part) {
 				part = $('#tafsir code.page[rel='+ position.tafsir.part +']');
 				container = $('#tafsir');
@@ -298,15 +321,34 @@ var TafsirView = Backbone.View.extend({
 					container.scrollTop(part.offset().top - container.offset().top + container.scrollTop());
 			}
 
-			tafsir.$el.removeClass('loading');
+			// footnote
 			tafsir.$el.find('span.footnote').hover(function() {
 				app.message($(this).attr('content'), 'note');
 			}, function() {
 				$('#message').hide();
 			});
+
+			// phrases
+			var quran = app.quran;
+			content.find('em[rel]').each(function() {
+				parts = $(this).attr('rel').split('_'); key = parts[1];
+				aya = quran.collection.get(key);
+
+				var page = '';
+				parent = $(this).parent();
+				parent.prevAll().each(function(){
+					if ($(this).find('.page').length) {
+						page = $(this).find('.page').attr('rel');
+						return false;
+					}
+				});
+				if (page)
+					page = 'almizan_'+ bayan.get('id') +'/'+ page;
+
+				aya.insertPhrase({words: parts[2], lang: parts[0], head: '', html: parent.html(), link: page});
+			});
 		};
 
-		tafsir.isLoading = true;
 		bayan = new Bayan({id: this.position.lang +'/'+ this.position.section});
 		bayan.fetch({
 			success: function (bayan) {
