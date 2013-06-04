@@ -269,7 +269,6 @@ var TafsirView = Backbone.View.extend({
 	el: $("#tafsir"),
 	initialize: function() {
 		this.sections = almizan_sections;
-		this.isLoading = false;
 	},
 	render: function() {
 		this.topStack = [];
@@ -282,44 +281,6 @@ var TafsirView = Backbone.View.extend({
 	events: {
 		'scroll': 'checkScroll'
 	},
-	// pushScroll: function() {
-	// 	this.topOff = this.$el.scrollTop();
-	// 	this.firstChild = this.$el.children().first().next().next();
-	// 	this.firstChildTop = this.firstChild.position().top;
-	// },
-	// popScroll: function() {
-	// 	extraHeight = this.firstChild.position().top - this.firstChildTop;
-	// 	if (extraHeight > 0)
-	// 		this.$el.scrollTop(this.topOff + extraHeight);
-	// },
-	// addElements: function(flag) {
-	// 	toLoad = 20;
-	// 	append = flag == 'append';
-	// 	this.isLoading = true;
-
-	// 	if (this.$el.hasClass('loading'))
-	// 		this.$el.removeClass('loading');
-
-	// 	if (!append) this.pushScroll();
-
-	// 	var elm;
-	// 	if (append) {
-	// 		for (i = 0; i < toLoad; i++) {
-	// 			if (elm = this.bottomStack.shift())
-	// 				this.$el.append(elm);
-	// 			else break;
-	// 		}
-	// 	} else {
-	// 		for (i = 0; i < toLoad; i++) {
-	// 			if (elm = this.topStack.pop())
-	// 				this.$el.prepend(elm);
-	// 			else break;
-	// 		}
-	// 	}
-
-	// 	if (!append) this.popScroll();
-	// 	this.isLoading = false;
-	// },
 	loadSection: function() {
 		var tafsir = this;
 
@@ -402,13 +363,6 @@ var TafsirView = Backbone.View.extend({
 		// 	this.position.part = '';
 		// 	this.trigger('updateAddress');
 		// }
-		
-		// // scroll event
-		// if(!this.isLoading && this.el.scrollTop < triggerOff)
-		// 	this.addElements('prepend');
-
-		// if(!this.isLoading && this.el.scrollTop + this.el.clientHeight + triggerOff > this.el.scrollHeight)
-		// 	this.addElements('append');
 	}
 });
 
