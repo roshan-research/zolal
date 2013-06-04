@@ -1,6 +1,6 @@
 var store = false;
 var server = '/';
-var language = 'fa';
+var language = 'ar';
 
 var numchars = {'0': '۰', '1': '۱', '2': '۲', '3': '۳', '4': '۴', '5': '۵', '6': '۶', '7': '۷', '8': '۸', '9': '۹'};
 var refine = function(str) {
@@ -282,17 +282,17 @@ var TafsirView = Backbone.View.extend({
 	events: {
 		'scroll': 'checkScroll'
 	},
-	pushScroll: function() {
-		this.topOff = this.$el.scrollTop();
-		this.firstChild = this.$el.children().first().next().next();
-		this.firstChildTop = this.firstChild.position().top;
-	},
-	popScroll: function() {
-		extraHeight = this.firstChild.position().top - this.firstChildTop;
-		if (extraHeight > 0)
-			this.$el.scrollTop(this.topOff + extraHeight);
-	},
-	addElements: function(flag) {
+	// pushScroll: function() {
+	// 	this.topOff = this.$el.scrollTop();
+	// 	this.firstChild = this.$el.children().first().next().next();
+	// 	this.firstChildTop = this.firstChild.position().top;
+	// },
+	// popScroll: function() {
+	// 	extraHeight = this.firstChild.position().top - this.firstChildTop;
+	// 	if (extraHeight > 0)
+	// 		this.$el.scrollTop(this.topOff + extraHeight);
+	// },
+	// addElements: function(flag) {
 	// 	toLoad = 20;
 	// 	append = flag == 'append';
 	// 	this.isLoading = true;
@@ -319,7 +319,7 @@ var TafsirView = Backbone.View.extend({
 
 	// 	if (!append) this.popScroll();
 	// 	this.isLoading = false;
-	},
+	// },
 	loadSection: function() {
 		var tafsir = this;
 
@@ -341,7 +341,7 @@ var TafsirView = Backbone.View.extend({
 			tafsir.$el.find('span.footnote').hover(function() {
 				app.message($(this).attr('content'), 'note');
 			}, function() {
-				tafsir.$el.find('#message').hide();
+				$('#message').hide();
 			});
 		};
 
