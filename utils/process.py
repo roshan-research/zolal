@@ -2,11 +2,13 @@
 import re, json
 from collections import defaultdict
 from pyquery import PyQuery as pq
+from nltk import stem
 from path import path
 
 files = path('../files')
 data = path('data')
 quran = open(data / 'quran-text.txt')
+isri = stem.ISRIStemmer()
 
 # suras
 quran_suras = ['الفاتحة', 'البقرة', 'آل‌عمران', 'النساء', 'المائدة', 'الأنعام', 'الأعراف', 'الأنفال', 'التوبة', 'یونس', 'هود', 'یوسف', 'الرعد', 'ابراهیم', 'الحجر', 'النحل', 'الإسراء', 'الکهف', 'مریم', 'طه', 'الأنبیاء', 'الحج', 'المؤمنون', 'النور', 'الفرقان', 'الشعراء', 'النمل', 'القصص', 'العنکبوت', 'الروم', 'لقمان', 'السجدة', 'الأحزاب', 'سبإ', 'فاطر', 'یس', 'الصافات', 'ص', 'الزمر', 'غافر', 'فصلت', 'الشورى', 'الزخرف', 'الدخان', 'الجاثیة', 'الأحقاف', 'محمد', 'الفتح', 'الحجرات', 'ق', 'الذاریات', 'الطور', 'النجم', 'القمر', 'الرحمن', 'الواقعة', 'الحدید', 'المجادلة', 'الحشر', 'الممتحنة', 'الصف', 'الجمعة', 'المنافقون', 'التغابن', 'الطلاق', 'التحریم', 'الملک', 'القلم', 'الحاقة', 'المعارج', 'نوح', 'الجن', 'المزمل', 'المدثر', 'القیامة', 'الانسان', 'المرسلات', 'النبإ', 'النازعات', 'عبس', 'التکویر', 'الإنفطار', 'المطففین', 'الإنشقاق', 'البروج', 'الطارق', 'الأعلى', 'الغاشیة', 'الفجر', 'البلد', 'الشمس', 'اللیل', 'الضحى', 'الشرح', 'التین', 'العلق', 'القدر', 'البینة', 'الزلزلة', 'العادیات', 'القارعة', 'التکاثر', 'العصر', 'الهمزة', 'الفیل', 'قریش', 'الماعون', 'الکوثر', 'الکافرون', 'النصر', 'المسد', 'الإخلاص', 'الفلق', 'الناس']
@@ -15,6 +17,10 @@ tashkeels = 'ًٌٍَُِّْٰ'
 
 
 def refineAya(text):
+
+	# characters
+	text = text.replace('ك', 'ک').replace('ي', 'ی')
+
 	# remove tashkeels
 	text = re.sub('[۞۩'+ symbols + tashkeels +']', '', text)
 
@@ -167,6 +173,7 @@ def process_tafsir(ayas, book):
 			footnote.remove()
 
 		# add ayas
+		aya_stems = {}
 		key = section.find('code.section').text()
 		if key:
 			sura, aya = key.split(' ')
@@ -175,7 +182,9 @@ def process_tafsir(ayas, book):
 			html = '<h2>آیات %s تا %s سوره %s</h2>' % (first, second, refineName(quran_suras[int(sura)-1]))
 			for a in range(int(first), int(second)+1):
 				aya = '%s-%d' % (sura, a)
-				html += '<span class="aya" rel="%s">%s «%d» </span>' % (aya, refineAya(ayas[aya]['text']), a)
+				text = refineAya(ayas[aya]['text'])
+				html += '<span class="aya" rel="%s">%s «%d» </span>' % (aya, text, a)
+				aya_stems[aya] = [isri.stem(word) for word in text.split(' ')]
 
 			section.prepend(html)
 		else:
@@ -183,8 +192,6 @@ def process_tafsir(ayas, book):
 
 		if key not in almizan_sections:
 			almizan_sections.append(key)
-		else:
-			print('multiple section', key, file=errors)
 
 		if book == 'almizan_fa':
 			# fix translations
@@ -215,6 +222,15 @@ def process_tafsir(ayas, book):
 			if item[0].tag == 'code':
 				item.wrap('<p>')
 			item.html(refine(item.html()))
+
+		# resolve em
+		for em in section.find('em'):
+			em = pq(em)
+			text = isri.stem(em.text().replace('‌', ''))
+			for aya, stems in aya_stems.items():
+				if text in stems:
+					em.attr('rel', '{0} {1}:{1}'.format(aya, stems.index(text)+1))
+					break
 
 		# store section
 		print(section.html(), file=open(files / book / key.replace('-', '_').replace(':', '-'), 'w'))

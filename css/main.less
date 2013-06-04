@@ -23,15 +23,6 @@ body {
 body, blockquote p {
 	font-size: 18px;
 }
-select {
-	font-family: AppFont;
-	-webkit-appearance: button;
-	-moz-appearance: button;
-	appearance: button;
-	option {
-		background: white;
-	}
-}
 select.btn {
 	font-size: 18px;
 	border: none;
@@ -170,7 +161,6 @@ select.btn {
 		}
 	}
 	p {
-		min-height: 15px;
 		margin-bottom: 8px;
 	}
 	code {
@@ -393,7 +383,8 @@ span.footnote {
 	padding-right: 5%;
 
 	span.aya {
-		color: teal;
+		color: royalblue;
+		text-shadow: 0 1px 2px #ccc;
 	}
 	li {
 		list-style: none;
@@ -412,15 +403,18 @@ span.footnote {
 		margin-right: -5%;
 		margin-left: -100%;
 		border: none;
-		background: #eee;
+		background: none;
 
 		span {
-			background: #777;
+			background: #eee;
+			border-top: 2px solid #aaa;
+			line-height: 20px;
+
 			text-shadow: none;
-			color: #fff;
 			width: 30px;
 			display: inline-block;
 			text-align: center;
 		}
 	}
 }
+

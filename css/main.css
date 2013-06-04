@@ -24,15 +24,6 @@ body,
 blockquote p {
   font-size: 18px;
 }
-select {
-  font-family: AppFont;
-  -webkit-appearance: button;
-  -moz-appearance: button;
-  appearance: button;
-}
-select option {
-  background: white;
-}
 select.btn {
   font-size: 18px;
   border: none;
@@ -82,6 +73,10 @@ select.btn {
   line-height: 46px;
   text-shadow: 0.5px 0.5px 1px #eee;
   cursor: pointer;
+  visibility: hidden;
+}
+#quran .page.front {
+  visibility: visible;
 }
 #quran .page div.bism {
   text-align: center;
@@ -153,7 +148,6 @@ select.btn {
   margin-bottom: 1px;
 }
 #tafsir p {
-  min-height: 15px;
   margin-bottom: 8px;
 }
 #tafsir code {
@@ -347,7 +341,8 @@ span.footnote:hover {
   padding-right: 5%;
 }
 #tafsir span.aya {
-  color: teal;
+  color: royalblue;
+  text-shadow: 0 1px 2px #ccc;
 }
 #tafsir li {
   list-style: none;
@@ -366,12 +361,13 @@ span.footnote:hover {
   margin-right: -5%;
   margin-left: -100%;
   border: none;
-  background: #eee;
+  background: none;
 }
 #tafsir code.page span {
-  background: #777;
+  background: #eee;
+  border-top: 2px solid #aaa;
+  line-height: 20px;
   text-shadow: none;
-  color: #fff;
   width: 30px;
   display: inline-block;
   text-align: center;
