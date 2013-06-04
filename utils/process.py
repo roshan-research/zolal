@@ -229,7 +229,7 @@ def process_tafsir(ayas, book):
 			text = isri.stem(em.text().replace('‌', ''))
 			for aya, stems in aya_stems.items():
 				if text in stems:
-					em.attr('rel', '{0} {1}:{1}'.format(aya, stems.index(text)+1))
+					em.attr('rel', 'ar_{0}_{1}:{1}'.format(aya, stems.index(text)+1))
 					break
 
 		# store section
@@ -263,7 +263,3 @@ if __name__ == '__main__':
 	print('var quran_suras = %s;' % str([sura for sura in quran_suras]), file=meta)
 	print('var quran_pages = %s;' % str(dict(quran_pages)), file=meta)
 	print('var almizan_sections = %s;' % str(almizan_sections), file=meta)
-
-	## postprocess
-	# find quoted phrases
-	# check section completeness

@@ -212,6 +212,10 @@ h3 em {
   margin-bottom: 2px;
   line-height: inherit;
 }
+#message #content code.page,
+#message #content .footnote {
+  display: none;
+}
 #message .alert-note {
   background-color: #FFFDC1;
   border-color: #FFFC99;

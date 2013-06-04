@@ -289,6 +289,7 @@ var TafsirView = Backbone.View.extend({
 	el: $("#tafsir"),
 	initialize: function() {
 		this.sections = almizan_sections;
+		this.prepared = [];
 	},
 	render: function() {
 		this.topStack = [];
@@ -303,56 +304,64 @@ var TafsirView = Backbone.View.extend({
 	},
 	loadSection: function() {
 		var tafsir = this;
+		var position = this.position;
+		var prepare = Boolean(this['prepare']);
+
+		if (prepare) {
+			position = this.quranToTafsir(this['prepare'].quran);
+			bid = position.lang +'/'+ position.section;
+			if (this.prepared.indexOf(bid) >= 0) return;
+			this.prepared.push(bid);
+		}
 
 		// show loading element
-		if (this.$el.children().length == 0)
+		if (!prepare && this.$el.children().length == 0)
 			this.$el.addClass('loading');
 
-		var loadBayan = function (bayan) {
+		var loadBayan = function (bayan, prepare) {
+			if (prepare) {
+				// phrases
+				var quran = app.quran;
+				$(bayan.get('content')).find('em[rel]').each(function() {
+					parts = $(this).attr('rel').split('_'); key = parts[1];
+					aya = quran.collection.get(key);
+					if (! aya) return;
 
-			// content
-			content = $(bayan.get('content'));
-			tafsir.$el.html(content);
-			tafsir.$el.removeClass('loading');
-			if (position.tafsir.part) {
-				part = $('#tafsir code.page[rel='+ position.tafsir.part +']');
-				container = $('#tafsir');
-				if (part.length == 1)
-					container.scrollTop(part.offset().top - container.offset().top + container.scrollTop());
-			}
-
-			// footnote
-			tafsir.$el.find('span.footnote').hover(function() {
-				app.message($(this).attr('content'), 'note');
-			}, function() {
-				$('#message').hide();
-			});
-
-			// phrases
-			var quran = app.quran;
-			content.find('em[rel]').each(function() {
-				parts = $(this).attr('rel').split('_'); key = parts[1];
-				aya = quran.collection.get(key);
-
-				var page = '';
-				parent = $(this).parent();
-				parent.prevAll().each(function(){
-					if ($(this).find('.page').length) {
-						page = $(this).find('.page').attr('rel');
-						return false;
-					}
+					var page = '';
+					parent = $(this).parent();
+					parent.prevAll().each(function(){
+						if ($(this).find('.page').length) {
+							page = $(this).find('.page').attr('rel');
+							return false;
+						}
+					});
+					aya.insertPhrase({words: parts[2], lang: parts[0], head: '', html: parent.html(), link: 'almizan_'+ bayan.get('id') + (page ? '/'+ page : '')});
 				});
-				if (page)
-					page = 'almizan_'+ bayan.get('id') +'/'+ page;
+			} else {
+				// content
+				tafsir.$el.scrollTop();
+				tafsir.$el.html(bayan.get('content'));
+				tafsir.$el.removeClass('loading');
+				if (position.part) {
+					part = tafsir.$el.find('code.page[rel='+ position.part +']');
+					container = tafsir.$el;
+					if (part.length == 1)
+						container.scrollTop(part.offset().top - container.offset().top + container.scrollTop());
+				}
 
-				aya.insertPhrase({words: parts[2], lang: parts[0], head: '', html: parent.html(), link: page});
-			});
+				// footnote
+				tafsir.$el.find('span.footnote').hover(function() {
+					app.message($(this).attr('content'), 'note');
+				}, function() {
+					$('#message').hide();
+				});
+			}
 		};
 
-		bayan = new Bayan({id: this.position.lang +'/'+ this.position.section});
+		bayan = new Bayan({id: position.lang +'/'+ position.section});
 		bayan.fetch({
 			success: function (bayan) {
-				loadBayan(bayan);
+				loadBayan(bayan, prepare);
 			},
 			error: $.proxy(function (bayan) {
 				$.ajax({
@@ -361,10 +370,10 @@ var TafsirView = Backbone.View.extend({
 					success: function(item){
 						bayan = new Bayan({id: this.id, content: item});
 						if (store) bayan.save();
-						loadBayan(bayan);
+						loadBayan(bayan, prepare);
 					},
 					error: app.connectionError
-				});
+				}, {prepare: prepare});
 			})
 		});
 	},
@@ -567,6 +576,7 @@ var AppView = Backbone.View.extend({
 
 		// set position
 		this.position = {mode: 'quran', quran: {page: 1, sura: 1, aya: ''}, tafsir: {section: '1-1:5'}};
+		this.quran.on('updateAddress', this.tafsir.loadSection, $.extend({}, this.tafsir, {prepare: this.position}));
 	},
 	render: function() {
 		$('#message').hide();
