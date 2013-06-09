@@ -40,6 +40,9 @@ select.btn {
 #footer {
   height: 60px;
 }
+body {
+  padding: 0 20px;
+}
 .container {
   max-width: 800px;
 }
@@ -47,9 +50,9 @@ select.btn {
 #tafsir {
   text-align: justify;
   overflow: auto;
+  margin: 20px auto;
 }
 #quran {
-  margin: 20px auto;
   max-width: 600px;
   overflow: hidden;
   direction: ltr;
@@ -121,7 +124,6 @@ select.btn {
   text-align: justify;
   overflow: auto;
   padding: 0 10px;
-  margin: 20px auto;
   font-size: 20px;
   line-height: 25px;
 }
@@ -183,6 +185,7 @@ h3 em {
 }
 #message #content {
   padding: 8px 15px;
+  margin-bottom: 20px;
   text-align: justify;
   box-shadow: 0 0 10px #e6ddb3;
 }
@@ -375,4 +378,54 @@ span.footnote:hover {
   width: 30px;
   display: inline-block;
   text-align: center;
+}
+@media (max-width: 480px) {
+  body {
+    padding: 0 5px;
+  }
+  #wrap {
+    margin-bottom: -40px;
+  }
+  #push,
+  #footer {
+    height: 40px;
+  }
+  #message {
+    bottom: 40px;
+  }
+  #message #content {
+    margin-bottom: 10px;
+  }
+  #footer {
+    padding: 0 10px;
+  }
+  #quran,
+  #tafsir {
+    margin: 5px auto;
+  }
+  #quran .page {
+    word-spacing: 0;
+    font-size: 15px;
+    line-height: 32px;
+    margin-right: 5px;
+  }
+  #quran .page span.number {
+    margin-right: 2px;
+  }
+  #quran .page span.mark {
+    margin-right: 3px;
+  }
+  #tafsir {
+    font-size: 18px;
+    line-height: 22px;
+  }
+  #tafsir h1,
+  #tafsir h2,
+  #tafsir h3 {
+    margin-top: 5px;
+    line-height: 30px;
+  }
+  #tafsir p {
+    margin-bottom: 5px;
+  }
 }

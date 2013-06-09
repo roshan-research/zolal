@@ -720,8 +720,7 @@ _.each(quran_pages, function(page, p) {
 });
 
 $(window).resize(function() {
-	margins = $('#quran').outerHeight(true) - $('#quran').height();
-	pageHeight = document.body.clientHeight - $('#footer').height() - margins;
+	pageHeight = document.body.clientHeight - $('#footer').height() - ($('#quran').outerHeight(true) - $('#quran').height());
 	$('#quran, #tafsir').height(pageHeight);
 
 	$('#page-style').html('#quran .page {width: '+ ($('#quran').width() - 20) +'px}');
@@ -742,3 +741,5 @@ $(document).ready(function() {
 
 	mixpanel.track('Zolal');
 });
+
+$(window).load($(window).resize);
