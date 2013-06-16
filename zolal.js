@@ -452,8 +452,7 @@ var AddressView = Backbone.View.extend({
 		});
 
 		// selector events
-		menus = this.$el.find('.tt-dropdown-menu');
-		sura_select.bind('change typeahead:selected', function() {
+		sura_select.bind('typeahead:selected', function() {
 			id = quran_suras.indexOf(sura_select.val())+1;
 			if (id > 0) {
 				aya_select.typeahead('destroy').typeahead({
@@ -462,19 +461,24 @@ var AddressView = Backbone.View.extend({
 				if (id != app.position.quran.sura)
 					app.router.navigate('quran/'+ id +'-1', true);
 			}
-			menus.hide();
 		});
-		aya_select.bind('change typeahead:selected', function() {
+		aya_select.bind('typeahead:selected', function() {
 			aya = rerefine($(this).val());
 			if (aya >= 1 && aya <= sura_ayas[app.position.quran.sura] && aya != app.position.quran.aya)
 				app.router.navigate('quran/'+ app.position.quran.sura +'-'+ aya, true);
-			menus.hide();
 		});
-		page_select.bind('change typeahead:selected', function() {
+		page_select.bind('typeahead:selected', function() {
 			page = rerefine($(this).val());
 			if (page >= 1 && page <= 604 && page != app.position.quran.page)
 				app.router.navigate('quran/p'+ page, true);
-			menus.hide();
+		});
+
+		menus = this.$el.find('.tt-dropdown-menu');
+		this.$el.find('.quran-address').find('#sura, #aya, #page').keypress(function(e) {
+			if(e.which == 13) {
+				$(e.target).trigger('typeahead:selected');
+				menus.hide();
+			}
 		});
 
 		this.$el.find('input').click(function() {
