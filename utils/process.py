@@ -28,6 +28,8 @@ def refineAya(text):
 	text = re.sub(r'([،؟:]) *` *', r'\1 ', text)
 	text = re.sub(r' *` *', '، ', text)
 
+	# remove qoutation marks
+	text = re.sub(r'"([^"\na-z0-9<>]+)"',r'\1',text)
 	return text
 
 
@@ -40,7 +42,8 @@ def refine(text):
 	# punctuations
 	result = re.sub(r'([\.،؛\):؟])(?=[^ :\.\d،؛])', r'\1 ', result)
 	result = re.sub(r'(?=[^ ])([\(])', r' \1', result)
-
+	result = re.sub(r'"(<[^\n]*)([^\n"]*)(</[^\n]*)"',r'\1\2\3',result)
+	result = re.sub(r'"([^"\na-z0-9<>]{1,10})"', r' <em>\1</em> ', result)
 	result = refineAya(result)
 
 	# fix spaces
@@ -229,7 +232,7 @@ def process_tafsir(ayas, book):
 			text = isri.stem(em.text().replace('‌', ''))
 			for aya, stems in aya_stems.items():
 				if text in stems:
-					em.attr('rel', 'ar_{0}_{1}:{1}'.format(aya, stems.index(text)+1))
+					em.attr('rel', '{0}_{1}_{2}:{2}'.format('ar' if book == 'almizan_ar' else 'fa', aya, stems.index(text)+1))
 					break
 
 		# store section
