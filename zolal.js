@@ -112,9 +112,8 @@ var QuranView = Backbone.View.extend({
 		pages = this.$el.find('#pages');
 		front = pages.find('.front');
 		el.addClass('front');
-		if (front.attr('rel') != this.position.page) {
+		if (front.attr('rel') != this.position.page)
 			this.$el.stop().animate({ scrollLeft: el.offset().left - pages.position().left }, 400, function() { front.removeClass('front'); $(this).addClass('front'); });
-		}
 	},
 	loadPage: function(page) {
 		if (page > 604 || page < 1)
