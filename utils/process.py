@@ -26,7 +26,7 @@ def refineAya(text):
 	text = re.sub(r' *` *', '، ', text)
 
 	# remove qoutation marks
-	text = re.sub(r'"([^"\na-z0-9<>]+)"',r'\1',text)
+	text = re.sub(r'"([^"\na-z0-9<>]+)"',r' \1 ',text)
 	return text
 
 
@@ -36,11 +36,17 @@ def refine(text):
 	# spaces
 	result = re.sub(r'[\n ]+', r' ', text)
 
+
+	# in chapter1, remove parantheses for ayas
+	#result = re.sub(r'(<span[^\n]*>)[^\()]*\(([^\n]*)\)[^\)]*(</span[^\n]*>)',r'\1\2\3',result)
+
+
 	# punctuations
 	result = re.sub(r'([\.،؛\):؟])(?=[^ :\.\d،؛])', r'\1 ', result)
 	result = re.sub(r'(?=[^ ])([\(])', r' \1', result)
-	result = re.sub(r'"(<span[^\n]*)([^\n"]*)(</span[^\n]*)"',r'\1\2\3',result)
-	result = re.sub(r'"([^"\na-z0-9<>]{1,10})"', r' <em>\1</em> ', result)
+	result = re.sub(r'"(<span[^\n]*>)([^\n"]*)(</span[^\n]*>)"',r'\1\2\3',result)
+	result = re.sub(r'(<span[^\n]*>)"([^\n"]*)(</span>)"', r'\1"\2"\3', result)
+	result = re.sub(r'"([^"\na-z0-9<>.]{1,15})"', r' <em>\1</em> ', result)
 	result = refineAya(result)
 	
 
@@ -150,6 +156,15 @@ def process_tafsir(ayas, book):
 	errors = open(data / ('errors_process_'+ book + '.txt'), 'w')
 	d = pq(open(data / (book + '.html')).read())
 
+	#remove ayas parantheses in tafseer
+	for aya in d('span.aya'):
+		aya = pq(aya)
+		html = aya.html()
+		print(aya.html())
+		html = re.sub(r'\(([^\n\)]*)\)', r'\1', html)
+		aya.html(html)
+	
+
 	for section in d.children().children():
 		section = pq(section)
 
@@ -224,20 +239,43 @@ def process_tafsir(ayas, book):
 				item.wrap('<p>')
 			item.html(refine(item.html()))
 
+		#find and resolve parantheses
+		html = section.html()
+		iter = re.finditer(r'\([^\)]{3,15}\)', html)
+		for match in reversed(list(iter)):
+			m = match.group()[1:-1]
+			rel = resolve(m, aya_stems, book)
+			if rel != 'null':
+				print(rel)
+				html = replace(match.start(), match.end(), html, '<em rel="{0}"> {1} </em>'.format(rel, m))
+
+		section.html(html)
+
+
 		# resolve em
 		for em in section.find('em'):
 			em = pq(em)
-			text = isri.stem(em.text().replace('‌', ''))
-			for aya, stems in aya_stems.items():
-				if text in stems:
-					em.attr('rel', '{0}_{1}_{2}:{2}'.format('ar' if book == 'almizan_ar' else 'fa', aya, stems.index(text)+1))
-					break
+			rel = resolve(em.text(),aya_stems, book)
+			if rel != 'null':
+				em.attr('rel', rel)
+
 
 		# store section
 		print(section.html(), file=open(files / book / key.replace('-', '_').replace(':', '-'), 'w'))
 
 	return almizan_sections
 
+def resolve(text, aya_stems, book):
+	text = isri.stem(text.replace('‌', ''))
+	rel = 'null'
+	for aya, stems in aya_stems.items():
+		if text in stems:
+			rel = '{0}_{1}_{2}:{2}'.format('ar' if book == 'almizan_ar' else 'fa', aya, stems.index(text)+1)
+			break	
+	return rel;
+
+def replace(start, end, oldtext, newtext):
+	return oldtext[:start] + newtext + oldtext[end:]
 
 if __name__ == '__main__':
 	print('ayas')
