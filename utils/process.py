@@ -18,9 +18,6 @@ tashkeels = 'ًٌٍَُِّْٰ'
 
 def refineAya(text):
 
-	# characters
-	text = text.replace('ك', 'ک').replace('ي', 'ی')
-
 	# remove tashkeels
 	text = re.sub('[۞۩'+ symbols + tashkeels +']', '', text)
 
@@ -42,9 +39,10 @@ def refine(text):
 	# punctuations
 	result = re.sub(r'([\.،؛\):؟])(?=[^ :\.\d،؛])', r'\1 ', result)
 	result = re.sub(r'(?=[^ ])([\(])', r' \1', result)
-	result = re.sub(r'"(<[^\n]*)([^\n"]*)(</[^\n]*)"',r'\1\2\3',result)
+	result = re.sub(r'"(<span[^\n]*)([^\n"]*)(</span[^\n]*)"',r'\1\2\3',result)
 	result = re.sub(r'"([^"\na-z0-9<>]{1,10})"', r' <em>\1</em> ', result)
 	result = refineAya(result)
+	
 
 	# fix spaces
 	for elm in ['span', 'em']:
