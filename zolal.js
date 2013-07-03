@@ -149,16 +149,8 @@ var QuranView = Backbone.View.extend({
 					app.message(html, 'note', '#'+ phr['link']);
 
 					msg = $('#message #content');
-					msg.find('em').each(function() {
-						rel = $(this).attr('rel');
-						if (rel) $(this).wrap('<a href="#quran/'+ rel +'">');
-					});
-
 					if (msg.children().length == 2)
 						msg.children().first().addClass('header');
-
-					// activate selected phrase
-					msg.find('em[rel="'+ aya.get('id') +'/'+ quran.position.phrase +'"]').addClass('active');
 
 				} else if (aya.get('trans'))
 					app.message(aya.get('trans'), 'note', '');
@@ -326,15 +318,17 @@ var TafsirView = Backbone.View.extend({
 					aya = quran.collection.get(key);
 					if (! aya) return;
 
-					var page = '';
+					var page, head;
 					parent = $(this).parent();
 					parent.prevAll().each(function(){
-						if ($(this).find('.page').length) {
+						if (!head && $(this)[0].tagName == 'H3')
+							head = '<h3>'+ $(this).html() +'</h3>';
+						if (!page && $(this).find('.page').length)
 							page = $(this).find('.page').attr('rel');
+						if (page && head)
 							return false;
-						}
 					});
-					aya.insertPhrase({words: parts[2], lang: parts[0], head: '', html: parent.html(), link: 'almizan_'+ bayan.get('id') + (page ? '/'+ page : '')});
+					aya.insertPhrase({words: parts[2], lang: parts[0], head: (head ? head : ''), html: parent.html(), link: 'almizan_'+ bayan.get('id') + (page ? '/'+ page : '')});
 				});
 			} else {
 				// content

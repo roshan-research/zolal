@@ -189,16 +189,12 @@ h3 em {
   text-align: justify;
   box-shadow: 0 0 10px #e6ddb3;
 }
-#message #content a {
-  outline: none;
-  color: #7b9ba2;
-  text-decoration: none;
+#message #content span.aya {
+  color: royalblue;
+  text-shadow: 0 1px 2px #ccc;
 }
-#message #content a:hover {
-  color: #618289;
-}
-#message #content em.active {
-  text-shadow: 1px 1px 2px #bbb;
+#message #content em {
+  font-size: .9em;
 }
 #message #content .continue {
   margin-right: 5px;
