@@ -344,8 +344,22 @@ var TafsirView = Backbone.View.extend({
 				if (position.part) {
 					part = tafsir.$el.find('code.page[rel='+ position.part +']');
 					container = tafsir.$el;
-					if (part.length == 1)
+					if (part.length == 1) {
 						container.scrollTop(part.offset().top - container.offset().top + container.scrollTop());
+
+						// bold selected phrase
+						quran = app.position.quran;
+						if (quran.phrase) {
+							parts = quran.phrase.split('_');
+							var rel = parts[0] +'_'+ quran.sura + '-'+ quran.aya +'_'+ parts[1];
+							$('#tafsir em').each(function() {
+								if ($(this).attr('rel') == rel) {
+									$(this).parent().css('background', '#FFFC99').animate({ backgroundColor: 'none' }, 1000);
+									return false;
+								}
+							});
+						}
+					}
 				}
 
 				// footnote
