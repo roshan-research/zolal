@@ -429,9 +429,6 @@ span.footnote:hover {
 .modal #copyright {
   font-size: .9em;
 }
-.modal .modal-footer.text-left {
-  text-align: left;
-}
 @media (max-width: 480px) {
   body {
     padding: 0 5px;
@@ -442,6 +439,9 @@ span.footnote:hover {
   #push,
   #footer {
     height: 40px;
+  }
+  #menu {
+    display: none;
   }
   #message {
     bottom: 40px;
