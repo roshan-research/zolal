@@ -428,21 +428,6 @@ var AddressView = Backbone.View.extend({
 	el: $("#address"),
 	initialize: function() {
 
-		// menu
-		$('#menu a').click(function() {
-			$('.modal[rel='+ $(this).attr('rel') +']').modal();
-		}).hover(function() {
-			$(this).stop().animate({'margin-right': -1*$(this).outerWidth() + 24});
-		}, function() {
-			$(this).stop().animate({'margin-right': '0'});
-		});
-
-
-		$('select#language').val(language).change(function() {
-			language = $(this).val();
-			app.render();
-		});
-
 		var sura_select = this.$el.find('.quran-address #sura'), aya_select = this.$el.find('.quran-address #aya'), page_select = this.$el.find('.quran-address #page');
 		numberData = function(num) {
 			items = [];
@@ -769,3 +754,20 @@ $(document).ready(function() {
 });
 
 $(window).load($(window).resize);
+
+// menu
+$('#menu a').click(function() {
+	$('.modal[rel='+ $(this).attr('rel') +']').modal();
+}).hover(function() {
+	$(this).stop().animate({'margin-right': -1*$(this).outerWidth() + 24}, 'fast');
+}, function() {
+	$(this).stop().animate({'margin-right': '0'}, 'fast');
+});
+
+// settings dialog
+$('select#language').val(language);
+$('#apply-settings').click(function() {
+	language = $('select#language').val();
+	$('#pages').html('');
+	app.render();
+});
