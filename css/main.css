@@ -137,7 +137,8 @@ body {
 #tafsir h1,
 #tafsir h2,
 #tafsir h3 {
-  margin-bottom: 0;
+  margin: 12px 0 6px;
+  line-height: 30px;
 }
 #tafsir blockquote {
   padding: 0 15px;
@@ -418,10 +419,13 @@ span.footnote:hover {
   #tafsir h1,
   #tafsir h2,
   #tafsir h3 {
-    margin-top: 5px;
-    line-height: 30px;
+    line-height: 20px;
+    font-size: .9em;
   }
   #tafsir p {
     margin-bottom: 5px;
+  }
+  #tafsir code.page {
+    visibility: hidden;
   }
 }
