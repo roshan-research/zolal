@@ -262,7 +262,6 @@ h3 em {
   box-shadow: 0px 0px 5px #eee;
   margin-right: 5px;
   min-width: 28px;
-  text-align: center;
   color: #555;
 }
 #footer .control:hover,
@@ -270,13 +269,23 @@ h3 em {
   color: #222;
   background: #e0e0e0;
 }
-#footer input {
+#footer a.control {
+  text-align: center;
+}
+#footer input,
+#footer select {
   border: none;
   font-family: AppFont, "B Mitra", Arial;
   text-align: right;
+  background: none;
 }
-#footer input:focus {
+#footer input:focus,
+#footer select:focus {
   outline: none;
+}
+#footer select {
+  text-align: right;
+  padding: 0px 6px 2px;
 }
 #footer .bold {
   font-weight: bold;
@@ -375,6 +384,43 @@ span.footnote:hover {
   width: 30px;
   display: inline-block;
   text-align: center;
+}
+#menu {
+  position: absolute;
+  margin: 0;
+  width: 124px;
+  left: -100px;
+  height: 100px;
+  top: -webkit-calc(50% - 50px);
+  top: calc(50% - 50px);
+}
+#menu li {
+  display: block;
+  margin: 5px 0;
+}
+#menu li a {
+  padding: 0 24px 0 16px;
+  color: #ccc;
+  text-decoration: none;
+  position: relative;
+}
+#menu li a:hover {
+  background: whitesmoke;
+  color: #555;
+}
+#menu i {
+  display: inline-block;
+  text-align: center;
+  width: 24px;
+  position: absolute;
+  right: 0px;
+  top: 4px;
+}
+.modal p.option {
+  margin-top: 18px;
+}
+.modal #copyright {
+  font-size: .9em;
 }
 @media (max-width: 480px) {
   body {

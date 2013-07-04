@@ -7,6 +7,7 @@
 	<script type="text/javascript" src="js/backbone.js"></script>
 	<script type="text/javascript" src="js/backbone.localStorage.js"></script>
 	<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="css/font-awesome.css">
 	<link rel="stylesheet" type="text/css" href="css/main.css">
 </head>
 <body>
@@ -23,8 +24,7 @@
 				<div id="pages"></div>
 			</div>
 			<div id="tafsir"></div>
-			<div id="push">
-		</div>
+			<div id="push"></div>
 		</div>
 	</div>
 	<div id="footer" class="container">
@@ -40,6 +40,38 @@
 				<div class="tafsir-address">
 					تفسیر المیزان، سوره <span id="sura" class="bold"></span>، آیات <span id="mi" class="bold"></span> تا <span id="ma" class="bold"></span>
 				</div>
+			</div>
+		</div>
+		<ul id="menu">
+			<li><a href="#" rel="download"><i class="icon-download"></i> دریافت نرم‌افزار</a></li>
+			<li><a href="#" rel="settings"><i class="icon-cog"></i> زبان تفسیر</a></li>
+			<li><a href="#" rel="about"><i class="icon-question"></i> درباره زلال</a></li>
+		</ul>
+		<div rel="download" class="modal hide fade">
+			<div class="modal-header">
+				<h3>دریافت نرم‌افزار</h3>
+			</div>
+			<div class="modal-body">
+			</div>
+		</div>
+		<div rel="settings" class="modal hide fade">
+			<div class="modal-header">
+				<h3>تنظیمات</h3>
+			</div>
+			<div class="modal-body">
+				<p class="option">تنظیم زبان تفسیر: <select id="language" class="btn control input-small"><option value="fa">فارسی</option><option value="ar">عربی</option></select></p>
+			</div>
+		</div>
+		<div rel="about" class="modal hide fade">
+			<div class="modal-header">
+				<h3>درباره زلال</h3>
+			</div>
+			<div class="modal-body">
+				<p>قرآن عمیق است و همه آرزو داریم که کمی بیشتر با آن آشنا شویم. ایده طراحی زلال، قرآنی بود که با نگاه به ظاهر آن، کمی از عمقش نیز پیداست؛ درست مثل آب روان. آنچه پیش روی شماست، اولین گام ما برای دستیابی به این هدف دور است و البته ما مشتاق برداشتن قدم‌های بعد هستیم.</p>
+				<p>شنیدن نظر شما در مورد این ایده و البته راه طی شده برای رسیدن به آن، برای ما اهمیت دارد. سهم شما از توسعه این پروژه نوشتن نامه برای <a href="mailto:alireza.nournia@gmail.com">ما</a> است.</p>
+			</div>
+			<div class="modal-footer">
+				<div id="copyright">حاصل همکاری <a href="http://www.sobhe.ir/">سُبحه</a> و <a href="http://www.noorsoft.org/">مرکزی تحقیقات کامپیوتری علوم اسلامی «نور»</a></div>
 			</div>
 		</div>
 	</div>

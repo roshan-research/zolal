@@ -152,7 +152,7 @@ var QuranView = Backbone.View.extend({
 					if (msg.children().length == 2)
 						msg.children().first().addClass('header');
 
-				} else if (aya.get('trans'))
+				} else if (language == 'fa' && aya.get('trans'))
 					app.message(aya.get('trans'), 'note', '');
 
 			} else
@@ -428,6 +428,21 @@ var AddressView = Backbone.View.extend({
 	el: $("#address"),
 	initialize: function() {
 
+		// menu
+		$('#menu a').click(function() {
+			$('.modal[rel='+ $(this).attr('rel') +']').modal();
+		}).hover(function() {
+			$(this).stop().animate({'margin-right': -1*$(this).outerWidth() + 24});
+		}, function() {
+			$(this).stop().animate({'margin-right': '0'});
+		});
+
+
+		$('select#language').val(language).change(function() {
+			language = $(this).val();
+			app.render();
+		});
+
 		var sura_select = this.$el.find('.quran-address #sura'), aya_select = this.$el.find('.quran-address #aya'), page_select = this.$el.find('.quran-address #page');
 		numberData = function(num) {
 			items = [];
@@ -493,7 +508,7 @@ var AddressView = Backbone.View.extend({
 		});
 	},
 	render: function() {
-		controls = [];
+		controls = ['settings'];
 		this.$el.find('#navigator li').hide();
 
 		// clone position
@@ -553,21 +568,21 @@ var AddressView = Backbone.View.extend({
 
 		// metrics
 		position = this.position;
-		if (position.mode == 'quran') {
-			if (position.quran.aya) {
-				if (position.quran.phrase)
-					mixpanel.track('Quran Phrase');
-				else
-					mixpanel.track('Quran Aya');
-			} else
-				mixpanel.track('Quran');
-		}
-		else if (position.mode == 'tafsir') {
-			if (position.tafsir.part)
-				mixpanel.track('Almizan Part');
-			else
-				mixpanel.track('Almizan');
-		}
+		// if (position.mode == 'quran') {
+		// 	if (position.quran.aya) {
+		// 		if (position.quran.phrase)
+		// 			mixpanel.track('Quran Phrase');
+		// 		else
+		// 			mixpanel.track('Quran Aya');
+		// 	} else
+		// 		mixpanel.track('Quran');
+		// }
+		// else if (position.mode == 'tafsir') {
+		// 	if (position.tafsir.part)
+		// 		mixpanel.track('Almizan Part');
+		// 	else
+		// 		mixpanel.track('Almizan');
+		// }
 	}
 });
 
@@ -630,7 +645,7 @@ var AppView = Backbone.View.extend({
 	},
 	events: {
 		'keydown': 'navKey',
-		'click #navigator a': 'navigate'
+		'click #navigator a[rel]': 'navigate'
 	},
 	navigate: function(e) {
 		e.preventDefault();
@@ -650,7 +665,7 @@ var AppView = Backbone.View.extend({
 	},
 	navKey: function(e) {
 
-		if (e.target.tagName == 'INPUT')
+		if (e.target.tagName == 'INPUT' || $('.modal').is(":visible"))
 			return;
 
 		refresh = false;
