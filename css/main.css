@@ -28,12 +28,6 @@ blockquote p {
   font-size: 17px;
   min-width: 25px;
 }
-select.btn {
-  font-size: 18px;
-  border: none;
-  background: #eee;
-  padding: 3px 6px;
-}
 #wrap {
   min-height: 100%;
   height: auto !important;
@@ -276,25 +270,34 @@ h3 em {
 #footer a.control {
   text-align: center;
 }
-#footer input,
-#footer select {
+#footer .bold {
+  font-weight: bold;
+  font-size: .85em;
+  color: #666;
+}
+input,
+select {
   border: none;
   font-family: AppFont, "B Mitra", Arial;
   text-align: right;
   background: none;
 }
-#footer input:focus,
-#footer select:focus {
+input:focus,
+select:focus {
   outline: none;
 }
-#footer select {
+select {
+  font-size: 18px;
+  border: none;
+  background: #eee;
   text-align: right;
   padding: 0px 6px 2px;
+  margin-bottom: 0;
 }
-#footer .bold {
-  font-weight: bold;
-  font-size: .85em;
-  color: #666;
+select:hover,
+select:active {
+  color: #222;
+  background: #e0e0e0;
 }
 .twitter-typeahead {
   display: inline !important;

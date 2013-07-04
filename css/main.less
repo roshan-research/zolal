@@ -27,12 +27,6 @@ body, blockquote p {
 	font-size: 17px;
 	min-width: 25px;
 }
-select.btn {
-	font-size: 18px;
-	border: none;
-	background: #eee;
-	padding: 3px 6px;
-}
 
 @footer: 60px;
 #wrap {
@@ -306,24 +300,33 @@ h3 em {
 	a.control {
 		text-align: center;
 	}
-	input, select {
-		border: none;
-		font-family: AppFont, "B Mitra", Arial;
-		text-align: right;
-		background: none;
-
-		&:focus {
-			outline: none;
-		}
-	}
-	select {
-		text-align: right;
-		padding: 0px 6px 2px;
-	}
 	.bold {
 		font-weight: bold;
 		font-size: .85em;
 		color: #666;
+	}
+}
+input, select {
+	border: none;
+	font-family: AppFont, "B Mitra", Arial;
+	text-align: right;
+	background: none;
+
+	&:focus {
+		outline: none;
+	}
+}
+select {
+	font-size: 18px;
+	border: none;
+	background: #eee;
+	text-align: right;
+	padding: 0px 6px 2px;
+	margin-bottom: 0;
+
+	&:hover, &:active {
+		color: #222;
+		background: #e0e0e0;
 	}
 }
 
