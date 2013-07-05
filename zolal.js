@@ -551,21 +551,21 @@ var AddressView = Backbone.View.extend({
 
 		// metrics
 		position = this.position;
-		// if (position.mode == 'quran') {
-		// 	if (position.quran.aya) {
-		// 		if (position.quran.phrase)
-		// 			mixpanel.track('Quran Phrase');
-		// 		else
-		// 			mixpanel.track('Quran Aya');
-		// 	} else
-		// 		mixpanel.track('Quran');
-		// }
-		// else if (position.mode == 'tafsir') {
-		// 	if (position.tafsir.part)
-		// 		mixpanel.track('Almizan Part');
-		// 	else
-		// 		mixpanel.track('Almizan');
-		// }
+		if (position.mode == 'quran') {
+			if (position.quran.aya) {
+				if (position.quran.phrase)
+					mixpanel.track('Quran Phrase');
+				else
+					mixpanel.track('Quran Aya');
+			} else
+				mixpanel.track('Quran');
+		}
+		else if (position.mode == 'tafsir') {
+			if (position.tafsir.part)
+				mixpanel.track('Almizan Part');
+			else
+				mixpanel.track('Almizan');
+		}
 	}
 });
 

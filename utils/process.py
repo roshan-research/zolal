@@ -42,7 +42,7 @@ def refine(text):
 	result = re.sub(r'"(<span[^\n]*)([^\n"]*)(</span[^\n]*)"',r'\1\2\3',result)
 	result = re.sub(r'"([^"\na-z0-9<>]{1,10})"', r' <em>\1</em> ', result)
 	result = refineAya(result)
-	
+
 
 	# fix spaces
 	for elm in ['span', 'em']:
@@ -211,7 +211,7 @@ def process_tafsir(ayas, book):
 						ayas[trans.attr('rel')]['trans'] = refineTranslation(text.text())
 
 				# add aya number
-				aya = trans.attr('rel').split('-')[1]
+				aya = trans.attr('rel').split('_')[1]
 				if int(aya): html = html + ' «%s»' % aya
 				trans.html(html + ' ')
 
