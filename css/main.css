@@ -171,6 +171,10 @@ h3 em {
   width: calc(100% - 40px);
   display: none;
 }
+#message.top {
+  bottom: initial;
+  top: 20px;
+}
 #message .container {
   max-width: 600px;
 }

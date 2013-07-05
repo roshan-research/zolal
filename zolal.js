@@ -626,7 +626,11 @@ var AppView = Backbone.View.extend({
 			msg.parent().removeClass('link');
 		}
 
-		$('#message').show();
+		box = $('#message');
+		box.removeClass('top').show();
+		aya = $('.aya.active');
+		if (aya && aya.offset().top + aya.height() - box.offset().top + 10 > 0)
+			box.addClass('top');
 	},
 	connectionError: function() {
 		this.$el.find('.loading').removeClass('loading');
