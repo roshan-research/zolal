@@ -28,7 +28,7 @@ def process(text):
 		(r'{J{GC(\d+)\\([\d-]+)GC}.?J}', r'</p></div><div><code class="section">\1 \2</code><p>'),
 		(r'{J{C[ \d\(\)]*([^\(]+)[ \d\(\)]*C}J}', r'<h2 class="sura">\1</h2>'),
 		(r'{J{H{C([^C]+)C}H}J}', r'<h2 class="sura">\1</h2>'),
-		(r'{H([^H]+)H}', r'<span class="meta">\1</span>'),
+		(r'{H([^H]+)H}', r'\1'),
 		(r'{J([^J]+)J}', r'<h3>\1</h3>&'),
 
 		# footnote

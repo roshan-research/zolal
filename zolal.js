@@ -332,7 +332,12 @@ var TafsirView = Backbone.View.extend({
 						if (page && head)
 							return false;
 					});
-					aya.insertPhrase({words: parts[3], lang: parts[0], head: (head ? head : ''), html: parent.html(), link: 'almizan_'+ bayan.get('id') + (page ? '/'+ page : '')});
+					html = parent.html();
+					if (parent[0].tagName == 'H3') {
+						head = '<h3>'+ parent.html() +'</h3>';
+						html = '';
+					}
+					aya.insertPhrase({words: parts[3], lang: parts[0], head: (head ? head : ''), html: html, link: 'almizan_'+ bayan.get('id') + (page ? '/'+ page : '')});
 				});
 			} else {
 				// content
