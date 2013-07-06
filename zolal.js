@@ -559,17 +559,17 @@ var AddressView = Backbone.View.extend({
 		if (position.mode == 'quran') {
 			if (position.quran.aya) {
 				if (position.quran.phrase)
-					mixpanel.track('Quran Phrase');
+					mixpanel.track('Quran Phrase', position.quran);
 				else
-					mixpanel.track('Quran Aya');
+					mixpanel.track('Quran Aya', position.quran);
 			} else
-				mixpanel.track('Quran');
+				mixpanel.track('Quran', position.quran);
 		}
 		else if (position.mode == 'tafsir') {
 			if (position.tafsir.part)
-				mixpanel.track('Almizan Part');
+				mixpanel.track('Almizan Part', position.tafsir);
 			else
-				mixpanel.track('Almizan');
+				mixpanel.track('Almizan', position.tafsir);
 		}
 	}
 });
