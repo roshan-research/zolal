@@ -777,3 +777,17 @@ $('#apply-settings').click(function() {
 	$('#pages').html('');
 	app.render();
 });
+
+// gestures
+$(document).ready(function() {
+	$('body').on( 'swipeleft', function () {
+		if (app.position.mode == 'quran')
+			if (app.quran.prevPage())
+				app.render();
+	});
+	$('body').on( 'swiperight', function () {
+		if (app.position.mode == 'quran')
+			if (app.quran.nextPage())
+				app.render();
+	});
+});
