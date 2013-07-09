@@ -48,7 +48,7 @@ def refine(text):
 	result = re.sub(r'(<span[^\n]*>)"([^\n"]*)(</span>)"', r'\1"\2"\3', result)
 	result = re.sub(r'"([^"\na-z0-9<>.]{1,15})"', r' <em>\1</em> ', result)
 	result = refineAya(result)
-	
+
 
 	# fix spaces
 	for elm in ['span', 'em']:
@@ -84,7 +84,7 @@ def refineTranslation(text):
 
 
 def aya_to_int(k):
-	l = k.split('-')
+	l = k.split('_')
 	return int(l[0])*10000+int(l[1])
 
 
@@ -98,8 +98,8 @@ def read_ayas():
 			if line[1] == '1' and line[0] != '1' and line[0] != '9':
 				line[2] = line[2][len(bismillah):]
 
-			key = '%s-%s' % (line[0], line[1])
-			ayas[key] = {'id': '%s-%s' % (line[0], line[1]), 'sura': int(line[0]), 'aya': int(line[1]), 'text': line[2].strip()}
+			key = '%s_%s' % (line[0], line[1])
+			ayas[key] = {'id': '%s_%s' % (line[0], line[1]), 'sura': int(line[0]), 'aya': int(line[1]), 'text': line[2].strip()}
 
 	pages, quran_lines = {}, {}
 	with open(data / 'quran-lines.txt') as lines:
@@ -108,8 +108,8 @@ def read_ayas():
 			line = line.split(', ')
 			if line:
 				if line[3] != 'S':
-					pages['%s-%s' % (line[2], line[3])] = line[0]
-					quran_lines['%s-%s' % (line[0], line[1])] = line[4].count(';')
+					pages['%s_%s' % (line[2], line[3])] = line[0]
+					quran_lines['%s_%s' % (line[0], line[1])] = line[4].count(';')
 
 
 	line_words = iter(sorted(quran_lines.keys(), key=aya_to_int))
@@ -194,10 +194,10 @@ def process_tafsir(ayas, book):
 		if key:
 			sura, aya = key.split(' ')
 			second, first = aya.split('-') if '-' in aya else (aya, aya)
-			key = '%s-%s:%s' % (sura, first, second)
+			key = '%s_%s-%s' % (sura, first, second)
 			html = '<h2>آیات %s تا %s سوره %s</h2>' % (first, second, refineName(quran_suras[int(sura)-1]))
 			for a in range(int(first), int(second)+1):
-				aya = '%s-%d' % (sura, a)
+				aya = '%s_%d' % (sura, a)
 				text = refineAya(ayas[aya]['text'])
 				html += '<span class="aya" rel="%s">%s «%d» </span>' % (aya, text, a)
 				aya_stems[aya] = [isri.stem(word) for word in text.split(' ')]
@@ -226,7 +226,7 @@ def process_tafsir(ayas, book):
 						ayas[trans.attr('rel')]['trans'] = refineTranslation(text.text())
 
 				# add aya number
-				aya = trans.attr('rel').split('-')[1]
+				aya = trans.attr('rel').split('_')[1]
 				if int(aya): html = html + ' «%s»' % aya
 				trans.html(html + ' ')
 
@@ -259,9 +259,8 @@ def process_tafsir(ayas, book):
 			if rel != 'null':
 				em.attr('rel', rel)
 
-
 		# store section
-		print(section.html(), file=open(files / book / key.replace('-', '_').replace(':', '-'), 'w'))
+		print(section.html(), file=open(files / book / key, 'w'))
 
 	return almizan_sections
 

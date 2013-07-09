@@ -24,11 +24,9 @@ body,
 blockquote p {
   font-size: 18px;
 }
-select.btn {
-  font-size: 18px;
-  border: none;
-  background: #eee;
-  padding: 3px 6px;
+.btn {
+  font-size: 17px;
+  min-width: 25px;
 }
 #wrap {
   min-height: 100%;
@@ -137,7 +135,8 @@ body {
 #tafsir h1,
 #tafsir h2,
 #tafsir h3 {
-  margin-bottom: 0;
+  margin: 12px 0 6px;
+  line-height: 30px;
 }
 #tafsir blockquote {
   padding: 0 15px;
@@ -172,6 +171,10 @@ h3 em {
   width: calc(100% - 40px);
   display: none;
 }
+#message.top {
+  bottom: initial;
+  top: 20px;
+}
 #message .container {
   max-width: 600px;
 }
@@ -189,16 +192,12 @@ h3 em {
   text-align: justify;
   box-shadow: 0 0 10px #e6ddb3;
 }
-#message #content a {
-  outline: none;
-  color: #7b9ba2;
-  text-decoration: none;
+#message #content span.aya {
+  color: royalblue;
+  text-shadow: 0 1px 2px #ccc;
 }
-#message #content a:hover {
-  color: #618289;
-}
-#message #content em.active {
-  text-shadow: 1px 1px 2px #bbb;
+#message #content em {
+  font-size: .9em;
 }
 #message #content .continue {
   margin-right: 5px;
@@ -265,7 +264,6 @@ h3 em {
   box-shadow: 0px 0px 5px #eee;
   margin-right: 5px;
   min-width: 28px;
-  text-align: center;
   color: #555;
 }
 #footer .control:hover,
@@ -273,18 +271,37 @@ h3 em {
   color: #222;
   background: #e0e0e0;
 }
-#footer input {
-  border: none;
-  font-family: AppFont, "B Mitra", Arial;
-  text-align: right;
-}
-#footer input:focus {
-  outline: none;
+#footer a.control {
+  text-align: center;
 }
 #footer .bold {
   font-weight: bold;
   font-size: .85em;
   color: #666;
+}
+input,
+select {
+  border: none;
+  font-family: AppFont, "B Mitra", Arial;
+  text-align: right;
+  background: none;
+}
+input:focus,
+select:focus {
+  outline: none;
+}
+select {
+  font-size: 18px;
+  border: none;
+  background: #eee;
+  text-align: right;
+  padding: 0px 6px 2px;
+  margin-bottom: 0;
+}
+select:hover,
+select:active {
+  color: #222;
+  background: #e0e0e0;
 }
 .twitter-typeahead {
   display: inline !important;
@@ -379,6 +396,43 @@ span.footnote:hover {
   display: inline-block;
   text-align: center;
 }
+#menu {
+  position: absolute;
+  margin: 0;
+  width: 124px;
+  left: -100px;
+  height: 100px;
+  top: -webkit-calc(50% - 50px);
+  top: calc(50% - 50px);
+}
+#menu li {
+  display: block;
+  margin: 5px 0;
+}
+#menu li a {
+  padding: 0 24px 0 18px;
+  color: #ccc;
+  text-decoration: none;
+  position: relative;
+}
+#menu li a:hover {
+  background: whitesmoke;
+  color: #555;
+}
+#menu i {
+  display: inline-block;
+  text-align: center;
+  width: 24px;
+  position: absolute;
+  right: 0px;
+  top: 4px;
+}
+.modal p.option {
+  margin-top: 18px;
+}
+.modal #copyright {
+  font-size: .9em;
+}
 @media (max-width: 480px) {
   body {
     padding: 0 5px;
@@ -389,6 +443,9 @@ span.footnote:hover {
   #push,
   #footer {
     height: 40px;
+  }
+  #menu {
+    display: none;
   }
   #message {
     bottom: 40px;
@@ -422,10 +479,13 @@ span.footnote:hover {
   #tafsir h1,
   #tafsir h2,
   #tafsir h3 {
-    margin-top: 5px;
-    line-height: 30px;
+    line-height: 20px;
+    font-size: .9em;
   }
   #tafsir p {
     margin-bottom: 5px;
+  }
+  #tafsir code.page {
+    visibility: hidden;
   }
 }

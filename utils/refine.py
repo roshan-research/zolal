@@ -22,13 +22,13 @@ def process(text):
 		(r'{/B([^Iw:]+)(:?){w([\d-]+)w}{I([\d:-]+)I}([^}/]{0,2})/}', r'<span class="aya" rel="\4 \3">\1\5</span>\2'),
 		(r'{\?([^I]+){I([\d:-]+)I}([^\?]{0,2})\?}', r'<span class="aya" rel="\2">\1\3</span>'),
 
-		(r'{BC{EC(\d+)\\(\d+)EC}([^}]*)BC}', r'<span class="trans" rel="\1-\2">\3</span>'),
+		(r'{BC{EC(\d+)\\(\d+)EC}([^}]*)BC}', r'<span class="trans" rel="\1_\2">\3</span>'),
 
 		# header
 		(r'{J{GC(\d+)\\([\d-]+)GC}.?J}', r'</p></div><div><code class="section">\1 \2</code><p>'),
 		(r'{J{C[ \d\(\)]*([^\(]+)[ \d\(\)]*C}J}', r'<h2 class="sura">\1</h2>'),
 		(r'{J{H{C([^C]+)C}H}J}', r'<h2 class="sura">\1</h2>'),
-		(r'{H([^H]+)H}', r'<span class="meta">\1</span>'),
+		(r'{H([^H]+)H}', r'\1'),
 		(r'{J([^J]+)J}', r'<h3>\1</h3>&'),
 
 		# footnote

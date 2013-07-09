@@ -2,11 +2,13 @@
 <head>
 	<title>زلال</title>
 	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1"/>
 	<script type="text/javascript" src="js/jquery.js"></script>
 	<script type="text/javascript" src="js/underscore.js"></script>
 	<script type="text/javascript" src="js/backbone.js"></script>
 	<script type="text/javascript" src="js/backbone.localStorage.js"></script>
 	<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="css/font-awesome.css">
 	<link rel="stylesheet" type="text/css" href="css/main.css">
 </head>
 <body>
@@ -23,8 +25,49 @@
 				<div id="pages"></div>
 			</div>
 			<div id="tafsir"></div>
-			<div id="push">
+			<div id="push"></div>
 		</div>
+		<ul id="menu">
+			<li><a href="#" rel="download"><i class="icon-download"></i> دریافت نرم‌افزار</a></li>
+			<li><a href="#" rel="settings"><i class="icon-cog"></i> زبان تفسیر</a></li>
+			<li><a href="#" rel="about"><i class="icon-question"></i> درباره زلال</a></li>
+		</ul>
+		<div rel="download" class="modal hide fade">
+			<div class="modal-header">
+				<h3>دریافت نرم‌افزار</h3>
+			</div>
+			<div class="modal-body">
+				<p>با دریافت این نرم‌افزار می‌توانید از تمامی ویژگی‌های زلال بدون اتصال به اینترنت استفاده کنید.</p>
+				<p style="text-align: center">
+					<a href="#" class="btn btn-info"><i class="icon-windows"></i> نسخه ویندوز</a>
+					<a href="#" class="btn disabled"><i class="icon-android"></i> نسخه آندروید</a>
+				</p>
+				<p>اگر می‌خواهید از زلال روی پلتفرم دیگری استفاده کنید، لطفا برای <a href="mailto:alireza.nournia@gmail.com">ما</a> بنویسید.</p>
+			</div>
+		</div>
+		<div rel="settings" class="modal hide fade">
+			<div class="modal-header">
+				<h3>تنظیمات</h3>
+			</div>
+			<div class="modal-body">
+				<p class="option">زبان تفسیر: <select id="language" class="control input-small"><option value="fa">فارسی</option><option value="ar">عربی</option></select></p>
+			</div>
+			<div class="modal-footer" style="text-align: left">
+				<a href="#" data-dismiss="modal" class="btn">لغو</a>
+				<a id="apply-settings" href="#" class="btn btn-primary" data-dismiss="modal">تایید</a>
+			</div>
+		</div>
+		<div rel="about" class="modal hide fade">
+			<div class="modal-header">
+				<h3>درباره زلال</h3>
+			</div>
+			<div class="modal-body">
+				<p>قرآن عمیق است و همه آرزو داریم که کمی بیشتر با آن آشنا شویم. ایده طراحی زلال، قرآنی بود که با نگاه به ظاهر آن، کمی از عمقش نیز پیداست؛ درست مثل آب روان. آنچه پیش روی شماست، اولین گام ما برای دستیابی به این هدف دور است و البته ما مشتاق برداشتن قدم‌های بعد هستیم.</p>
+				<p>شنیدن نظر شما در مورد این ایده و البته راه طی شده برای رسیدن به آن، برای ما اهمیت دارد. سهم شما از توسعه این پروژه نوشتن نامه برای <a href="mailto:alireza.nournia@gmail.com">ما</a> است.</p>
+			</div>
+			<div class="modal-footer">
+				<div id="copyright">حاصل همکاری <a href="http://www.sobhe.ir/">سُبحه</a> و <a href="http://www.noorsoft.org/">مرکزی تحقیقات کامپیوتری علوم اسلامی «نور»</a></div>
+			</div>
 		</div>
 	</div>
 	<div id="footer" class="container">
@@ -44,6 +87,9 @@
 		</div>
 	</div>
 	<script type="text/javascript">(function(e,b){if(!b.__SV){var a,f,i,g;window.mixpanel=b;a=e.createElement("script");a.type="text/javascript";a.async=!0;a.src=("https:"===e.location.protocol?"https:":"http:")+'//cdn.mxpnl.com/libs/mixpanel-2.2.min.js';f=e.getElementsByTagName("script")[0];f.parentNode.insertBefore(a,f);b._i=[];b.init=function(a,e,d){function f(b,h){var a=h.split(".");2==a.length&&(b=b[a[0]],h=a[1]);b[h]=function(){b.push([h].concat(Array.prototype.slice.call(arguments,0)))}}var c=b;"undefined"!==typeof d?c=b[d]=[]:d="mixpanel";c.people=c.people||[];c.toString=function(b){var a="mixpanel";"mixpanel"!==d&&(a+="."+d);b||(a+=" (stub)");return a};c.people.toString=function(){return c.toString(1)+".people (stub)"};i="disable track track_pageview track_links track_forms register register_once alias unregister identify name_tag set_config people.set people.increment people.append people.track_charge people.clear_charges people.delete_user".split(" ");for(g=0;g<i.length;g++)f(c,i[g]);b._i.push([a,e,d])};b.__SV=1.2}})(document,window.mixpanel||[]); mixpanel.init("08646e83029019f7dd879c063c73d480");</script>
+	<script type="text/javascript" src="js/jquery-ui.js"></script>
+	<script type="text/javascript" src="js/jquery.mobile.js"></script>
+	<script type="text/javascript" src="js/bootstrap.js"></script>
 	<script type="text/javascript" src="js/typeahead.js"></script>
 	<script type="text/javascript" src="files/meta.js"></script>
 	<script type="text/javascript" src="zolal.js"></script>

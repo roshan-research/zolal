@@ -23,11 +23,9 @@ body {
 body, blockquote p {
 	font-size: 18px;
 }
-select.btn {
-	font-size: 18px;
-	border: none;
-	background: #eee;
-	padding: 3px 6px;
+.btn {
+	font-size: 17px;
+	min-width: 25px;
 }
 
 @footer: 60px;
@@ -151,7 +149,8 @@ body {
 		font-size: 1em;
 	}
 	h1, h2, h3 {
-		margin-bottom: 0;
+		margin: 12px 0 6px;
+		line-height: 30px;
 	}
 	blockquote {
 		padding: 0 15px;
@@ -189,6 +188,11 @@ h3 em {
 	width: calc(~"100% - 40px");
 	display: none;
 
+	&.top {
+		bottom: initial;
+		top: 20px;
+	}
+
 	.container {
 		max-width: 600px;
 	}
@@ -208,16 +212,12 @@ h3 em {
 		text-align: justify;
 		box-shadow: 0 0 10px hsl(50, 50%, 80%);
 
-		a {
-			outline: none;
-			color: darken(#99B2B7, 10%);
-			text-decoration: none;
-			&:hover {
-				color: darken(#99B2B7, 20%);
-			}
+		span.aya {
+			color: royalblue;
+			text-shadow: 0 1px 2px #ccc;
 		}
-		em.active {
-			text-shadow: 1px 1px 2px #bbb;
+		em {
+			font-size: .9em;
 		}
 		.continue {
 			margin-right: 5px;
@@ -295,7 +295,6 @@ h3 em {
 		box-shadow: 0px 0px 5px #eee;
 		margin-right: 5px;
 		min-width: 28px;
-		text-align: center;
 
 		color: #555;
 		&:hover, &:active {
@@ -303,20 +302,36 @@ h3 em {
 			background: #e0e0e0;
 		}
 	}
-
-	input {
-		border: none;
-		font-family: AppFont, "B Mitra", Arial;
-		text-align: right;
-
-		&:focus {
-			outline: none;
-		}
+	a.control {
+		text-align: center;
 	}
 	.bold {
 		font-weight: bold;
 		font-size: .85em;
 		color: #666;
+	}
+}
+input, select {
+	border: none;
+	font-family: AppFont, "B Mitra", Arial;
+	text-align: right;
+	background: none;
+
+	&:focus {
+		outline: none;
+	}
+}
+select {
+	font-size: 18px;
+	border: none;
+	background: #eee;
+	text-align: right;
+	padding: 0px 6px 2px;
+	margin-bottom: 0;
+
+	&:hover, &:active {
+		color: #222;
+		background: #e0e0e0;
 	}
 }
 
@@ -426,6 +441,49 @@ span.footnote {
 	}
 }
 
+#menu {
+	position: absolute;
+	margin: 0;
+	width: 124px;
+	left: -100px;
+	height: 100px;
+	top: -webkit-calc(~"50% - 50px");
+	top: calc(~"50% - 50px");
+
+	li {
+		display: block;
+		margin: 5px 0;
+
+		a {
+			padding: 0 24px 0 18px;
+			color: #ccc;
+			text-decoration: none;
+			position: relative;
+
+			&:hover {
+				background: whitesmoke;
+				color: #555;
+			}
+		}
+	}
+	i {
+		display: inline-block;
+		text-align: center;
+		width: 24px;
+		position: absolute;
+		right: 0px;
+		top: 4px;
+	}
+}
+
+.modal {
+	p.option {
+		margin-top: 18px;
+	}
+	#copyright {
+		font-size: .9em;
+	}
+}
 
 // phone
 
@@ -440,6 +498,9 @@ span.footnote {
 	}
 	#push, #footer {
 		height: @footer;
+	}
+	#menu {
+		display: none;
 	}
 	#message {
 		bottom: @footer;
@@ -473,11 +534,14 @@ span.footnote {
 		line-height: 22px;
 
 		h1, h2, h3 {
-			margin-top: 5px;
-			line-height: 30px;
+			line-height: 20px;
+			font-size: .9em;
 		}
 		p {
 			margin-bottom: 5px;
+		}
+		code.page {
+			visibility: hidden;
 		}
 	}
 }
