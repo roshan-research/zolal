@@ -27,6 +27,7 @@ def refineAya(text):
 
 	# remove qoutation marks
 	text = re.sub(r'"([^"\na-z0-9<>]+)"',r' \1 ',text)
+	text = text.replace('ك', 'ک').replace('ي', 'ی')
 	return text
 
 
@@ -160,7 +161,6 @@ def process_tafsir(ayas, book):
 	for aya in d('span.aya'):
 		aya = pq(aya)
 		html = aya.html()
-		print(aya.html())
 		html = re.sub(r'\(([^\n\)]*)\)', r'\1', html)
 		aya.html(html)
 	
@@ -190,6 +190,7 @@ def process_tafsir(ayas, book):
 
 		# add ayas
 		aya_stems = {}
+		aya_tokens = {}
 		key = section.find('code.section').text()
 		if key:
 			sura, aya = key.split(' ')
@@ -201,6 +202,7 @@ def process_tafsir(ayas, book):
 				text = refineAya(ayas[aya]['text'])
 				html += '<span class="aya" rel="%s">%s «%d» </span>' % (aya, text, a)
 				aya_stems[aya] = [isri.stem(word) for word in text.split(' ')]
+				aya_tokens[aya] = text.split(' ')
 
 			section.prepend(html)
 		else:
@@ -230,6 +232,18 @@ def process_tafsir(ayas, book):
 				if int(aya): html = html + ' «%s»' % aya
 				trans.html(html + ' ')
 
+			#find and resolve parantheses
+			if int(key.split('_')[0]) <= 2: 
+				html = section.html()
+				iter = re.finditer(r'\([^\)]{3,15}\)', html)
+				for match in reversed(list(iter)):
+					m = match.group()[1:-1]
+					rel = resolve(m, aya_stems, aya_tokens, book)
+					if rel != 'null':
+						html = replace(match.start(), match.end(), html, '<em rel="{0}"> {1} </em>'.format(rel, m))
+
+				section.html(html)
+
 		# refinement
 		for item in section.children():
 			item = pq(item)
@@ -239,23 +253,13 @@ def process_tafsir(ayas, book):
 				item.wrap('<p>')
 			item.html(refine(item.html()))
 
-		#find and resolve parantheses
-		html = section.html()
-		iter = re.finditer(r'\([^\)]{3,15}\)', html)
-		for match in reversed(list(iter)):
-			m = match.group()[1:-1]
-			rel = resolve(m, aya_stems, book)
-			if rel != 'null':
-				print(rel)
-				html = replace(match.start(), match.end(), html, '<em rel="{0}"> {1} </em>'.format(rel, m))
 
-		section.html(html)
 
 
 		# resolve em
 		for em in section.find('em'):
 			em = pq(em)
-			rel = resolve(em.text(),aya_stems, book)
+			rel = resolve(em.text(),aya_stems, aya_tokens, book)
 			if rel != 'null':
 				em.attr('rel', rel)
 
@@ -264,12 +268,24 @@ def process_tafsir(ayas, book):
 
 	return almizan_sections
 
-def resolve(text, aya_stems, book):
-	text = isri.stem(text.replace('‌', ''))
+
+def resolve(text, aya_stems, aya_tokens, book):
 	rel = 'null'
+	#resolve aya tokens with or without Alif-Lam
+	for aya, tokens in aya_tokens.items():
+		if text in tokens:
+			rel = '{0}_{1}_{2}-{2}'.format('ar' if book == 'almizan_ar' else 'fa', aya, tokens.index(text)+1)
+			return rel
+		elif text[2:] in aya_tokens.items():
+			rel = '{0}_{1}_{2}-{2}'.format('ar' if book == 'almizan_ar' else 'fa', aya, tokens.index(text[2:])+1)
+			print ('case 2: ' + rel)
+			return rel
+
+	#resolve aya stems
+	text = isri.stem(text.replace('‌', ''))	
 	for aya, stems in aya_stems.items():
 		if text in stems:
-			rel = '{0}_{1}_{2}:{2}'.format('ar' if book == 'almizan_ar' else 'fa', aya, stems.index(text)+1)
+			rel = '{0}_{1}_{2}-{2}'.format('ar' if book == 'almizan_ar' else 'fa', aya, stems.index(text)+1)
 			break	
 	return rel;
 
