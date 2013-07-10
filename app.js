@@ -1,10 +1,10 @@
-var appjs = require('appjs');
+var app = require('appjs');
 
 // serve static files from a directory
-appjs.serveFilesFrom(__dirname + '/');
+app.serveFilesFrom(__dirname + '/content');
 
 // create a window
-var window = appjs.createWindow({
+var window = app.createWindow({
 	width: 850,
 	height: 700,
 	icons  : __dirname + '/content/icons'
