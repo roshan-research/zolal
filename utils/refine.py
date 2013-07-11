@@ -69,7 +69,6 @@ def process(text):
 
 		('_ص', 'ص'),
 		('.\n', '.&'),
-		('\n*', '&'),
 	]
 
 	for key, value in replacements:
