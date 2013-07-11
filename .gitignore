@@ -1,2 +1,4 @@
-data
 files
+utils/data
+utils/deploy/app
+*.exe
