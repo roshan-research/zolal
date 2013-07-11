@@ -37,9 +37,6 @@ def refine(text):
 	# spaces
 	result = re.sub(r'[\n ]+', r' ', text)
 
-
-
-
 	# punctuations
 	result = re.sub(r'([\.،؛\):؟])(?=[^ :\.\d،؛])', r'\1 ', result)
 	result = re.sub(r'(?=[^ ])([\(])', r' \1', result)
@@ -240,7 +237,7 @@ def process_tafsir(ayas, book):
 				if not item.text().strip():
 					item.remove()
 				else:
-					if len(item.find('.trans')) > 1:
+					if len(item.find('.trans')) >= 1:
 						for span in section.find('.trans'):
 							span = pq(span)
 							item.append(span.outerHtml())
