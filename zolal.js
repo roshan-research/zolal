@@ -288,10 +288,7 @@ var TafsirView = Backbone.View.extend({
 		this.prepared = [];
 	},
 	render: function() {
-		this.topStack = [];
-		this.bottomStack = [];
 		this.$el.empty();
-
 		this.trigger('updateAddress');
 		this.loadSection();
 	},
@@ -776,6 +773,7 @@ $('select#language').val(language);
 $('#apply-settings').click(function() {
 	language = $('select#language').val();
 	$('#pages').html('');
+	app.position.tafsir.lang = language;
 	app.render();
 });
 
