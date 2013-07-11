@@ -339,9 +339,9 @@ var TafsirView = Backbone.View.extend({
 				});
 			} else {
 				// content
-				tafsir.$el.scrollTop();
 				tafsir.$el.html(bayan.get('content'));
 				tafsir.$el.removeClass('loading');
+				tafsir.$el.scrollTop(0);
 				if (position.part) {
 					part = tafsir.$el.find('code.page[rel='+ position.part +']');
 					container = tafsir.$el;

@@ -77,7 +77,8 @@ def refineNote(text):
 def refineTranslation(text):
 	if not text: return ''
 
-	text = re.sub(r'([\.،؟:])(?=[^ :\.\d،؛])', r'\1 ', text)
+	text = re.sub(r'([\.،؟!:\)])(?=[^ :\.\d،؛])', r'\1 ', text)
+	text = re.sub(r'(?=[^ ])([\(])', r' \1', text)
 	text = text.strip()
 	if text[-1] not in '.؟!':
 		text += '.'
@@ -140,7 +141,7 @@ def process_tafsir(ayas, book):
 		html = aya.html()
 		html = re.sub(r'\(([^\n\)]*)\)', r'\1', html)
 		aya.html(html)
-	
+
 
 	for section in d.children().children():
 		section = pq(section)
@@ -202,7 +203,8 @@ def process_tafsir(ayas, book):
 					if trans.attr('rel') in ayas:
 						text = pq(html)
 						text.find('code').remove()
-						ayas[trans.attr('rel')]['trans'] = refineTranslation(text.text())
+						html = refineTranslation(text.text())
+						ayas[trans.attr('rel')]['trans'] = html
 
 				# add aya number
 				aya = trans.attr('rel').split('_')[1]
@@ -224,14 +226,21 @@ def process_tafsir(ayas, book):
 		# refinement
 		for item in section.children():
 			item = pq(item)
-			if item[0].tag == 'p' and not item.text():
-				item.remove()
-			if item[0].tag == 'code':
+
+			if item[0].tag == 'p':
+				if not item.text().strip():
+					item.remove()
+				else:
+					if len(item.find('.trans')) > 1:
+						for span in section.find('.trans'):
+							span = pq(span)
+							item.append(span.outerHtml())
+							span.remove()
+
+			elif item[0].tag == 'code':
 				item.wrap('<p>')
+
 			item.html(refine(item.html()))
-
-
-
 
 		# resolve em
 		for em in section.find('em'):
