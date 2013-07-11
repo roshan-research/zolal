@@ -38,8 +38,6 @@ def refine(text):
 	result = re.sub(r'[\n ]+', r' ', text)
 
 
-	# in chapter1, remove parantheses for ayas
-	#result = re.sub(r'(<span[^\n]*>)[^\()]*\(([^\n]*)\)[^\)]*(</span[^\n]*>)',r'\1\2\3',result)
 
 
 	# punctuations
@@ -157,12 +155,7 @@ def process_tafsir(ayas, book):
 	errors = open(data / ('errors_process_'+ book + '.txt'), 'w')
 	d = pq(open(data / (book + '.html')).read())
 
-	#remove ayas parantheses in tafseer
-	for aya in d('span.aya'):
-		aya = pq(aya)
-		html = aya.html()
-		html = re.sub(r'\(([^\n\)]*)\)', r'\1', html)
-		aya.html(html)
+	
 	
 
 	for section in d.children().children():
@@ -201,8 +194,8 @@ def process_tafsir(ayas, book):
 				aya = '%s_%d' % (sura, a)
 				text = refineAya(ayas[aya]['text'])
 				html += '<span class="aya" rel="%s">%s «%d» </span>' % (aya, text, a)
-				aya_stems[aya] = [isri.stem(word) for word in text.split(' ')]
-				aya_tokens[aya] = text.split(' ')
+				aya_stems[aya] = [isri.stem(word) for word in text.replace('ة','ه').replace('ؤ','و').split(' ')]
+				aya_tokens[aya] = text.replace('ة','ه').replace('ؤ','و').split(' ')
 
 			section.prepend(html)
 		else:
@@ -233,8 +226,27 @@ def process_tafsir(ayas, book):
 				trans.html(html + ' ')
 
 			#find and resolve parantheses
-			if int(key.split('_')[0]) <= 2: 
+			if int(key.split('_')[0]) <= 2:
 				html = section.html()
+
+				# in chapter1, remove parantheses for ayas
+				iter = re.finditer(r'(<span[^\n]*>)[ ]*\(([^\)s]*)\)[^\)]*(</span[^\n]*>)',html)
+				for m in reversed(list(iter)):
+					html = replace(m.start(), m.end(), html, m.group().replace('(','').replace(')',''))
+
+
+				#remove ayas parantheses in tafseer
+				"""
+				for aya in d('span.aya'):
+					aya = pq(aya)
+					html = aya.html()
+					print('html1: ' + html + '\n', file = testfile)
+					html = re.sub(r'\(([^\n\)]*)\)', r'\1', html)
+					print('html2: ' + html + '\n', file = testfile)
+					aya.html(html)
+					print('ayahtml: ' + html + '\n', file = testfile)"""
+
+				
 				iter = re.finditer(r'\([^\)]{3,15}\)', html)
 				for match in reversed(list(iter)):
 					m = match.group()[1:-1]
@@ -271,6 +283,7 @@ def process_tafsir(ayas, book):
 
 def resolve(text, aya_stems, aya_tokens, book):
 	rel = 'null'
+	text  = text.replace('ة','ه').replace('ؤ','و')
 	#resolve aya tokens with or without Alif-Lam
 	for aya, tokens in aya_tokens.items():
 		if text in tokens:
