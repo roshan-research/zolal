@@ -41,11 +41,11 @@ var AyaView = Backbone.View.extend({
 	},
 	render: function () {
 		data = this.model.toJSON();
+		data['html'] = data['text'].replace(/[ ]*([ۖۗۚۛۙۘ])[ ]*/g, '<span class="mark"> \$1 </span>');
 
 		if (Object.keys(data['phrases']).length) {
 			html = data['html'];
-			text = $('<p>'+ html +'</p>').text();
-			parts = text.replace(/[ۖۗۚۛۙۘ]/g, '').split(' ');
+			parts = data['text'].replace(/[ۖۗۚۛۙۘ]/g, '').split(' ');
 
 			_.each(data['phrases'], function (phrase) {
 				if (phrase['lang'] != language)
@@ -66,6 +66,7 @@ var AyaView = Backbone.View.extend({
 				return this;
 			}
 		}
+
 		this.setElement(this.template(data));
 		return this;
 	},
@@ -657,7 +658,7 @@ var AppView = Backbone.View.extend({
 	},
 	navKey: function(e) {
 
-		if (e.target.tagName == 'INPUT' || $('.modal').is(":visible"))
+		if (e.target.tagName == 'INPUT' || $('.modal').is(':visible'))
 			return;
 
 		refresh = false;

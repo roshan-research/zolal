@@ -123,30 +123,7 @@ def read_ayas():
 				count = 0
 
 		ayas[key]['page'] = page
-
-		# todo care about hizb and sajde characters
-		html, parts = '', []
-		text = ayas[key]['text']
-		text = text.replace('۞ ', '')  # remove hizb sign
-		text = re.sub('[ ]*(['+ symbols +'])[ ]*', '<span class="mark">\\1 </span>', text)
-		aya_parts = text.split(' ')
-		for part in aya_parts:
-			parts.append(part)
-			count += 1
-			if (count >= current_line):
-				html += ' '.join(parts) + ' '  # use <br> for line breaks
-				count, parts = 0, []
-
-				try:
-					current_line = quran_lines[line_words.__next__()]
-				except:
-					pass
-
-		if parts:
-			html += ' '.join(parts)
-			parts = []
-
-		ayas[key]['html'] = html.strip()
+		ayas[key]['text'] = ayas[key]['text'].replace('۞ ', '')  # remove hizb sign
 
 	return ayas
 
@@ -288,7 +265,6 @@ if __name__ == '__main__':
 	quran_pages, page = defaultdict(list), 0
 	for key in sorted(ayas.keys(), key=aya_to_int):
 		aya = ayas[key]
-		del aya['text']
 		if aya['page'] != page:
 			page = aya['page']
 			quran_file = open(files / 'quran' / ('p%d' % page), 'w')
