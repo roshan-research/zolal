@@ -735,8 +735,10 @@ _.each(quran_pages, function(page, p) {
 });
 
 $(window).resize(function() {
-	pageHeight = document.body.clientHeight - $('#footer').height() - ($('#quran').outerHeight(true) - $('#quran').height());
-	$('#quran, #tafsir').height(pageHeight);
+	$('#container').height($('#wrap').height() - $('#footer').height());
+	$('#quran, #tafsir').height($('#container').height() - ($('#quran').outerHeight(true) - $('#quran').height()));
+	$('#pages').height($('#quran').height() - 20);
+	$('#wrap').css('margin-top', ($('body').height() - $('#wrap').height())/2);
 
 	$('#page-style').html('#quran .page {width: '+ ($('#quran').width() - 20) +'px}');
 	if ($('#quran .front').length)
