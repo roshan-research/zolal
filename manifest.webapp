@@ -5,7 +5,7 @@
 	"launch_path": "/index.html",
 	"fullscreen": "true",
 	"icons": {
-		"128": "img/logo.png"
+		"128": "/img/logo.png"
 	},
 	"developer": {
 		"name": "Sobhe",

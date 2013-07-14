@@ -18,8 +18,8 @@ def process(text):
 
 		# aya
 		(r'{a([^{]+)a}', r'<em>\1</em>'),
-		(r'{HC{/B([^Iw:]+)(:?){w([\d-]+)w}{I([\d:-]+)I}([^}/]{0,2})/}HC}', r'<span class="aya" rel="\4 \3">\1\5</span>\2'),
-		(r'{/B([^Iw:]+)(:?){w([\d-]+)w}{I([\d:-]+)I}([^}/]{0,2})/}', r'<span class="aya" rel="\4 \3">\1\5</span>\2'),
+		(r'{HC({/B[^H]+/})HC}', r'\1'),
+		(r'{/B([^Iw]+){w([\d-]+)w}{I([\d:-]+)I}([^}/]{0,2})/}', r'<span class="aya" rel="\3 \3">\1\4</span>'),
 		(r'{\?([^I]+){I([\d:-]+)I}([^\?]{0,2})\?}', r'<span class="aya" rel="\2">\1\3</span>'),
 
 		(r'{BC{EC(\d+)\\(\d+)EC}([^}]*)BC}', r'<span class="trans" rel="\1_\2">\3</span>'),
@@ -35,6 +35,9 @@ def process(text):
 		(r'{L([^{]+)L}', r'<span class="latin">\1</span>'),
 		(r'{P([\d]+)P}', r'<span class="footnote" rel="\1"></span>'),
 		(r'{P\(([\d،و -]+)\)([^P]+)P}', r'<span class="footnote-content" rel="\1">\2</span>'),
+
+		(r' ?: ?</span>', r'</span>:'),
+		(r': ?\(([^{\d\na-zA-Z]{1,10}): ?(\d+)\)', r'<span class="footnote" content="\1، \2">*</span>'),
 		(r':([^{\d\na-zA-Z]{1,10})[ :،-]([0-9، ]*\d)', r'<span class="footnote" content="\1، \2">*</span>'),
 
 		# hadith
