@@ -432,6 +432,9 @@ var AddressView = Backbone.View.extend({
 	el: $("#address"),
 	initialize: function() {
 
+		// cookie optoins
+		$.cookie.json = true;
+
 		var sura_select = this.$el.find('.quran-address #sura'), aya_select = this.$el.find('.quran-address #aya'), page_select = this.$el.find('.quran-address #page');
 		numberData = function(num) {
 			items = [];
@@ -555,6 +558,9 @@ var AddressView = Backbone.View.extend({
 			title = 'تفسیر سوره '+ position.tafsir.sura  +'، آیات '+ refine(position.tafsir.mi) +' تا '+ refine(position.tafsir.ma);
 		$(document).attr('title', 'زلال' +' | '+ title);
 
+		// cookie
+		$.cookie('position', this.position);
+
 		// metrics
 		position = this.position;
 		if (position.mode == 'quran') {
@@ -590,7 +596,10 @@ var AppView = Backbone.View.extend({
 		});
 
 		// set position
-		this.position = {mode: 'quran', quran: {page: 1, sura: 1, aya: ''}, tafsir: {section: '1-1:5'}};
+		if($.cookie('position'))
+			this.position = $.cookie('position');
+		else
+			this.position = {mode: 'quran', quran: {page: 1, sura: 1, aya: ''}, tafsir: {section: '1-1:5'}};
 		this.quran.on('updateAddress', this.tafsir.loadSection, $.extend({}, this.tafsir, {prepare: this.position}));
 	},
 	render: function() {
