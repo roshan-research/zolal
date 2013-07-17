@@ -346,14 +346,17 @@ var TafsirView = Backbone.View.extend({
 					part = tafsir.$el.find('code.page[rel='+ position.part +']');
 					container = tafsir.$el;
 					if (part.length == 1) {
-						container.scrollTop(part.offset().top - container.offset().top + container.scrollTop());
 
 						// bold selected phrase
 						quran = app.position.quran;
 						if (quran.phrase) {
 							parts = quran.phrase.split('_');
-							$('#tafsir em[rel='+ parts[0] +'_'+ quran.sura + '_'+ quran.aya +'_'+ parts[1] +']').parent().css('background', '#FFFC99').animate({ backgroundColor: 'none' }, 1000);
+							part = $('#tafsir em[rel='+ parts[0] +'_'+ quran.sura + '_'+ quran.aya +'_'+ parts[1] +']').parent();
+							console.log(part);
+							part.css('background', '#FFFC99').animate({ backgroundColor: 'none' }, 1000);
 						}
+
+						container.scrollTop(part.offset().top - container.offset().top + container.scrollTop());
 					}
 				}
 
