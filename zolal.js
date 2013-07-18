@@ -1,7 +1,8 @@
 var store = false;
 var server = '/';
-var language = 'fa';
 
+
+// functions
 var numchars = {'0': '۰', '1': '۱', '2': '۲', '3': '۳', '4': '۴', '5': '۵', '6': '۶', '7': '۷', '8': '۸', '9': '۹'};
 var refine = function(str) {
 	return String(str).replace(/[0-9]/g, function(c) { return numchars[c]; });
@@ -10,6 +11,17 @@ var renumchars = {'۰': '0', '۱': '1', '۲': '2', '۳': '3', '۴': '4', '۵': '
 var rerefine = function(str) {
 	return String(str).replace(/[۰-۹]/g, function(c) { return renumchars[c]; });
 };
+
+
+// read variables
+appStorage = new Backbone.LocalStorage('App');
+if (!appStorage.find({id: 'variables'}))
+	appStorage.update({
+		id: 'variables',
+		lang: 'fa',
+		position: {mode: 'quran', quran: {page: 1, sura: 1, aya: ''}, tafsir: {section: '1-1:5'}}});
+
+variables = appStorage.find({id: 'variables'});
 
 
 // models
@@ -33,6 +45,7 @@ var Bayan = Backbone.Model.extend({
 	localStorage: new Backbone.LocalStorage('Almizan')
 });
 
+
 // views
 var AyaView = Backbone.View.extend({
 	template: _.template('<span class="aya" rel="<%= sura %>_<%= aya %>"><span class="text"><%= html %></span><span class="number">(<%= aya %>)</span></span>'),
@@ -48,7 +61,7 @@ var AyaView = Backbone.View.extend({
 			parts = data['text'].replace(/[ۖۗۚۛۙۘ]/g, '').split(' ');
 
 			_.each(data['phrases'], function (phrase) {
-				if (phrase['lang'] != language)
+				if (phrase['lang'] != variables.lang)
 					return;
 
 				key = phrase['words'].split('-');
@@ -157,7 +170,7 @@ var QuranView = Backbone.View.extend({
 					if (msg.children().length == 2)
 						msg.children().first().addClass('header');
 
-				} else if (language == 'fa' && aya.get('trans'))
+				} else if (variables.lang == 'fa' && aya.get('trans'))
 					app.message(aya.get('trans'), 'note', '');
 
 			} else
@@ -394,9 +407,9 @@ var TafsirView = Backbone.View.extend({
 			section = this.sections[s];
 			parts = sectionToAddress(section);
 			if (parts[0] == sura && (aya == 0 || (aya >= parts[1] && aya <= parts[2])))
-				return {lang: language, section: section, part: ''};
+				return {lang: variables.lang, section: section, part: ''};
 		}
-		return {lang: language, section: '0', part: ''};
+		return {lang: variables.lang, section: '0', part: ''};
 	},
 	tafsirToQuran: function(tafsir) {
 		parts = sectionToAddress(tafsir.section);
@@ -431,9 +444,6 @@ var TafsirView = Backbone.View.extend({
 var AddressView = Backbone.View.extend({
 	el: $("#address"),
 	initialize: function() {
-
-		// cookie optoins
-		$.cookie.json = true;
 
 		var sura_select = this.$el.find('.quran-address #sura'), aya_select = this.$el.find('.quran-address #aya'), page_select = this.$el.find('.quran-address #page');
 		numberData = function(num) {
@@ -558,8 +568,9 @@ var AddressView = Backbone.View.extend({
 			title = 'تفسیر سوره '+ position.tafsir.sura  +'، آیات '+ refine(position.tafsir.mi) +' تا '+ refine(position.tafsir.ma);
 		$(document).attr('title', 'زلال' +' | '+ title);
 
-		// cookie
-		$.cookie('position', this.position);
+		// store position
+		variables.position = this.position;
+		appStorage.update(variables);
 
 		// metrics
 		position = this.position;
@@ -596,10 +607,7 @@ var AppView = Backbone.View.extend({
 		});
 
 		// set position
-		if($.cookie('position'))
-			this.position = $.cookie('position');
-		else
-			this.position = {mode: 'quran', quran: {page: 1, sura: 1, aya: ''}, tafsir: {section: '1-1:5'}};
+		this.position = variables.position;
 		this.quran.on('updateAddress', this.tafsir.loadSection, $.extend({}, this.tafsir, {prepare: this.position}));
 	},
 	render: function() {
@@ -783,11 +791,11 @@ $('#menu a').click(function() {
 });
 
 // settings dialog
-$('select#language').val(language);
+$('select#language').val(variables.lang);
 $('#apply-settings').click(function() {
-	language = $('select#language').val();
 	$('#pages').html('');
-	app.position.tafsir.lang = language;
+	variables.lang = $('select#language').val();
+	app.position.tafsir.lang = variables.lang;
 	app.render();
 });
 
