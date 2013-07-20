@@ -166,8 +166,8 @@ def process_tafsir(ayas, book):
 				aya = '%s_%d' % (sura, a)
 				text = refineAya(ayas[aya]['text'])
 				html += '<span class="aya" rel="%s">%s «%d» </span>' % (aya, text, a)
-				aya_stems[aya] = [isri.stem(word) for word in text.replace('ة','ه').replace('ؤ','و').split(' ')]
-				aya_tokens[aya] = text.replace('ة','ه').replace('ؤ','و').split(' ')
+				aya_tokens[aya] = text.replace('ة','ه').replace('ؤ','و').replace('ّ', '').split(' ')
+				aya_stems[aya] = list(map(isri.stem, aya_tokens[aya]))
 
 			section.prepend(html)
 		else:
