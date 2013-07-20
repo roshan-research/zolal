@@ -269,7 +269,7 @@ var QuranView = Backbone.View.extend({
 	nextAya: function() {
 		this.position.phrase = '';
 		if (this.position.aya == '')
-			this.position.aya = Number(this.$el.find('.front .aya').first().attr('rel').split('_')[1]);
+			this.position.aya = Number(quran_pages[Number(this.position.page)][0].split('_')[1]);
 		else if (this.position.aya < sura_ayas[this.position.sura])
 			this.position.aya += 1;
 		else if (this.position.aya == sura_ayas[this.position.sura] && this.position.sura < quran_suras.length) {
