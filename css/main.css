@@ -188,13 +188,11 @@ h3 em {
   margin-bottom: 20px;
   text-align: justify;
   box-shadow: 0 0 10px #e6ddb3;
+  max-height: 142px;
 }
 #message #content span.aya {
   color: royalblue;
   text-shadow: 0 1px 2px #ccc;
-}
-#message #content em {
-  font-size: .9em;
 }
 #message #content .continue {
   margin-right: 5px;
@@ -203,6 +201,8 @@ h3 em {
   font-size: 15px;
   line-height: initial;
   margin: 0;
+  margin-bottom: 2px;
+  max-height: 24px;
 }
 #message #content p {
   margin-bottom: 0;

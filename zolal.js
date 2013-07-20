@@ -648,6 +648,8 @@ var AppView = Backbone.View.extend({
 		aya = $('.aya.active');
 		if (aya && aya.offset().top + aya.height() - box.offset().top + 10 > 0)
 			box.addClass('top');
+
+		box.find('h3, #content').dotdotdot({ellipsis : ' ... '});
 	},
 	connectionError: function() {
 		this.$el.find('.loading').removeClass('loading');
