@@ -38,11 +38,10 @@ def refine(text):
 	result = re.sub(r'[\n ]+', r' ', text)
 
 	# punctuations
-	result = re.sub(r'([\.،؛\):؟])(?=[^ :\.\d،؛])', r'\1 ', result)
+	result = re.sub(r'([\.،؛\):؟>])(?=[^ :\.\d،؛\)])', r'\1 ', result)
 	result = re.sub(r'(?=[^ ])([\(])', r' \1', result)
-	result = re.sub(r'"(<span[^\n]*>)([^\n"]*)(</span[^\n]*>)"',r'\1\2\3',result)
-	result = re.sub(r'(<span[^\n]*>)"([^\n"]*)(</span>)"', r'\1"\2"\3', result)
 	result = re.sub(r'"([^"\na-z0-9<>.]{1,15})"', r' <em>\1</em> ', result)
+	result = re.sub(r'([^=a-z\d])"([^=a-z\d>])', r'\1\2', result)
 	result = refineAya(result)
 
 
@@ -166,8 +165,8 @@ def process_tafsir(ayas, book):
 				aya = '%s_%d' % (sura, a)
 				text = refineAya(ayas[aya]['text'])
 				html += '<span class="aya" rel="%s">%s «%d» </span>' % (aya, text, a)
-				aya_stems[aya] = [isri.stem(word) for word in text.replace('ة','ه').replace('ؤ','و').split(' ')]
-				aya_tokens[aya] = text.replace('ة','ه').replace('ؤ','و').split(' ')
+				aya_tokens[aya] = text.replace('ة','ه').replace('ؤ','و').replace('ّ', '').split(' ')
+				aya_stems[aya] = list(map(isri.stem, aya_tokens[aya]))
 
 			section.prepend(html)
 		else:
