@@ -33,7 +33,7 @@ def process(text):
 
 		# footnote
 		(r'{L([^{]+)L}', r'<span class="latin">\1</span>'),
-		(r'{P([\d]+)P}', r'<span class="footnote" rel="\1"></span>'),
+		(r'{P([\d]+)P}', r'<span class="footnote" rel="\1">\1</span>'),
 		(r'{P\(([\d،و -]+)\)([^P]+)P}', r'<span class="footnote-content" rel="\1">\2</span>'),
 
 		(r' ?: ?</span>', r'</span>:'),
