@@ -125,7 +125,8 @@ blockquote p {
   font-size: 1.1em;
 }
 #tafsir h2,
-#tafsir h3 {
+#tafsir h3,
+#tafsir h1 {
   font-size: 1em;
 }
 #tafsir h1,
@@ -133,6 +134,7 @@ blockquote p {
 #tafsir h3 {
   margin: 12px 0 6px;
   line-height: 30px;
+  text-shadow: 0 1px 2px #CCC;
 }
 #tafsir blockquote {
   padding: 0 15px;

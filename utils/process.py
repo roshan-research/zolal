@@ -39,7 +39,8 @@ def refine(text):
 
 	# punctuations
 	result = re.sub(r'\*(?!</span>)', r'', result)
-	result = re.sub(r'([\.،؛\):؟>])(?=[^ :\.\d،؛\)])', r'\1 ', result)
+	result = re.sub(r'([\.،؛\):؟])(?=[^ :\.\d،؛\)])', r'\1 ', result)
+	result = re.sub(r' ([:\)])', r'\1', result)
 	result = re.sub(r'(?=[^ ])([\(])', r' \1', result)
 	result = re.sub(r'"([^"\na-z0-9<>.]{1,15})"', r' <em>\1</em> ', result)
 	result = re.sub(r'([^=a-z\d])"([^=a-z\d>])', r'\1\2', result)
@@ -225,7 +226,7 @@ def process_tafsir(ayas, book):
 					m = match.group()[1:-1]
 					rel = resolve(m, aya_stems, aya_tokens, book)
 					if rel != 'null':
-						html = replace(match.start(), match.end(), html, '<em rel="{0}"> {1} </em>'.format(rel, m))
+						html = replace(match.start(), match.end(), html, '<em rel="{0}">{1}</em>'.format(rel, m))
 
 				section.html(html)
 
