@@ -256,16 +256,16 @@ def resolve(text, aya_stems, aya_tokens, book):
 	for aya, tokens in aya_tokens.items():
 		for token in tokens:
 			if text in token:
-				rel = '{0}_{1}_{2}-{2}'.format('ar' if book == 'almizan_ar' else 'fa', aya, tokens.index(text)+1)
+				rel = '{0}_{1}_{2}-{2}'.format('ar' if book == 'almizan_ar' else 'fa', aya, tokens.index(token)+1)
 				return rel
-			
+
 
 	#resolve aya stems
 	text = isri.stem(text.replace('‌', ''))
 	for aya, stems in aya_stems.items():
-		for stem in stems
-			if text in stems:
-				rel = '{0}_{1}_{2}-{2}'.format('ar' if book == 'almizan_ar' else 'fa', aya, stems.index(text)+1)
+		for stem in stems:
+			if text in stem:
+				rel = '{0}_{1}_{2}-{2}'.format('ar' if book == 'almizan_ar' else 'fa', aya, stem.index(text)+1)
 				break
 	return rel;
 
