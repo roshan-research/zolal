@@ -38,6 +38,7 @@ def refine(text):
 	result = re.sub(r'[\n ]+', r' ', text)
 
 	# punctuations
+	result = re.sub(r'\*(?!</span>)', r'', result)
 	result = re.sub(r'([\.،؛\):؟>])(?=[^ :\.\d،؛\)])', r'\1 ', result)
 	result = re.sub(r'(?=[^ ])([\(])', r' \1', result)
 	result = re.sub(r'"([^"\na-z0-9<>.]{1,15})"', r' <em>\1</em> ', result)
