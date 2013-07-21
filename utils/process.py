@@ -208,19 +208,6 @@ def process_tafsir(ayas, book):
 				for m in reversed(list(iter)):
 					html = replace(m.start(), m.end(), html, m.group().replace('(','').replace(')',''))
 
-
-				#remove ayas parantheses in tafseer
-				"""
-				for aya in d('span.aya'):
-					aya = pq(aya)
-					html = aya.html()
-					print('html1: ' + html + '\n', file = testfile)
-					html = re.sub(r'\(([^\n\)]*)\)', r'\1', html)
-					print('html2: ' + html + '\n', file = testfile)
-					aya.html(html)
-					print('ayahtml: ' + html + '\n', file = testfile)"""
-
-
 				iter = re.finditer(r'\([^\)]{3,15}\)', html)
 				for match in reversed(list(iter)):
 					m = match.group()[1:-1]
@@ -267,20 +254,19 @@ def resolve(text, aya_stems, aya_tokens, book):
 	text  = text.replace('ة','ه').replace('ؤ','و')
 	#resolve aya tokens with or without Alif-Lam
 	for aya, tokens in aya_tokens.items():
-		if text in tokens:
-			rel = '{0}_{1}_{2}-{2}'.format('ar' if book == 'almizan_ar' else 'fa', aya, tokens.index(text)+1)
-			return rel
-		elif text[2:] in aya_tokens.items():
-			rel = '{0}_{1}_{2}-{2}'.format('ar' if book == 'almizan_ar' else 'fa', aya, tokens.index(text[2:])+1)
-			print ('case 2: ' + rel)
-			return rel
+		for token in tokens:
+			if text in token:
+				rel = '{0}_{1}_{2}-{2}'.format('ar' if book == 'almizan_ar' else 'fa', aya, tokens.index(text)+1)
+				return rel
+			
 
 	#resolve aya stems
 	text = isri.stem(text.replace('‌', ''))
 	for aya, stems in aya_stems.items():
-		if text in stems:
-			rel = '{0}_{1}_{2}-{2}'.format('ar' if book == 'almizan_ar' else 'fa', aya, stems.index(text)+1)
-			break
+		for stem in stems
+			if text in stems:
+				rel = '{0}_{1}_{2}-{2}'.format('ar' if book == 'almizan_ar' else 'fa', aya, stems.index(text)+1)
+				break
 	return rel;
 
 def replace(start, end, oldtext, newtext):
