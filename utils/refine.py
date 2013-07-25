@@ -9,18 +9,19 @@ def process(text):
 
 	expressions = [
 		# refinement
-		(r'{AC\d+\\\d+AC}', ''),
 		(r'\[t-\d+-\d+-\d+\]', ''),
 
 		# address
 		(r'{"([^}]+)"}', r'<code class="book">\1</code>'),
 		(r'{\$(\d+)\$}', r'<code class="page" rel="\1"><span>\1</span></code>'),
+		(r'{AC(\d+)\\(\d+)AC}', r'<code class="aya" rel="\1_\2"></code>'),
 
 		# aya
 		(r'{a([^{]+)a}', r'<em>\1</em>'),
 		(r'{HC({/B[^H]+/})HC}', r'\1'),
-		(r'{/B([^Iw]+){w([\d-]+)w}{I([\d:-]+)I}([^}/]{0,2})/}', r'<span class="aya" rel="\3 \3">\1\4</span>'),
+		(r'{/B([^Iw]+){w([\d-]+)w}{I([\d:-]+)I}([^}/]{0,2})/}', r'<span class="aya" rel="\3" data-words="\2">\1\4</span>'),
 		(r'{\?([^I]+){I([\d:-]+)I}([^\?]{0,2})\?}', r'<span class="aya" rel="\2">\1\3</span>'),
+		(r'class="aya" rel="(\d+):', r'class="aya" rel="\1_'),
 
 		(r'{BC{EC(\d+)\\(\d+)EC}([^}]*)BC}', r'<span class="trans" rel="\1_\2">\3</span>'),
 
