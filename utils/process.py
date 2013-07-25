@@ -255,7 +255,13 @@ def resolve(text, aya_stems, aya_tokens, book):
 	#resolve aya tokens with or without Alif-Lam
 	for aya, tokens in aya_tokens.items():
 		for token in tokens:
-			if text in token:
+			if text == token:
+				rel = '{0}_{1}_{2}-{2}'.format('ar' if book == 'almizan_ar' else 'fa', aya, tokens.index(token)+1)
+				return rel
+			if token[:2] == 'ال' and text == token[2:]:
+				rel = '{0}_{1}_{2}-{2}'.format('ar' if book == 'almizan_ar' else 'fa', aya, tokens.index(token)+1)
+				return rel
+			if token[:1] in 'وبکف' and text == token[1:]:
 				rel = '{0}_{1}_{2}-{2}'.format('ar' if book == 'almizan_ar' else 'fa', aya, tokens.index(token)+1)
 				return rel
 
@@ -264,9 +270,10 @@ def resolve(text, aya_stems, aya_tokens, book):
 	text = isri.stem(text.replace('‌', ''))
 	for aya, stems in aya_stems.items():
 		for stem in stems:
-			if text in stem:
-				rel = '{0}_{1}_{2}-{2}'.format('ar' if book == 'almizan_ar' else 'fa', aya, stem.index(text)+1)
+			if text == stem:
+				rel = '{0}_{1}_{2}-{2}'.format('ar' if book == 'almizan_ar' else 'fa', aya, stems.index(stem)+1)
 				break
+
 	return rel;
 
 def replace(start, end, oldtext, newtext):
