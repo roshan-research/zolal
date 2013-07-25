@@ -23,7 +23,7 @@ def refineAya(text):
 
 	# remove aya separator
 	text = re.sub(r'([،؟:]) *` *', r'\1 ', text)
-	text = re.sub(r' *` *', '، ', text)
+	text = re.sub(r' *` *', '، ', text).replace('.،', '،')
 
 	# remove qoutation marks
 	text = re.sub(r'"([^"\na-z0-9<>]+)"',r' \1 ',text)
