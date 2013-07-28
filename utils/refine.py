@@ -51,6 +51,7 @@ def process(text):
 		(r'&([^&]+)', r'\n<p>\1</p>'),
 
 		# others
+		(r'(<h2 class="sura">[^h]+</h2>)[^p]*</p></div><div>', r'</p></div><div>\1'),
 		(r'{S([^S]+)S}', r'<span class="poem">\1</span>'),
 		(r'#', r' / '),
 	]

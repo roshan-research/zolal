@@ -149,6 +149,9 @@ blockquote p {
 #tafsir p {
   margin-bottom: 8px;
 }
+#tafsir p.ayas {
+  margin-top: 10px;
+}
 #tafsir code {
   display: none;
 }

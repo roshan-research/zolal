@@ -162,7 +162,7 @@ def process_tafsir(ayas, book):
 			sura, aya = key.split(' ')
 			second, first = aya.split('-') if '-' in aya else (aya, aya)
 			key = '%s_%s-%s' % (sura, first, second)
-			html = '<h2>آیات %s تا %s سوره %s</h2>' % (first, second, refineName(quran_suras[int(sura)-1]))
+			html = ''
 			for a in range(int(first), int(second)+1):
 				aya = '%s_%d' % (sura, a)
 				text = refineAya(ayas[aya]['text'])
@@ -170,7 +170,7 @@ def process_tafsir(ayas, book):
 				aya_tokens[aya] = text.replace('ة','ه').replace('ؤ','و').replace('ّ', '').split(' ')
 				aya_stems[aya] = list(map(isri.stem, aya_tokens[aya]))
 
-			section.prepend(html)
+			section.find('code.section').before('<p class="ayas">'+ html +'</p>')
 		else:
 			key = '0'
 
