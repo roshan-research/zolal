@@ -512,7 +512,7 @@ var AddressView = Backbone.View.extend({
 				slug = position.quran.sura +'_'+ position.quran.aya;
 				if (position.quran.phrase)
 					slug += '/'+ position.quran.phrase;
-				app.router.navigate('quran/'+ slug, false);
+				app.router.navigate('quran/'+ slug, {trigger: false, replace: true});
 			}
 			else
 				app.router.navigate('quran/p'+ position.quran.page, false);
@@ -634,7 +634,8 @@ var AppView = Backbone.View.extend({
 		if (aya && aya.offset().top + aya.height() - box.offset().top + 10 > 0)
 			box.addClass('top');
 
-		box.find('h3, #content').dotdotdot({ellipsis : ' ... '});
+		box.find('#content').dotdotdot({ellipsis : ' ... '});
+		box.find('h3').dotdotdot({ellipsis : ' ... '});
 	},
 	connectionError: function() {
 		this.$el.find('.loading').removeClass('loading');

@@ -216,7 +216,7 @@ h3 em {
   margin-bottom: 2px;
   line-height: inherit;
 }
-#message #content code.page,
+#message #content code,
 #message #content .footnote {
   display: none;
 }
