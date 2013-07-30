@@ -348,29 +348,27 @@ var TafsirView = Backbone.View.extend({
 						head = '<h3>'+ parent.html() +'</h3>';
 						html = '';
 					}
-					aya.insertPhrase({words: parts[3], lang: parts[0], head: (head ? head : ''), html: html, link: 'almizan_'+ bayan.get('id') + (page ? '/'+ page : '')});
+					aya.insertPhrase({words: parts[3], lang: parts[0], head: (head ? head : ''), html: html, link: 'almizan_'+ parts[0] +'/'+ parts[1] +'_'+ parts[2]});
 				});
 			} else {
 				// content
 				tafsir.$el.html(bayan.get('content'));
 				tafsir.$el.removeClass('loading');
 				tafsir.$el.scrollTop(0);
-				if (position.part) {
-					part = tafsir.$el.find('code.page[rel='+ position.part +']');
-					container = tafsir.$el;
-					if (part.length == 1) {
 
-						// bold selected phrase
-						quran = app.position.quran;
-						if (quran.phrase) {
-							parts = quran.phrase.split('_');
-							part = $('#tafsir em[rel='+ parts[0] +'_'+ quran.sura + '_'+ quran.aya +'_'+ parts[1] +']').parent();
-							console.log(part);
-							part.css('background', '#FFFC99').animate({ backgroundColor: 'none' }, 1000);
-						}
+				container = tafsir.$el;
+				part = tafsir.$el.find('code.aya[rel='+ position.aya +']').parent();
 
-						container.scrollTop(part.offset().top - container.offset().top + container.scrollTop());
-					}
+				// bold selected phrase
+				quran = app.position.quran;
+				if (quran.phrase) {
+					parts = quran.phrase.split('_');
+					part = $('#tafsir em[rel='+ parts[0] +'_'+ quran.sura + '_'+ quran.aya +'_'+ parts[1] +']').parent();
+				}
+
+				if (part.length > 0) {
+					part.css('background', '#FFFC99').animate({ backgroundColor: 'none' }, 1000);
+					container.scrollTop(part.offset().top - container.offset().top + container.scrollTop());
 				}
 
 				// footnote
@@ -402,17 +400,11 @@ var TafsirView = Backbone.View.extend({
 		});
 	},
 	quranToTafsir: function(quran) {
-		sura = quran.sura; aya = quran.aya;
-		for (s in this.sections) {
-			section = this.sections[s];
-			parts = sectionToAddress(section);
-			if (parts[0] == sura && (aya == 0 || (aya >= parts[1] && aya <= parts[2])))
-				return {lang: variables.lang, section: section, part: ''};
-		}
-		return {lang: variables.lang, section: '0', part: ''};
+		aya = quran.sura +'_'+ quran.aya;
+		return {lang: variables.lang, aya: aya, section: almizan_ayas[aya]};
 	},
 	tafsirToQuran: function(tafsir) {
-		parts = sectionToAddress(tafsir.section);
+		parts = tafsir.aya.split('_');
 		return {sura: parts[0], aya: parts[1]};
 	},
 	checkScroll: function () {
@@ -535,10 +527,7 @@ var AddressView = Backbone.View.extend({
 			el.find('#aya').val(position.quran.aya ? position.quran.aya : '...');
 		}
 		else if (position.mode == 'tafsir') {
-			slug = this.position.tafsir.section;
-			if (position.tafsir.part)
-				slug += '/'+ position.tafsir.part;
-			app.router.navigate('almizan_'+ position.tafsir.lang +'/'+ slug, false);
+			app.router.navigate('almizan_'+ position.tafsir.lang +'/'+ this.position.tafsir.aya, false);
 			parts = sectionToAddress(position.tafsir.section);
 			position.tafsir = {'sura': quran_suras[parts[0]-1], 'mi': parts[1], 'ma': parts[2]};
 
@@ -583,12 +572,8 @@ var AddressView = Backbone.View.extend({
 			} else
 				mixpanel.track('Quran', position.quran);
 		}
-		else if (position.mode == 'tafsir') {
-			if (position.tafsir.part)
-				mixpanel.track('Almizan Part', position.tafsir);
-			else
-				mixpanel.track('Almizan', position.tafsir);
-		}
+		else if (position.mode == 'tafsir')
+			mixpanel.track('Almizan', position.tafsir);
 	}
 });
 
@@ -704,8 +689,7 @@ var AddressRouter = Backbone.Router.extend({
 		'quran/p:page': 'quranPage',
 		'quran/:aya': 'quranAya',
 		'quran/:aya/:phrase': 'quranPhrase',
-		'almizan_:lang/:section': 'almizanSection',
-		'almizan_:lang/:section/:part': 'almizanPart'
+		'almizan_:lang/:aya': 'almizanAya'
 	},
 	quranPage: function(page) {
 		if (isNaN(page) || page < 0 || page > 605)
@@ -726,15 +710,12 @@ var AddressRouter = Backbone.Router.extend({
 		app.position.quran = {'page': '', 'sura': Number(aya.split('_')[0]), 'aya': Number(aya.split('_')[1]), 'phrase': phrase};
 		app.render();
 	},
-	almizanSection: function(lang, section) {
-		this.almizanPart(lang, section, '');
-	},
-	almizanPart: function(lang, section, part) {
-		if (_.indexOf(almizan_sections, section) < 0)
+	almizanAya: function(lang, aya) {
+		if (!(aya in almizan_ayas))
 			return;
 
 		app.position.mode = 'tafsir';
-		app.position.tafsir = {'lang': lang, 'section': section, 'part': part};
+		app.position.tafsir = {'lang': lang, 'aya': aya, section: almizan_ayas[aya]};
 		app.render();
 	}
 });
@@ -748,13 +729,19 @@ var sectionToAddress = function(section) {
 };
 
 // aya inverted index
-var quran_ayas = {}, sura_ayas = {};
+var quran_ayas = {}, sura_ayas = {}, almizan_ayas = {};
 _.each(quran_pages, function(page, p) {
 	for (aya in page) {
 		quran_ayas[page[aya]] = Number(p);
 		sura_ayas[Number(page[aya].split('_')[0])] = Number(page[aya].split('_')[1]);
 	}
 });
+_.each(almizan_sections, function(section) {
+	parts = sectionToAddress(section);
+	for (i = parts[1]; i <= parts[2]; i++)
+		almizan_ayas[parts[0]+'_'+i] = section;
+});
+
 
 $(window).resize(function() {
 	$('#container').height($('#wrap').height() - $('#footer').height());
