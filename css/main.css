@@ -39,6 +39,7 @@ blockquote p {
 }
 #footer {
   height: 40px;
+  padding: 0 10px;
 }
 .container {
   max-width: 800px;
@@ -89,30 +90,34 @@ blockquote p {
   text-shadow: 1px 1px 2px #999;
   line-height: 20px;
 }
-#quran .page span.aya .text {
-  padding: 0 3px;
-}
 #quran .page span.aya.active .text {
-  background: #f7f7f7;
-  box-shadow: 0 0 4px 1px #f7f7f7;
+  text-shadow: 0px 2px 3px #ccc;
 }
 #quran .page span.aya.active .phrase {
-  text-shadow: 0px 1px 3px #999;
+  color: #2A6496;
 }
 #quran .page span.aya.active .phrase:hover,
 #quran .page span.aya.active .phrase.active {
-  color: #758486;
+  color: #428BCA;
 }
 #quran .page span.mark {
   color: #3A87AD;
   font-family: AppFont;
 }
 #quran .page span.number {
-  margin-right: 5px;
   font-family: AppFont;
   font-weight: bold;
-  font-size: .9em;
-  color: #999;
+  font-size: .8em;
+  color: #888;
+  padding: 0 2px;
+  border-radius: 3px;
+  min-width: 14px;
+  text-align: center;
+  border-right: 2px solid #CCC;
+  border-left: 2px solid #CCC;
+  display: inline-block;
+  line-height: 18px;
+  margin: 0 1px 0 3px;
 }
 #tafsir {
   text-align: justify;
@@ -436,9 +441,12 @@ span.footnote:hover {
 .modal #copyright {
   font-size: .9em;
 }
+.tooltip-inner {
+  font-size: 15px;
+}
 @media (max-width: 480px) {
   #wrap {
-    padding: 0 10px;
+    padding: 0;
   }
   #menu {
     display: none;
@@ -461,7 +469,8 @@ span.footnote:hover {
     line-height: 32px;
   }
   #quran .page span.number {
-    margin-right: 2px;
+    line-height: 14px;
+    min-width: 10px;
   }
   #quran .page span.mark {
     margin-right: 3px;

@@ -48,7 +48,7 @@ var Bayan = Backbone.Model.extend({
 
 // views
 var AyaView = Backbone.View.extend({
-	template: _.template('<span class="aya" rel="<%= sura %>_<%= aya %>"><span class="text"><%= html %></span><span class="number">(<%= aya %>)</span></span>'),
+	template: _.template('<span class="aya" rel="<%= sura %>_<%= aya %>"><span class="text"><%= html %></span> <span class="number"><%= aya %></span></span>'),
 	initialize: function () {
 		this.model.on('change', this.render, this);
 	},

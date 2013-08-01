@@ -40,6 +40,7 @@ body, blockquote p {
 @footer: 40px;
 #footer {
 	height: @footer;
+	padding: 0 10px;
 }
 
 .container {
@@ -98,20 +99,16 @@ body, blockquote p {
 	}
 
 	span.aya {
-		.text {
-			padding: 0 3px;
-		}
 		&.active {
 			.text {
-				background: hsl(0, 0%, 97%);
-				box-shadow: 0 0 4px 1px hsl(0, 0%, 97%);
+				text-shadow: 0px 2px 3px #ccc;
 			}
 
 			.phrase {
-				text-shadow: 0px 1px 3px #999;
+				color: #2A6496;
 
 				&:hover, &.active {
-					color: #758486;
+					color: #428BCA;
 				}
 			}
 		}
@@ -122,11 +119,19 @@ body, blockquote p {
 		font-family: AppFont;
 	}
 	span.number {
-		margin-right: 5px;
 		font-family: AppFont;
 		font-weight: bold;
-		font-size: .9em;
-		color: #999;
+		font-size: .8em;
+		color: #888;
+		padding: 0 2px;
+		border-radius: 3px;
+		min-width: 14px;
+		text-align: center;
+		border-right: 2px solid #CCC;
+		border-left: 2px solid #CCC;
+		display: inline-block;
+		line-height: 18px;
+		margin: 0 1px 0 3px;
 	}
 }
 
@@ -486,12 +491,15 @@ span.footnote {
 		font-size: .9em;
 	}
 }
+.tooltip-inner {
+	font-size: 15px;
+}
 
 // phone
 
 @media (max-width: 480px) {
 	#wrap {
-		padding: 0 10px;
+		padding: 0;
 	}
 	#menu {
 		display: none;
@@ -515,7 +523,8 @@ span.footnote {
 		line-height: 32px;
 
 		span.number {
-			margin-right: 2px;
+			line-height: 14px;
+			min-width: 10px;
 		}
 		span.mark {
 			margin-right: 3px;
