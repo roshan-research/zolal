@@ -82,7 +82,7 @@ blockquote p {
   font-size: .9em;
 }
 #quran .page div.sura {
-  margin: 12px 0 5px;
+  margin: 8px 0 4px;
   text-align: center;
   background: #eee;
 }
@@ -468,6 +468,9 @@ span.footnote:hover {
     font-size: 15px;
     line-height: 32px;
   }
+  #quran .page div.sura {
+    margin: 4px 0 2px;
+  }
   #quran .page span.number {
     line-height: 14px;
     min-width: 10px;
@@ -478,8 +481,7 @@ span.footnote:hover {
   #tafsir {
     font-size: 18px;
     line-height: 22px;
-    margin-right: 0;
-    padding-right: 1px;
+    padding: 0 7px;
   }
   #tafsir h1,
   #tafsir h2,
