@@ -441,6 +441,9 @@ span.footnote:hover {
 .modal #copyright {
   font-size: .9em;
 }
+.modal p:last-child {
+  margin: 0;
+}
 .tooltip-inner {
   font-size: 15px;
 }
@@ -458,6 +461,7 @@ span.footnote:hover {
   }
   #message #content {
     margin-bottom: 10px;
+    padding: 5px 10px;
   }
   #quran,
   #tafsir {
@@ -481,7 +485,7 @@ span.footnote:hover {
   #tafsir {
     font-size: 18px;
     line-height: 22px;
-    padding: 0 7px;
+    padding: 0 10px;
   }
   #tafsir h1,
   #tafsir h2,
