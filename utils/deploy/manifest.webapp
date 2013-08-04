@@ -1,5 +1,6 @@
 {
-	"name": "Zolal Online",
+	"version": "0.9.4",
+	"name": "Zolal",
 	"description": "Quran with Tafsir.",
 	"launch_path": "/index.html",
 	"fullscreen": "true",

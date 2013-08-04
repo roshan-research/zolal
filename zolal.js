@@ -788,6 +788,7 @@ $('#apply-settings').click(function() {
 	app.position.tafsir.lang = variables.lang;
 	app.render();
 });
+$('a[data-toggle=tooltip]').tooltip();
 
 // gestures
 $(document).ready(function() {
