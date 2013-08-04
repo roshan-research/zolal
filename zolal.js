@@ -400,7 +400,11 @@ var TafsirView = Backbone.View.extend({
 		});
 	},
 	quranToTafsir: function(quran) {
-		aya = quran.sura +'_'+ quran.aya;
+		var aya;
+		if (quran.aya == '')
+			aya = quran.sura +'_'+ quran_pages[quran.page][0].split('_')[1];
+		else
+			aya = quran.sura +'_'+ quran.aya;
 		return {lang: variables.lang, aya: aya, section: almizan_ayas[aya]};
 	},
 	tafsirToQuran: function(tafsir) {
