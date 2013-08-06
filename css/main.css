@@ -1,7 +1,7 @@
 @font-face {
   font-family: QuranFont;
   font-weight: normal;
-  src: url('../font/QuranFont.woff') format('woff'), url('../font/QuranFont.ttf') format('truetype');
+  src: url('../font/QuranFont.otf') format('opentype');
 }
 @font-face {
   font-family: AppFont;
@@ -25,7 +25,7 @@ body {
 }
 #wrap {
   height: 100%;
-  max-height: 680px;
+  max-height: 650px;
   position: relative;
   padding: 0 25px;
 }
@@ -60,16 +60,15 @@ blockquote p {
 }
 #quran #pages .page {
   height: inherit;
-  padding: 10px;
+  padding: 0 10px;
   float: left;
   direction: rtl;
   overflow-y: auto;
 }
 #quran .page {
   font-family: QuranFont;
-  word-spacing: 3px;
-  font-size: 20px;
-  line-height: 46px;
+  font-size: 24px;
+  line-height: 42px;
   text-shadow: 0.5px 0.5px 1px #eee;
   cursor: pointer;
   visibility: hidden;
@@ -102,19 +101,19 @@ blockquote p {
 }
 #quran .page span.mark {
   color: #3A87AD;
-  font-family: AppFont;
+  font-family: Arial;
+  margin-right: 6px;
 }
 #quran .page span.number {
   font-family: AppFont;
   font-weight: bold;
-  font-size: .8em;
-  color: #888;
-  padding: 0 2px;
-  border-radius: 3px;
+  font-size: .6em;
+  color: #555;
+  background: #efefef;
+  padding: 3px 5px 0px 4px;
+  border-radius: 50px;
   min-width: 14px;
   text-align: center;
-  border-right: 2px solid #CCC;
-  border-left: 2px solid #CCC;
   display: inline-block;
   line-height: 18px;
   margin: 0 1px 0 3px;
@@ -468,9 +467,8 @@ span.footnote:hover {
     margin: 5px auto;
   }
   #quran .page {
-    word-spacing: 0;
-    font-size: 15px;
-    line-height: 32px;
+    font-size: 18px;
+    line-height: 30px;
   }
   #quran .page div.sura {
     margin: 4px 0 2px;
@@ -478,9 +476,6 @@ span.footnote:hover {
   #quran .page span.number {
     line-height: 14px;
     min-width: 10px;
-  }
-  #quran .page span.mark {
-    margin-right: 3px;
   }
   #tafsir {
     font-size: 18px;

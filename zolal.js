@@ -54,7 +54,7 @@ var AyaView = Backbone.View.extend({
 	},
 	render: function () {
 		data = this.model.toJSON();
-		data['html'] = data['text'].replace(/[ ]*([ۖۗۚۛۙۘ])[ ]*/g, '<span class="mark"> \$1 </span>');
+		data['html'] = data['text'].replace(/[ ]*([ۖۗۚۛۙۘ])[ ]*/g, '<span class="mark">\$1 </span>');
 
 		if (Object.keys(data['phrases']).length) {
 			html = data['html'];
@@ -751,7 +751,7 @@ _.each(almizan_sections, function(section) {
 $(window).resize(function() {
 	$('#container').height($('#wrap').height() - $('#footer').height());
 	$('#quran, #tafsir').height($('#container').height() - ($('#quran').outerHeight(true) - $('#quran').height()));
-	$('#pages').height($('#quran').height() - 20);
+	$('#pages').height($('#quran').height());
 	$('#wrap').css('margin-top', ($('body').height() - $('#wrap').height())/2);
 
 	$('#page-style').html('#quran .page {width: '+ ($('#quran').width() - 20) +'px}');
