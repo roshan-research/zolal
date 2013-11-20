@@ -1,5 +1,5 @@
 var store = false;
-var server = '/';
+var server = 'http://zolal-files.ap01.aws.af.cm/';
 
 
 // functions
@@ -231,7 +231,7 @@ var QuranView = Backbone.View.extend({
 			error: function () {
 				$.ajax({
 					context: {page: page},
-					url: server +'files/quran/p'+ page,
+					url: server +'quran/p'+ page,
 					success: function(data){
 						_.each(data.split('\n'), function(item) {
 							if (item) {
@@ -388,7 +388,7 @@ var TafsirView = Backbone.View.extend({
 			error: $.proxy(function (bayan) {
 				$.ajax({
 					context: {id: bayan.get('id')},
-					url: server +'files/almizan_'+ bayan.get('id'),
+					url: server +'almizan_'+ bayan.get('id'),
 					success: function(item){
 						bayan = new Bayan({id: this.id, content: item});
 						if (store) bayan.save();

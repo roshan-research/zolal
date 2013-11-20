@@ -299,7 +299,7 @@ if __name__ == '__main__':
 		print(json.dumps(aya, ensure_ascii=False), file=quran_file)
 
 	# write meta.js
-	meta = open(files / 'meta.js', 'w')
+	meta = open('js/meta.js', 'w')
 	print('var quran_suras = %s;' % str([sura for sura in quran_suras]), file=meta)
 	print('var quran_pages = %s;' % str(dict(quran_pages)), file=meta)
 	print('var almizan_sections = %s;' % str(almizan_sections), file=meta)

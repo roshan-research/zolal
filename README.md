@@ -21,3 +21,13 @@ Start a simple server for hosting whole directory:
 Use `zolal` as a standalone desktop application with [app.js](http://appjs.org), just use following command:
 
 	node --harmony app.js
+
+## Deployment
+Update application:
+
+	af update zolal-dev
+
+Update files:
+
+	cd files
+	af update zolal-files
