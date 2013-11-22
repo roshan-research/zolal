@@ -1,4 +1,7 @@
 files
 utils/data
 utils/deploy/app
+utils/deploy/zolal.js
 *.exe
+*.pyc
+*.zip

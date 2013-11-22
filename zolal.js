@@ -1,5 +1,6 @@
-var store = false;
+var store = true;
 var server = 'http://zolal-files.ap01.aws.af.cm/';
+store = false; // hosted_mode
 
 
 // functions
