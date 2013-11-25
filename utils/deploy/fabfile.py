@@ -12,7 +12,7 @@ def make_apps():
 	archive.write('manifest.webapp')
 
 	os.chdir('../../')
-	for directory in ['css/', 'font/', 'img/', 'js/', 'files/quran/']:
+	for directory in ['css/', 'font/', 'img/', 'js/']:
 		for root, dirs, files in os.walk(directory):
 			for file in files:
 				archive.write(os.path.join(root, file))

@@ -1,7 +1,7 @@
 {
 	"name": "Zolal",
 	"description": "Quran with Tafsir.",
-	"version": "0.9.4",
+	"version": "0.9.5",
 	"icons": {
 		"16": "img/logo16.png",
 		"128": "img/logo128.png"

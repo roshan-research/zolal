@@ -30,6 +30,10 @@
 				<h3>دریافت نرم‌افزار</h3>
 			</div>
 			<div class="modal-body">
+				<!-- <p>با دریافت داده‌ها می‌توانید بدون اتصال اینترنت، از زلال استفاده کنید: <a href="#" id="tafsir-download" class="btn disabled"><i class="icon-download-alt"></i> دریافت تفسیر</a></p> -->
+				<div id="download-progress" class="progress progress-striped active" style="display: none">
+					<div class="bar" style="width: 0%;"></div>
+				</div>
 				<p>نسخه‌های قابل نصب زلال، هنوز در حال توسعه هستند:</p>
 				<p style="text-align: center">
 					<a href="#" class="btn disabled"><i class="icon-windows"></i> نسخه ویندوز</a>
@@ -95,5 +99,17 @@
 	<script type="text/javascript" src="js/typeahead.js"></script>
 	<script type="text/javascript" src="js/meta.js"></script>
 	<script type="text/javascript" src="zolal.js"></script>
+	<script type="text/javascript" src="js/download.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			if (store) {
+				$('#tafsir-download').removeClass('disabled').click(download_tafsir);
+
+				if (!Boolean(localStorage.Quran) || localStorage.Quran.split(',').length < 6200) {
+					download_quran();
+				}
+			}
+		})
+	</script>
 </body>
 </html>
