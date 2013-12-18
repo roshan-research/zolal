@@ -13,6 +13,9 @@ var rerefine = function(str) {
 	return String(str).replace(/[۰-۹]/g, function(c) { return renumchars[c]; });
 };
 
+var track = function(title, data) {
+	// mixpanel.track(title, data);
+}
 
 // read variables
 appStorage = new Backbone.LocalStorage('App');
@@ -571,14 +574,14 @@ var AddressView = Backbone.View.extend({
 		if (position.mode == 'quran') {
 			if (position.quran.aya) {
 				if (position.quran.phrase)
-					mixpanel.track('Quran Phrase', position.quran);
+					track('Quran Phrase', position.quran);
 				else
-					mixpanel.track('Quran Aya', position.quran);
+					track('Quran Aya', position.quran);
 			} else
-				mixpanel.track('Quran', position.quran);
+				track('Quran', position.quran);
 		}
 		else if (position.mode == 'tafsir')
-			mixpanel.track('Almizan', position.tafsir);
+			track('Almizan', position.tafsir);
 	}
 });
 
@@ -779,7 +782,7 @@ $(document).ready(function() {
 		}
 	}
 
-	mixpanel.track('Zolal');
+	track('Zolal');
 });
 
 $(window).load($(window).resize);
