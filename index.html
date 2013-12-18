@@ -99,17 +99,5 @@
 	<script type="text/javascript" src="js/typeahead.js"></script>
 	<script type="text/javascript" src="js/meta.js"></script>
 	<script type="text/javascript" src="zolal.js"></script>
-	<script type="text/javascript" src="js/download.js"></script>
-	<script type="text/javascript">
-		$(function() {
-			if (store) {
-				$('#tafsir-download').removeClass('disabled').click(download_tafsir);
-
-				if (!Boolean(localStorage.Quran) || localStorage.Quran.split(',').length < 6200) {
-					download_quran();
-				}
-			}
-		})
-	</script>
 </body>
 </html>
