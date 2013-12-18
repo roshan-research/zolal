@@ -1,7 +1,7 @@
 {
 	"name": "Zolal",
 	"description": "Quran with Tafsir.",
-	"version": "0.9.5",
+	"version": "0.9.6",
 	"icons": {
 		"16": "img/logo16.png",
 		"128": "img/logo128.png"
@@ -14,7 +14,7 @@
 	"permissions": [
 		"unlimitedStorage"
 	],
+	"content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
 	"offline_enabled": true,
-	"kiosk_enabled": true,
 	"manifest_version": 2
 }
