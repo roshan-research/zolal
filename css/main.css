@@ -36,7 +36,7 @@ blockquote p {
   min-width: 25px;
 }
 #footer {
-  height: 40px;
+  height: 50px;
   padding: 0 10px;
 }
 .container {
@@ -450,6 +450,9 @@ span.footnote:hover {
   }
   #menu {
     display: none;
+  }
+  #footer {
+    height: 40px;
   }
   #message {
     left: 10px;
