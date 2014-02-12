@@ -17,12 +17,9 @@ body {
   height: 100%;
   padding: 0;
   overflow: hidden;
+  direction: rtl;
   font-family: AppFont;
   -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
-}
-#wrap,
-#footer {
-  direction: rtl;
 }
 #wrap {
   height: 100%;

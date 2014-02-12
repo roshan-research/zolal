@@ -646,7 +646,7 @@ var AppView = Backbone.View.extend({
 		box.find('h3').dotdotdot({ellipsis : ' ... '});
 	},
 	connectionError: function() {
-		this.$el.find('.loading').removeClass('loading');
+		$('body').find('.loading').removeClass('loading');
 		app.message('خطا در اتصال به شبکه.', 'error', '');
 	},
 	events: {
@@ -824,18 +824,20 @@ $(document).ready(function() {
 // download
 var request_url = function(urls, index, store_data, progress_bar) {
 	if (progress_bar)
-		var progress = function(percent) { progress_bar.find('div').css({width: percent+'%'}) };
+		var progress = function(percent) { progress_bar.attr('data-progrecss', Math.round(percent)) };
 
 	if (index >= urls.length) {
 		if (progress_bar) {
 			progress(100);
-			progress_bar.hide();
+			progress_bar.removeClass('progrecss');
 		}
 		return;
 	}
 
-	if (progress_bar) progress_bar.show();
-	$.ajax({
+	if (progress_bar)
+		progress_bar.addClass('progrecss');
+
+	settings = {
 		context: {url: urls[index]},
 		url: server + urls[index],
 		success: function(data) {
@@ -843,8 +845,13 @@ var request_url = function(urls, index, store_data, progress_bar) {
 			if (progress_bar) progress(100*index/urls.length);
 			request_url(urls, index+1, store_data, progress_bar);
 		},
-		error: app.connectionError
-	});
+		error : function(xhr, textStatus) {
+			setTimeout(function() { $.ajax(this.settings); }, 1000);
+			console.log('retry in 1 second ...');
+		}
+	};
+	settings.context.settings = settings;
+	$.ajax(settings);
 };
 
 var download_quran = function() {
@@ -871,6 +878,9 @@ var download_quran = function() {
 };
 
 var download_tafsir = function() {
+	$('.modal').modal('hide');
+	$('#tafsir-download').addClass('disabled');
+
 	var store_data = function(url, data) {
 		bayan = new Bayan({id: url.substr(8), content: data});
 		bayan.save();
@@ -886,5 +896,5 @@ var download_tafsir = function() {
 		});
 	});
 
-	request_url(urls, 0, store_data, $('#download-progress'));
+	request_url(urls, 0, store_data, $('html'));
 };
