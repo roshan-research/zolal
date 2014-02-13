@@ -10,6 +10,7 @@
 	<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
 	<link rel="stylesheet" type="text/css" href="css/progrecss.css">
 	<link rel="stylesheet" type="text/css" href="css/main.css">
+	<link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/cmhmgigldkolppfbfdadehjlmfgblgin">
 </head>
 <body>
 	<div id="wrap">
@@ -31,10 +32,13 @@
 				<h3>دریافت داده‌ها</h3>
 			</div>
 			<div class="modal-body">
-				<p>برای استفاده بدون اتصال به اینترنت، داده‌ها را دریافت کنید:</p>
-				<p style="text-align: left">
-					<a href="#" id="tafsir-download" class="btn" disabled="disabled"><i class="icon-download-alt"></i> دریافت تفسیر</a>
-				</p>
+				<p class="store-hide">برای استفاده بدون اتصال به اینترنت می‌توانید <a href="https://chrome.google.com/webstore/detail/cmhmgigldkolppfbfdadehjlmfgblgin" onclick="chrome.webstore.install(); return false;">زلال در کروم</a> را نصب کنید.</p>
+				<div class="store-display" style="display: none">
+					<p>برای استفاده بدون اتصال به اینترنت، داده‌ها را دریافت کنید:</p>
+					<p style="text-align: left">
+						<a href="#" id="download-tafsir" class="btn"><i class="icon-download-alt"></i> دریافت تفسیر</a>
+					</p>
+				</div>
 			</div>
 		</div>
 		<div rel="settings" class="modal hide fade">

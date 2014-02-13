@@ -757,7 +757,9 @@ $(document).ready(function() {
 		app.render();
 
 	if (store) {
-		$('#tafsir-download').removeAttr('disabled').click(download_tafsir);
+		$('.store-display').show();
+		$('.store-hide').hide();
+		$('#download-tafsir').click(download_tafsir);
 
 		if (!Boolean(localStorage.Quran) || localStorage.Quran.split(',').length < 6230) {
 			download_quran();
@@ -861,7 +863,7 @@ var download_quran = function() {
 
 var download_tafsir = function() {
 	$('.modal').modal('hide');
-	$('#tafsir-download').att('disabled', 'disabled');
+	$('#download-tafsir').attr('disabled', 'disabled');
 
 	var store_data = function(url, data) {
 		bayan = new Bayan({id: url.substr(8), content: data});
