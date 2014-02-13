@@ -307,18 +307,12 @@ select:active {
   color: #222;
   background: #e0e0e0;
 }
-.twitter-typeahead {
-  display: inline !important;
-}
-.twitter-typeahead .tt-query {
-  vertical-align: middle !important;
+.twitter-typeahead .tt-input {
+  vertical-align: initial !important;
 }
 .twitter-typeahead .tt-dropdown-menu {
   top: initial !important;
   bottom: 100% !important;
-}
-.twitter-typeahead .tt-hint {
-  display: none;
 }
 .twitter-typeahead .tt-dropdown-menu {
   padding: 8px 0;
@@ -332,7 +326,7 @@ select:active {
   font-size: 18px;
   line-height: 24px;
 }
-.twitter-typeahead .tt-suggestion.tt-is-under-cursor {
+.twitter-typeahead .tt-suggestion.tt-cursor {
   color: #fff;
   background-color: #0097cf;
 }
