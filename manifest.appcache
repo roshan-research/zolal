@@ -17,6 +17,10 @@ css/bootstrap.css
 css/progrecss.css
 css/main.css
 css/font-awesome.css
+font/QuranFont.otf
+font/AppFont.ttf
+font/AppFontBd.ttf
+font/FontAwesome.woff
 
 NETWORK:
 *
