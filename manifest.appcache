@@ -1,0 +1,22 @@
+CACHE MANIFEST
+# version 0.9.7
+
+CACHE:
+zolal.js
+js/jquery.js
+js/underscore.js
+js/backbone.js
+js/backbone.localStorage.js
+js/jquery-ui.js
+js/jquery.mobile.js
+js/jquery.dotdotdot.js
+js/bootstrap.js
+js/typeahead.js
+js/meta.js
+css/bootstrap.css
+css/progrecss.css
+css/main.css
+css/font-awesome.css
+
+NETWORK:
+*

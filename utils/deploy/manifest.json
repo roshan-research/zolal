@@ -1,15 +1,17 @@
 {
 	"name": "Zolal",
-	"description": "Quran with Tafsir.",
-	"version": "0.9.6",
+	"description": "Quran with Almizan tafsir.",
+	"short_name": "Zolal",
+	"version": "0.9.7",
 	"icons": {
 		"16": "img/logo16.png",
 		"128": "img/logo128.png"
 	},
 	"app": {
 		"launch": {
-			"local_path": "index.html"
-		}
+			"web_url": "http://zolal.sobhe.ir/"
+		},
+		"urls": [ "http://zolal.sobhe.ir/" ]
 	},
 	"permissions": [
 		"unlimitedStorage"
