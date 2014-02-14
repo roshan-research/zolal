@@ -1,6 +1,8 @@
-var store = true;
+var store = false;
 var server = 'http://zolal-files.ap01.aws.af.cm/';
-store = false; // hosted_mode
+
+if ('chrome' in window && chrome.app.isInstalled)
+	store = true;
 
 
 // functions
