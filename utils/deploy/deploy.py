@@ -23,7 +23,7 @@ def make_apps():
 
 	with zipfile.ZipFile('zolal_chrome_%s.zip' % info['version'], 'w', zipfile.ZIP_DEFLATED) as archive:
 		archive.write('manifest.json')
-		add_files(archive)
+		archive.write('logo.png')
 
 	with zipfile.ZipFile('zolal_firefox_%s.zip' % info['version'], 'w', zipfile.ZIP_DEFLATED) as archive:
 		archive.write('manifest.webapp')
