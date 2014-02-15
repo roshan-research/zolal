@@ -30,6 +30,20 @@ if (!appStorage.find({id: 'variables'}))
 variables = appStorage.find({id: 'variables'});
 
 
+var tafsirDb = {
+	id: 'tafsirs',
+	migrations:[
+		{
+			version: '1.0',
+			migrate: function (transaction, next) {
+				transaction.db.createObjectStore('tafsirs');
+				next();
+			}
+		}
+	]
+};
+
+
 // models
 var Aya = Backbone.Model.extend({
 	defaults: {'phrases': {}},
@@ -48,7 +62,8 @@ var Quran = Backbone.Collection.extend({
 });
 
 var Bayan = Backbone.Model.extend({
-	localStorage: new Backbone.LocalStorage('Almizan')
+	database: tafsirDb,
+	storeName: 'tafsirs'
 });
 
 
