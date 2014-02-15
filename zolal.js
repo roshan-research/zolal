@@ -16,7 +16,7 @@ var rerefine = function(str) {
 };
 
 var track = function(title, data) {
-	// mixpanel.track(title, data);
+	mixpanel.track(title, data);
 }
 
 // read variables
