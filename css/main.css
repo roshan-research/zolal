@@ -228,6 +228,11 @@ h3 em {
   color: #6b5d49;
   box-shadow: 0 0 10px #FFFC99;
 }
+#message .alert-error {
+  background-color: #f2dede;
+  border-color: #eed3d7;
+  color: #b94a48;
+}
 #message a.link:hover .alert-note {
   background-color: #fffca7;
 }
