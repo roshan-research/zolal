@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# version 0.9.7
+# version 0.9.8
 
 CACHE:
 zolal.js
@@ -7,6 +7,7 @@ js/jquery.js
 js/underscore.js
 js/backbone.js
 js/backbone.localStorage.js
+js/backbone.indexedDb.js
 js/jquery-ui.js
 js/jquery.mobile.js
 js/jquery.dotdotdot.js

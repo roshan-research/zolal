@@ -30,6 +30,20 @@ if (!appStorage.find({id: 'variables'}))
 variables = appStorage.find({id: 'variables'});
 
 
+var tafsirDb = {
+	id: 'tafsirs',
+	migrations:[
+		{
+			version: '1.0',
+			migrate: function (transaction, next) {
+				transaction.db.createObjectStore('tafsirs');
+				next();
+			}
+		}
+	]
+};
+
+
 // models
 var Aya = Backbone.Model.extend({
 	defaults: {'phrases': {}},
@@ -48,7 +62,8 @@ var Quran = Backbone.Collection.extend({
 });
 
 var Bayan = Backbone.Model.extend({
-	localStorage: new Backbone.LocalStorage('Almizan')
+	database: tafsirDb,
+	storeName: 'tafsirs'
 });
 
 
@@ -808,40 +823,45 @@ $(document).ready(function() {
 
 
 // download
-var request_url = function(urls, index, store_data, progress_bar) {
-	if (progress_bar)
-		var progress = function(percent) { progress_bar.attr('data-progrecss', Math.round(percent)) };
+var requestUrls = function(urls, index, isStored, storeData, progressBar) {
+	if (progressBar)
+		var progress = function(percent) { progressBar.attr('data-progrecss', Math.round(percent)) };
 
 	if (index >= urls.length) {
-		if (progress_bar) {
+		if (progressBar) {
 			progress(100);
-			progress_bar.removeClass('progrecss');
+			progressBar.removeClass('progrecss');
 		}
 		return;
 	}
 
-	if (progress_bar)
-		progress_bar.addClass('progrecss');
+	if (progressBar)
+		progressBar.addClass('progrecss');
 
-	settings = {
-		context: {url: urls[index]},
-		url: server + urls[index],
-		success: function(data) {
-			store_data(this.url, data);
-			if (progress_bar) progress(100*index/urls.length);
-			request_url(urls, index+1, store_data, progress_bar);
-		},
-		error : function(xhr, textStatus) {
-			setTimeout(function() { $.ajax(this.settings); }, 1000);
-			console.log('retry in 1 second ...');
-		}
-	};
-	settings.context.settings = settings;
-	$.ajax(settings);
+	isStored(urls[index], function() {
+			if (progressBar) progress(100*index/urls.length);
+			requestUrls(urls, index+1, isStored, storeData, progressBar);
+		},	function() {
+		settings = {
+			context: {url: urls[index]},
+			url: server + urls[index],
+			success: function(data) {
+				storeData(this.url, data);
+				if (progressBar) progress(100*index/urls.length);
+				requestUrls(urls, index+1, isStored, storeData, progressBar);
+			},
+			error : function(xhr, textStatus) {
+				setTimeout(function() { $.ajax(this.settings); }, 1000);
+				console.log('retry in 1 second ...');
+			}
+		};
+		settings.context.settings = settings;
+		$.ajax(settings);
+	});
 };
 
 var download_quran = function() {
-	var store_data = function(url, data) {
+	var storeData = function(url, data) {
 		_.each(data.split('\n'), function(item) {
 			if (item) {
 				item = $.parseJSON(item);
@@ -851,36 +871,28 @@ var download_quran = function() {
 		});
 	}
 
-	urls = [];
-	_.each(quran_pages, function(ayas, page) {
-		(new Aya({id: ayas[0]})).fetch({
-			error: function () {
-				urls.push('quran/p'+ page);
-			}
-		});
-	});
+	var isStored = function(url, success, error) {
+		aya = new Aya({id: quran_pages[Number(url.substr(7))][0]});
+		aya.fetch({success: success, error: error});
+	}
 
-	request_url(urls, 0, store_data, false);
+	urls = _.map(quran_pages, function(ayas, page) { return 'quran/p'+ page; });
+	requestUrls(urls, 0, isStored, storeData, false);
 };
 
 var download_tafsir = function() {
 	$('.modal').modal('hide');
 	$('#download-tafsir').attr('disabled', 'disabled');
 
-	var store_data = function(url, data) {
+	var storeData = function(url, data) {
 		bayan = new Bayan({id: url.substr(8), content: data});
 		bayan.save();
 	}
+	var isStored = function(url, success, error) {
+		bayan = new Bayan({id: url.substr(8)});
+		bayan.fetch({success: success, error: error});
+	}
 
-	urls = [];
-	_.each(almizan_sections, function(section) {
-		var bayan = new Bayan({id: variables.lang +'/'+ section});
-		bayan.fetch({
-			error: function () {
-				urls.push('almizan_'+ bayan.get('id'));
-			}
-		});
-	});
-
-	request_url(urls, 0, store_data, $('html'));
+	urls = _.map(almizan_sections, function(section) { return 'almizan_'+ variables.lang +'/'+ section; });
+	requestUrls(urls, 0, isStored, storeData, $('html'));
 };
