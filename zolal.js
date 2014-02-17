@@ -21,14 +21,24 @@ var track = function(title, data) {
 
 // read variables
 appStorage = new Backbone.LocalStorage('App');
-if (!appStorage.find({id: 'variables'}))
-	appStorage.update({
+if (!appStorage.find({id: 'variables'})) {
+
+	defaults = {
 		id: 'variables',
 		lang: 'fa',
-		position: {mode: 'quran', quran: {page: 1, sura: 1, aya: ''}, tafsir: {section: '1-1:5'}}});
+		position: {mode: 'quran', quran: {page: 1, sura: 1, aya: ''}, tafsir: {section: '1-1:5'}}
+	};
+
+	appStorage.update(defaults);
+
+	// detect user language
+	$.get('http://zolal.herokuapp.com/language', function(language) {
+		defaults['lang'] = language;
+		appStorage.update(defaults);
+	});
+}
 
 variables = appStorage.find({id: 'variables'});
-
 
 var tafsirDb = {
 	id: 'tafsirs',
