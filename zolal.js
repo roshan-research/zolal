@@ -268,7 +268,7 @@ var QuranView = Backbone.View.extend({
 							if (item) {
 								item = $.parseJSON(item);
 								aya = new Aya(item);
-								if (store) aya.save();
+								aya.save();
 								quran.collection.add(aya);
 							}
 						});
@@ -422,7 +422,7 @@ var TafsirView = Backbone.View.extend({
 					url: server +'almizan_'+ bayan.get('id'),
 					success: function(item){
 						bayan = new Bayan({id: this.id, content: item});
-						if (store) bayan.save();
+						bayan.save();
 						loadBayan(bayan, prepare);
 					},
 					error: app.connectionError
@@ -652,7 +652,8 @@ var AppView = Backbone.View.extend({
 			box.addClass('top');
 
 		box.find('#content').dotdotdot({ellipsis : ' ... '});
-		box.find('h3').dotdotdot({ellipsis : ' ... '});
+		if (box.find('h3').length)
+			box.find('h3').dotdotdot({ellipsis : ' ... '});
 	},
 	connectionError: function() {
 		$('body').find('.loading').removeClass('loading');
