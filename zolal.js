@@ -35,6 +35,7 @@ if (!appStorage.find({id: 'variables'})) {
 	$.get('http://zolal.herokuapp.com/language', function(language) {
 		defaults['lang'] = language;
 		appStorage.update(defaults);
+		track('Default Language', {'lang': language});
 	});
 }
 
@@ -584,8 +585,7 @@ var AddressView = Backbone.View.extend({
 			if (position.quran.aya) {
 				if (position.quran.phrase)
 					track('Quran Phrase', position.quran);
-				else
-					track('Quran Aya', position.quran);
+				// else track('Quran Aya', position.quran);
 			} else
 				track('Quran', position.quran);
 		}
@@ -894,6 +894,7 @@ var download_quran = function() {
 var download_tafsir = function() {
 	$('.modal').modal('hide');
 	$('#download-tafsir').attr('disabled', 'disabled');
+	track('Almizan Download', {'lang': variables.lang});
 
 	var storeData = function(url, data) {
 		bayan = new Bayan({id: url.substr(8), content: data});
