@@ -1,14 +1,11 @@
 
-import json
 from collections import defaultdict
-from path import path
-files = path('../files')
 
 
 def read_quran(quran):
 	ayas, suras = {}, []
 
-	for s, sura in enumerate(quran.split('# ')):
+	for s, sura in enumerate(quran.read().split('# ')):
 		lines = sura.split('\n')
 		if len(lines) < 5:
 			continue
@@ -29,13 +26,8 @@ def read_quran(quran):
 	return ayas, suras
 
 
-if __name__ == '__main__':
-
-	ayas, suras = read_quran(open('data/quran.txt').read())
-
-
-	# translation
-	for line in open('data/quran-translation.txt'):
+def read_translation(translation, ayas):
+	for line in translation:
 		line = line.strip().split('|')
 		if len(line) != 3:
 			continue
@@ -43,8 +35,8 @@ if __name__ == '__main__':
 		ayas['%s_%s' % (line[0], line[1])]['trans'] = line[2]
 
 
-	# pages
-	for line in open('data/quran-lines.txt'):
+def read_lines(lines, ayas):
+	for line in lines:
 		line = line.split(', ')
 		if len(line) < 2:
 			continue
@@ -53,26 +45,17 @@ if __name__ == '__main__':
 		if id in ayas:
 			ayas[id]['page'] = int(line[0])
 
+	aya_ids = sorted(ayas.keys(), key=lambda id: int(id.split('_')[0])*1000+int(id.split('_')[1]))
+
 	page = 1
-	for id in sorted(ayas.keys(), key=lambda id: int(id.split('_')[0])*1000+int(id.split('_')[1])):
+	for id in aya_ids:
 		if not 'page' in ayas[id]:
 			ayas[id]['page'] = page
 		else:
 			page = ayas[id]['page']
 
 	pages = defaultdict(list)
-	for id, aya in ayas.items():
-		pages[aya['page']].append(id)
+	for id in aya_ids:
+		pages[ayas[id]['page']].append(id)
 
-
-	# write pages
-	for page, ids in pages.items():
-		page_file = open(files / 'quran' / ('p%d' % page), 'w')
-		for id in ids:
-			print(json.dumps(ayas[id], ensure_ascii=False), file=page_file)
-
-
-	# write meta.js
-	meta = open('../js/meta.js', 'w')
-	print('var quran_suras = %s;' % str([sura for sura in suras]), file=meta)
-	print('var quran_pages = %s;' % str(dict(pages)), file=meta)
+	return pages
