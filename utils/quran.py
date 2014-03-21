@@ -19,7 +19,7 @@ def read_quran(quran):
 				continue
 
 			a = int(parts[1][:-1])
-			aya = parts[0].strip()
+			aya = parts[0].strip().replace('۞ ', '')
 			id = '%d_%d' % (s, a)
 			ayas[id] = {'id': id, 'sura': s, 'aya': a, 'text': aya}
 

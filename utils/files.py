@@ -2,7 +2,7 @@
 import json
 from path import path
 from quran import read_quran, read_translation, read_lines
-from almizan import read_tafsir
+from almizan import read_tafsir, section_ayas, resolve_footnotes, refine_section
 
 
 data = path('data')
@@ -30,11 +30,24 @@ if __name__ == '__main__':
 		id = ar_section.find('code.section').attr('rel')
 		if id != fa_section.find('code.section').attr('rel'):
 			print('error', id)
-		if not id: id = '0'
-		almizan_sections.append(id)
 
+		if not id:
+			id = '0'
+		else:
+			html, tokens, stems = section_ayas(id, ayas)
+			ar_section.find('code.section').before('<p class="ayas">'+ html +'</p>')
+			fa_section.find('code.section').before('<p class="ayas">'+ html +'</p>')
+
+		resolve_footnotes(ar_section)
+		refine_section(ar_section)
+
+		resolve_footnotes(fa_section)
+		refine_section(fa_section)
+
+		almizan_sections.append(id)
 		print(ar_section.html(), file=open(files / 'almizan_ar' / id, 'w'))
 		print(fa_section.html(), file=open(files / 'almizan_fa' / id, 'w'))
+		print(id)
 
 	# write meta.js
 	meta = open('../js/meta.js', 'w')
