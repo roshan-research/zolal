@@ -71,12 +71,13 @@ def refine_html(html):
 		(r':([^{\d\na-zA-Z]{1,10})[ :،-]([0-9، ]*\d)', r'<span class="footnote" content="\1، \2">*</span>'),
 
 		# punctuations
+		(r'،? ?`', r'،'),
 		(r'\*(?!</span>)', r''),
+		(r'"([^"\na-z0-9<>.]{1,15})"', r' <em>\1</em> '),
+		(r'([^=a-z\d])"([^=a-z\d>])', r'\1 \2'),
 		(r'([\.،؛\):؟])(?=[^ :\.\d،؛\)])', r'\1 '),
 		(r' ([:\)])', r'\1'),
 		(r'(?=[^ ])([\(])', r' \1'),
-		(r'"([^"\na-z0-9<>.]{1,15})"', r' <em>\1</em> '),
-		(r'([^=a-z\d])"([^=a-z\d>])', r'\1 \2'),
 
 		# fix spaces
 		(r'</span>(?=[^ ،؛.\)؟])', '</span> '),
@@ -103,9 +104,10 @@ def refine_section(section):
 
 	# ayas
 	for item in section.find('.aya').items():
-		text = item.text()
-		text = text.replace('`', '،')
-		item.text(simple_aya(text))
+		text = simple_aya(item.text())
+		if text.startswith('(') and text.startswith('('):
+			text = text[1:-1]
+		item.text(text)
 
 	# structure
 	for item in section.children().items():
