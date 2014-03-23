@@ -2,7 +2,7 @@
 import json
 from path import path
 from quran import read_quran, read_translation, read_lines
-from almizan import read_tafsir, section_ayas, resolve_footnotes, refine_section
+from almizan import read_tafsir, section_ayas, resolve_footnotes, refine_section, resolve_phrases
 
 
 data = path('data')
@@ -32,7 +32,7 @@ if __name__ == '__main__':
 			print('error', id)
 
 		if not id:
-			id = '0'
+			id, tokens, stems = '0', {}, {}
 		else:
 			html, tokens, stems = section_ayas(id, ayas)
 			ar_section.find('code.section').before('<p class="ayas">'+ html +'</p>')
@@ -40,9 +40,11 @@ if __name__ == '__main__':
 
 		resolve_footnotes(ar_section)
 		refine_section(ar_section)
+		resolve_phrases(ar_section, tokens, stems, 'almizan_ar', id)
 
 		resolve_footnotes(fa_section)
 		refine_section(fa_section)
+		resolve_phrases(fa_section, tokens, stems, 'almizan_fa', id)
 
 		almizan_sections.append(id)
 		print(ar_section.html(), file=open(files / 'almizan_ar' / id, 'w'))

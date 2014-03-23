@@ -119,3 +119,52 @@ def refine_section(section):
 					for span in section.find('.trans').items():
 						item.append(span.outerHtml())
 						span.remove()
+
+
+def resolve_phrases(section, tokens, stems, book, id):
+
+	# find and resolve parantheses
+	if book == 'almizan_fa':
+		if int(id.split('_')[0]) <= 2:
+			html = section.html()
+			replace = lambda start, end, oldtext, newtext: oldtext[:start] + newtext + oldtext[end:]
+
+			# in chapter1, remove parantheses for ayas
+			iter = re.finditer(r'(<span[^\n]*>)[ ]*\(([^\)s]*)\)[^\)]*(</span[^\n]*>)', html)
+			for m in reversed(list(iter)):
+				html = replace(m.start(), m.end(), html, m.group().replace('(','').replace(')',''))
+
+			iter = re.finditer(r'\([^\)]{3,15}\)', html)
+			for match in reversed(list(iter)):
+				m = match.group()[1:-1]
+				rel = resolve_phrase(m, tokens, stems, book[-2:])
+				if rel != 'null':
+					html = replace(match.start(), match.end(), html, '<em rel="{0}">{1}</em>'.format(rel, m))
+
+			section.html(html)
+
+	# resolve em elements
+	for em in section.find('em').items():
+		rel = resolve_phrase(em.text(), tokens, stems, book[-2:])
+		if rel:
+			em.attr('rel', rel)
+
+
+def resolve_phrase(text, tokens, stems, book):
+	rel = None
+	text  = text.replace('ة','ه').replace('ؤ','و')
+	#resolve aya tokens with or without Alif-Lam
+	for aya, token_list in tokens.items():
+		for t, token in enumerate(token_list):
+			if text == token or (token[:2] == 'ال' and text == token[2:]) or (token[:1] in 'بکف' and text == token[1:]):
+				return '{0}_{1}_{2}-{2}'.format(book, aya, t+1)
+
+	#resolve aya stems
+	text = isri.stem(text.replace('‌', ''))
+	for aya, stem_list in stems.items():
+		for s, stem in enumerate(stem_list):
+			if text == stem:
+				rel = '{0}_{1}_{2}-{2}'.format(book, aya, s+1)
+				break
+
+	return rel
