@@ -1,4 +1,5 @@
 
+import re
 from collections import defaultdict
 
 
@@ -59,3 +60,9 @@ def read_lines(lines, ayas):
 		pages[ayas[id]['page']].append(id)
 
 	return pages
+
+
+def simple_aya(aya):
+	aya = re.sub('[۞۩' + 'ۖۗۚۛۙۘ' + 'ًٌٍَُِّْٓ' + 'ٰۥۦ' + ']', '', aya)
+	aya = aya.replace('ٱ', 'ا').replace('ٔ', 'ئ').replace('ىٰ', 'ا')
+	return aya

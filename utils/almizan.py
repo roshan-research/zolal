@@ -3,10 +3,9 @@ import re
 from collections import defaultdict
 from pyquery import PyQuery as pq
 from nltk import stem
+from quran import simple_aya
 
 
-symbols = 'ۖۗۚۛۙۘ'
-tashkeels = 'ًٌٍَُِّْٰ'
 isri = stem.ISRIStemmer()
 
 
@@ -27,7 +26,7 @@ def section_ayas(id, ayas):
 
 	for a in range(int(aya.split('-')[0]), int(aya.split('-')[1])+1):
 		aya = '%s_%d' % (sura, a)
-		text = refine_aya(ayas[aya]['text'])
+		text = simple_aya(ayas[aya]['text'])
 		html += '<span class="aya" rel="%s">%s «%d»</span> ' % (aya, text, a)
 		tokens[aya] = text.replace('ة','ه').replace('ؤ','و').replace('ّ', '').split(' ')
 		stems[aya] = list(map(isri.stem, tokens[aya]))
@@ -36,8 +35,7 @@ def section_ayas(id, ayas):
 
 
 def resolve_footnotes(section):
-	for footnote in section.find('.footnote:not([content])'):
-		footnote = pq(footnote)
+	for footnote in section.find('.footnote:not([content])').items():
 		content = section.find('.footnote-content[rel="%s"]' % footnote.attr('rel'))
 		if content:
 			content = pq(content[0])
@@ -69,7 +67,6 @@ def refine(text):
 	result = re.sub(r'(?=[^ ])([\(])', r' \1', result)
 	result = re.sub(r'"([^"\na-z0-9<>.]{1,15})"', r' <em>\1</em> ', result)
 	result = re.sub(r'([^=a-z\d])"([^=a-z\d>])', r'\1\2', result)
-	result = refine_aya(result)
 
 	# fix spaces
 	for elm in ['span', 'em']:
@@ -80,20 +77,6 @@ def refine(text):
 	return result
 
 
-def refine_aya(text):
-	# remove tashkeels
-	text = re.sub('[۞۩'+ symbols + tashkeels +']', '', text)
-
-	# remove aya separator
-	text = re.sub(r'([،؟:]) *` *', r'\1 ', text)
-	text = re.sub(r' *` *', '، ', text).replace('.،', '،')
-
-	# remove qoutation marks
-	text = re.sub(r'"([^"\na-z0-9<>]+)"',r' \1 ',text)
-	text = text.replace('ك', 'ک').replace('ي', 'ی')
-	return text
-
-
 def refine_note(text):
 	result = text
 	if result.startswith('-'):
@@ -102,6 +85,13 @@ def refine_note(text):
 
 
 def refine_section(section):
+
+	# ayas
+	for item in section.find('.aya').items():
+		text = item.text()
+		text = text.replace('`', '،')
+		item.text(simple_aya(text))
+
 	for item in section.children().items():
 		if item[0].tag == 'p':
 			if not item.text().strip():
