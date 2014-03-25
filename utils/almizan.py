@@ -85,6 +85,7 @@ def refine_html(html):
 		(r'</em>(?=[^ ،؛.\)؟])', '</em> '),
 		(r'([^ \(])<em', r'\1 <em'),
 		(r' +<span class="footnote"', '<span class="footnote"'),
+		(r'‌<', '<'),
 	]
 
 	for key, value in expressions:
@@ -152,7 +153,8 @@ def resolve_phrases(section, tokens, stems, book, id):
 
 def resolve_phrase(text, tokens, stems, book):
 	rel = None
-	text  = text.replace('ة','ه').replace('ؤ','و')
+	text  = text.strip().replace('ة','ه').replace('ؤ','و')
+
 	#resolve aya tokens with or without Alif-Lam
 	for aya, token_list in tokens.items():
 		for t, token in enumerate(token_list):
