@@ -539,15 +539,9 @@ var AddressView = Backbone.View.extend({
 			else
 				app.router.navigate('quran/p'+ position.quran.page, false);
 
-			controls.push('tafsir');
-			this.$el.find('.tafsir-address').hide();
-			el = this.$el.find('.quran-address');
-			el.show();
-
-			el.find('#sura').val(quran_suras[position.quran.sura-1]).change();
-			el.find('#page').val(position.quran.page);
-			el.find('#aya').val(position.quran.aya ? position.quran.aya : '...');
-			this.$el.find('.sura').text(quran_suras[position.quran.sura-1]);
+			page_sura = Number(quran_pages[position.quran.page][0].split('_')[0]);
+			this.$el.find('.sura').text(quran_suras[page_sura-1]);
+			// el.find('#page').val(position.quran.page);
 		}
 		else if (position.mode == 'tafsir') {
 			app.router.navigate('almizan_'+ position.tafsir.lang +'/'+ this.position.tafsir.aya, false);
@@ -586,7 +580,6 @@ var AddressView = Backbone.View.extend({
 			if (position.quran.aya) {
 				if (position.quran.phrase)
 					track('Quran Phrase', position.quran);
-				// else track('Quran Aya', position.quran);
 			} else
 				track('Quran', position.quran);
 		}
@@ -602,7 +595,8 @@ var AddressView = Backbone.View.extend({
 	suraSelect: function() {
 		this.$el.find('.front').removeClass('front');
 		this.$el.find('.search').addClass('front');
-		this.$el.find('#search').val('').trigger('input').val('سوره ').focus().trigger('input');
+		this.$el.find('#search').val('').trigger('input').val('سوره ').trigger('input').focus();
+		this.$el.find('#search')[0].setSelectionRange(10, 10);
 	}
 });
 
