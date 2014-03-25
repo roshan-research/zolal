@@ -57,7 +57,7 @@ blockquote p {
 }
 #quran #pages .page {
   height: 600px;
-  padding: 0 5px;
+  margin-right: 10px;
   float: left;
   direction: rtl;
   overflow-y: auto;
@@ -128,35 +128,29 @@ body {
   display: block;
 }
 #header .glyphicon {
-  margin-top: 10px;
   font-size: 12px;
   position: absolute;
-  top: 2px;
   cursor: pointer;
+  padding: 12px 6px;
+  top: 0;
 }
 #header .next {
-  left: 10px;
+  left: 0;
 }
 #header .prev {
-  right: 10px;
+  right: 0;
 }
 #header input#search {
   width: 100%;
-  height: 40px;
-  padding: 2px 10px;
+  height: 36px;
+  padding: 0 10px;
   background: #031634;
   outline: none;
   border: none;
 }
-#header.quran input,
-#header.aya input {
-  display: none;
-}
-#header.search .right,
-#header.search .left,
-#header.search #prev,
-#header.search #next {
-  display: none;
+#header .sura,
+#header .select {
+  cursor: pointer;
 }
 .header {
   height: 36px;
@@ -184,6 +178,32 @@ body {
   background: #031634;
 }
 #wrap {
+  padding: 0 10px;
   border-right: 2px solid #031634;
   border-left: 2px solid #031634;
+}
+.twitter-typeahead {
+  width: 100%;
+}
+.twitter-typeahead .tt-dropdown-menu {
+  width: 100%;
+  max-height: 600px;
+  overflow-y: auto;
+  background-color: #033649;
+}
+.twitter-typeahead .tt-suggestion {
+  color: #e8ddcb;
+  padding: 2px 10px;
+  font-size: 85%;
+  line-height: 24px;
+  cursor: pointer;
+}
+.twitter-typeahead .tt-suggestion:nth-child(even) {
+  background-color: #031634;
+}
+.twitter-typeahead .tt-suggestion.tt-cursor {
+  background-color: #036564;
+}
+.twitter-typeahead .tt-suggestion p {
+  margin: 0;
 }

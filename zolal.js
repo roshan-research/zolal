@@ -480,56 +480,51 @@ var TafsirView = Backbone.View.extend({
 var AddressView = Backbone.View.extend({
 	el: $("#header"),
 	initialize: function() {
-
-		var sura_select = this.$el.find('.quran-address #sura'), aya_select = this.$el.find('.quran-address #aya'), page_select = this.$el.find('.quran-address #page');
+		var input = this.$el.find('#search');
 
 		// sura selector
 		var suraTokens = function(name) {
+			name = name.replace('ي', 'ی').replace('ك', 'ک').replace('أ', 'ا').replace('إ', 'ا').replace('ؤ', 'و').replace('ة', 'ه');
+			if (name.substr(0, 5) != 'سوره ')
+				return [];
+
+			name = name.substr(5);
 			tokens = name.split('‌');
-			name = name.replace('أ', 'ا').replace('إ', 'ا').replace('ؤ', 'و').replace('ة', 'ه');
+			tokens.push('?');
 			tokens.push(name);
-			if (name.indexOf('ال') == 0)
+			if (name.substr(0, 2) == 'ال')
 				tokens.push(name.substr(2));
 			return tokens;
 		}
 		sura_items = new Bloodhound({
-			local: _.map(quran_suras, function(item) { return {name: item}; }),
+			local: _.map(quran_suras, function(item, i) { return {name: 'سوره '+ item, id: i+1}; }),
 			datumTokenizer: function(d) { return suraTokens(d.name); },
-			queryTokenizer: suraTokens
+			queryTokenizer: suraTokens,
+			limit: 1000
 		});
 		sura_items.initialize();
-		sura_select.typeahead({hint: false, autoselect: true}, {
+		input.typeahead({hint: false, autoselect: true}, {
 			name: 'sura',
 			displayKey: 'name',
 			source: sura_items.ttAdapter()
 		});
 
 		// selector events
-		sura_select.bind('typeahead:selected', function() {
-			id = quran_suras.indexOf(sura_select.val())+1;
-			if (id > 0 && id != app.position.quran.sura)
-				app.router.navigate('quran/'+ id +'_1', true);
+		input.bind('typeahead:selected', function(t, selected, name) {
+			if (name == 'sura') {
+				id = selected.id;
+				if (id > 0 && id != app.position.quran.sura)
+					app.router.navigate('quran/'+ id +'_1', true);
+			}
 		});
-		page_select.keypress(function(e) {
-			if(e.which != 13) return;
-			page = rerefine($(this).val());
-			if (page >= 1 && page <= 604 && page != app.position.quran.page)
-				app.router.navigate('quran/p'+ page, true);
-		});
-		aya_select.keypress(function(e) {
-			if(e.which != 13) return;
-			aya = rerefine($(this).val());
-			if (aya >= 1 && aya <= sura_ayas[app.position.quran.sura] && aya != app.position.quran.aya)
-				app.router.navigate('quran/'+ app.position.quran.sura +'_'+ aya, true);
-		});
-
-		this.$el.find('input').click(function() {
-			$(this).select();
+		input.bind('typeahead:closed', function() {
+			app.address.render();
 		});
 	},
 	events: {
 		'click .quran .next': 'nextPage',
 		'click .quran .prev': 'prevPage',
+		'click .quran .right, .quran .left': 'suraSelect',
 	},
 	render: function() {
 		// clone position
@@ -570,7 +565,6 @@ var AddressView = Backbone.View.extend({
 		this.$el.find('.front').removeClass('front');
 		this.$el.find('.'+ position.mode).addClass('front');
 
-
 		// set page title
 		title = '';
 		if (position.mode == 'quran') {
@@ -604,6 +598,11 @@ var AddressView = Backbone.View.extend({
 	},
 	prevPage: function() {
 		this.trigger('prevPage');
+	},
+	suraSelect: function() {
+		this.$el.find('.front').removeClass('front');
+		this.$el.find('.search').addClass('front');
+		this.$el.find('#search').val('').trigger('input').val('سوره ').focus().trigger('input');
 	}
 });
 
