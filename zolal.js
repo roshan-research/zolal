@@ -239,7 +239,7 @@ var QuranView = Backbone.View.extend({
 				if (item.get('page') == page) {
 					var ayaView = new AyaView({model: item});
 					if (item.get('aya') == 1) {
-						el.append('<div class="sura"><span>'+ quran_suras[item.get('sura')-1] +'</span></div>');
+						el.append('<div class="sura header"><div class="right">سوره</div><div class="left">'+ quran_suras[item.get('sura')-1] +'</div></div>');
 						if (item.get('sura') != 1 && item.get('sura') != 9)
 							el.append('<div class="bism"><span>بِسمِ اللَّهِ الرَّحمٰنِ الرَّحيمِ</span></div>');
 					}
@@ -287,6 +287,8 @@ var QuranView = Backbone.View.extend({
 			this.position.page = 604;
 			return false;
 		}
+
+		this.render();
 		return true;
 	},
 	prevPage: function() {
@@ -296,6 +298,8 @@ var QuranView = Backbone.View.extend({
 			this.position.page = 1;
 			return false;
 		}
+
+		this.render();
 		return true;
 	},
 	nextAya: function() {
@@ -309,6 +313,8 @@ var QuranView = Backbone.View.extend({
 			this.position.aya = 1;
 		} else
 			return false;
+
+		this.render();
 		return true;
 	},
 	prevAya: function() {
@@ -322,6 +328,8 @@ var QuranView = Backbone.View.extend({
 			this.position.aya = sura_ayas[this.position.sura];
 		} else
 			return false;
+
+		this.render();
 		return true;
 	}
 });
@@ -470,7 +478,7 @@ var TafsirView = Backbone.View.extend({
 });
 
 var AddressView = Backbone.View.extend({
-	el: $("#address"),
+	el: $("#header"),
 	initialize: function() {
 
 		var sura_select = this.$el.find('.quran-address #sura'), aya_select = this.$el.find('.quran-address #aya'), page_select = this.$el.find('.quran-address #page');
@@ -519,10 +527,11 @@ var AddressView = Backbone.View.extend({
 			$(this).select();
 		});
 	},
+	events: {
+		'click .quran .next': 'nextPage',
+		'click .quran .prev': 'prevPage',
+	},
 	render: function() {
-		controls = ['settings'];
-		this.$el.find('#navigator li').hide();
-
 		// clone position
 		position = $.extend(true, {}, this.position);
 		if (position.mode == 'quran') {
@@ -543,6 +552,7 @@ var AddressView = Backbone.View.extend({
 			el.find('#sura').val(quran_suras[position.quran.sura-1]).change();
 			el.find('#page').val(position.quran.page);
 			el.find('#aya').val(position.quran.aya ? position.quran.aya : '...');
+			this.$el.find('.sura').text(quran_suras[position.quran.sura-1]);
 		}
 		else if (position.mode == 'tafsir') {
 			app.router.navigate('almizan_'+ position.tafsir.lang +'/'+ this.position.tafsir.aya, false);
@@ -557,12 +567,9 @@ var AddressView = Backbone.View.extend({
 			el.find('#mi').text(position.tafsir['mi']);
 			el.find('#ma').text(position.tafsir['ma']);
 		}
-		this.$el.show();
+		this.$el.find('.front').removeClass('front');
+		this.$el.find('.'+ position.mode).addClass('front');
 
-		// show controls
-		_.each(controls, function(item) {
-			$('#navigator .'+ item).show();
-		});
 
 		// set page title
 		title = '';
@@ -591,6 +598,12 @@ var AddressView = Backbone.View.extend({
 		}
 		else if (position.mode == 'tafsir')
 			track('Almizan', position.tafsir);
+	},
+	nextPage: function() {
+		this.trigger('nextPage');
+	},
+	prevPage: function() {
+		this.trigger('prevPage');
 	}
 });
 
@@ -602,6 +615,8 @@ var AppView = Backbone.View.extend({
 		this.tafsir = new TafsirView();
 		this.quran.on('updateAddress', this.address.render, this.address);
 		this.tafsir.on('updateAddress', this.address.render, this.address);
+		this.address.on('nextPage', this.quran.nextPage, this.quran);
+		this.address.on('prevPage', this.quran.prevPage, this.quran);
 
 		// message
 		$('#message .close').click(function() {
@@ -696,10 +711,8 @@ var AppView = Backbone.View.extend({
 				refresh = this.quran.nextAya();
 		}
 
-		if (refresh) {
+		if (refresh)
 			e.preventDefault();
-			this.render();
-		}
 	}
 });
 
@@ -763,12 +776,9 @@ _.each(almizan_sections, function(section) {
 
 
 $(window).resize(function() {
-	$('#container').height($('#wrap').height() - $('#footer').height());
-	$('#quran, #tafsir').height($('#container').height() - ($('#quran').outerHeight(true) - $('#quran').height()));
-	$('#pages').height($('#quran').height());
 	$('#wrap').css('margin-top', ($('body').height() - $('#wrap').height())/2);
 
-	$('#page-style').html('#quran .page {width: '+ ($('#quran').width() - 20) +'px}');
+	$('#page-style').html('#quran .page {width: '+ $('#quran').width() +'px}');
 	if ($('#quran .front').length)
 		$('#quran').scrollLeft($('#quran .front').offset().left - $('#pages').position().left);
 });

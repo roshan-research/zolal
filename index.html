@@ -1,34 +1,46 @@
+<!DOCTYPE html>
 <html manifest="manifest.appcache">
 <head>
 	<title>زلال</title>
 	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<meta name="google-site-verification" content="9tFcYHmpaeW7VT72A19ZuwVqg_sbhI9nY_jHUyH-cG8" />
 	<link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/cmhmgigldkolppfbfdadehjlmfgblgin">
 	<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
 	<link rel="stylesheet" type="text/css" href="css/progrecss.css">
 	<link rel="stylesheet" type="text/css" href="css/main.css">
 	<link rel="shortcut icon" type="image/png" href="img/fav.png">
-	<script type="text/javascript" src="js/jquery.js"></script>
-	<script type="text/javascript" src="js/underscore.js"></script>
-	<script type="text/javascript" src="js/backbone.js"></script>
-	<script type="text/javascript" src="js/backbone.localStorage.js"></script>
-	<script type="text/javascript" src="js/backbone.indexedDb.js"></script>
 </head>
 <body>
-	<div id="wrap">
+	<div id="wrap" class="container">
+		<div id="views">
+			<div id="header">
+				<div class="search">
+					<input id="search" type="text">
+				</div>
+				<div class="header quran front">
+					<span class="next glyphicon glyphicon-chevron-left"></span>
+					<span class="prev glyphicon glyphicon-chevron-right"></span>
+					<div class="right">سوره</div>
+					<div class="left sura"></div>
+				</div>
+				<div class="header tafsir">
+					<div class="right">تفسیر المیزان</div>
+					<div class="left page"></div>
+				</div>
+			</div>
+
+			<div id="quran">
+				<style id="page-style"></style>
+				<div id="pages"></div>
+			</div>
+
+			<div id="tafsir"></div>
+		</div>
 		<div id="message">
 			<div class="container">
 				<button class="close">&times;</button>
 				<a><div id="content" class="alert"></div></a>
 			</div>
-		</div>
-		<div id="container" class="container">
-			<div id="quran">
-				<style id="page-style"></style>
-				<div id="pages"></div>
-			</div>
-			<div id="tafsir"></div>
 		</div>
 		<div rel="download" class="modal hide fade">
 			<div class="modal-header">
@@ -71,29 +83,13 @@
 				<div id="copyright">حاصل همکاری <a href="http://www.sobhe.ir/" target="_blank">سُبحه</a> و <a href="http://www.noorsoft.org/" target="_blank">مرکزی تحقیقات کامپیوتری علوم اسلامی «نور»</a></div>
 			</div>
 		</div>
-		<div id="footer" class="container">
-			<div id="address">
-				<ul id="navigator" class="nav nav-pills">
-					<li class="quran"><a rel="quran" href="#" class="control">قرآن</a></li>
-					<li class="tafsir"><a rel="tafsir" href="#" class="control">تفسیر</a></li>
-				</ul>
-				<div id="current">
-					<div class="quran-address">
-						سوره <input id="sura" class="bold" /> آیه <input id="aya" class="bold" /> صفحه <input id="page" class="bold" />
-					</div>
-					<div class="tafsir-address">
-						تفسیر المیزان، سوره <span id="sura" class="bold"></span>، آیات <span id="mi" class="bold"></span> تا <span id="ma" class="bold"></span>
-					</div>
-				</div>
-			</div>
-		</div>
 	</div>
-	<ul id="menu">
-		<li><a href="#" rel="download"><i class="icon-download"></i> دریافت داده‌ها</a></li>
-		<li><a href="#" rel="settings"><i class="icon-cog"></i> زبان تفسیر</a></li>
-		<li><a href="#" rel="about"><i class="icon-question"></i> درباره زلال</a></li>
-	</ul>
-	<link rel="stylesheet" type="text/css" href="css/font-awesome.css">
+
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/underscore.js"></script>
+	<script type="text/javascript" src="js/backbone.js"></script>
+	<script type="text/javascript" src="js/backbone.localStorage.js"></script>
+	<script type="text/javascript" src="js/backbone.indexedDb.js"></script>
 	<script type="text/javascript" src="js/jquery-ui.js"></script>
 	<script type="text/javascript" src="js/jquery.mobile.js"></script>
 	<script type="text/javascript" src="js/jquery.dotdotdot.js"></script>

@@ -14,6 +14,12 @@
 	src: url('../fonts/AppFontBd.ttf') format('truetype');
 }
 
+* {
+	box-sizing: border-box;
+}
+html {
+	height: 100%;
+}
 body {
 	height: 100%;
 	padding: 0;
@@ -24,9 +30,6 @@ body {
 }
 #wrap {
 	height: 100%;
-	max-height: 650px;
-	position: relative;
-	padding: 0 25px;
 }
 body, blockquote p {
 	font-size: 18px;
@@ -36,20 +39,14 @@ body, blockquote p {
 	min-width: 25px;
 }
 
-@footer: 50px;
-#footer {
-	height: @footer;
-	padding: 0 10px;
-}
-
 .container {
-	max-width: 800px;
+	max-width: 600px;
 }
 
 #quran, #tafsir {
 	text-align: justify;
 	overflow: auto;
-	margin: 10px auto;
+	margin: 0 auto;
 }
 
 #quran {
@@ -61,8 +58,8 @@ body, blockquote p {
 		width: 100000px;
 
 		.page {
-			height: inherit;
-			padding: 0 10px;
+			height: 600px;
+			padding: 0 5px;
 			float: left;
 			direction: rtl;
 			overflow-y: auto;
@@ -72,10 +69,11 @@ body, blockquote p {
 
 #quran .page {
 	font-family: QuranFont;
-	font-size: 24px;
+	font-size: 22px;
 	line-height: 42px;
-	text-shadow: 0.5px 0.5px 1px #eee;
+	color: @color5;
 	cursor: pointer;
+
 	visibility: hidden;
 	&.front {
 		visibility: visible;
@@ -84,23 +82,21 @@ body, blockquote p {
 	div.bism {
 		text-align: center;
 		font-size: .9em;
+		margin-top: -4px;
 	}
 	div.sura {
-		margin: 8px 0 4px;
-		text-align: center;
-		background: #eee;
+		margin-top: 8px;
 
-		span {
-			text-shadow: 1px 1px 2px #999;
-			line-height: 20px;
+		&:first-child {
+			display: none !important;
 		}
 	}
 
 	span.aya {
 		&.active {
 			.text {
-				text-shadow: 0px 2px 3px #ccc;
-				// text-shadow: 0px 0px 20px #999;
+				// text-shadow: 0px 2px 3px fade(@color3, 40%);
+				background: darken(@color1, 5%);
 			}
 
 			.phrase {
@@ -114,440 +110,107 @@ body, blockquote p {
 	}
 
 	span.mark {
-		color: #3A87AD;
-		font-family: Arial;
+		color: @color3;
 		margin-right: 6px;
 	}
 	span.number {
 		font-family: AppFont;
 		font-weight: bold;
-		font-size: .6em;
-		color: #555;
-		background: #efefef;
-		padding: 3px 5px 0px 4px;
+		font-size: .65em;
+		color: lighten(@color1, 10%);
+		background: @color2;
+		padding: 4px 5px 2px 4px;
 		border-radius: 50px;
-		min-width: 14px;
+		min-width: 15px;
 		text-align: center;
 		display: inline-block;
 		line-height: 18px;
 		margin: 0 1px 0 3px;
+		box-sizing: initial;
+		-moz-box-sizing: initial;
 	}
 }
 
-#tafsir {
-	text-align: justify;
-	overflow: auto;
-	font-size: 20px;
-	line-height: 25px;
-	padding: 0 5px;
+@color1: #E8DDCB; @color2: #CDB380; @color3: #036564; @color4: #033649; @color5: #031634;
 
-	h1 {
-		font-size: 1.1em;
-	}
-	h2, h3, h1 {
-		font-size: 1em;
-	}
-	h1, h2, h3 {
-		margin: 12px 0 6px;
-		line-height: 30px;
-		text-shadow: 0 1px 2px #CCC;
-	}
-	blockquote {
-		padding: 0 15px;
-		margin: 0 20px;
-		border-right: 5px solid #EEE;
-		border-left: none;
-		font-size: 1em;
+body {
+	background: @color1;
+}
 
-		p {
-			margin-bottom: 1px;
-		}
-	}
-	p {
-		margin-bottom: 8px;
+#header {
+	position: relative;
+	margin-top: 20px;
 
-		&.ayas {
-			margin-top: 10px;
-		}
-	}
-	code {
+	& > div {
 		display: none;
 	}
-}
-em {
-	font-style: normal;
-	font-weight: bold;
-	font-size: .85em;
-}
-h3 em {
-	font-weight: inherit;
-	font-size: inherit;
-}
-
-#message {
-	position: absolute;
-	bottom: 40px;
-	left: 20px;
-	width: -webkit-calc(~"100% - 40px");
-	width: calc(~"100% - 40px");
-	display: none;
-	z-index: 10;
-
-	&.top {
-		bottom: initial;
-		top: 20px;
+	.front {
+		display: block;
 	}
 
-	.container {
-		max-width: 600px;
+	.glyphicon {
+		margin-top: 10px;
+		font-size: 12px;
+		position: absolute;
+		top: 2px;
+		cursor: pointer;
+	}
+	.next {
+		left: 10px;
+	}
+	.prev {
+		right: 10px;
 	}
 
-	.close {
-		font-family: Arial;
-		margin-top: -8px;
-		margin-right: -8px;
-		background: #D9CEB2;
-		border-radius: 15px;
-		width: 20px;
+	input#search {
+		width: 100%;
+		height: 40px;
+		padding: 2px 10px;
+		background: @color5;
+		outline: none;
+		border: none;
 	}
 
-	#content {
-		padding: 8px 15px;
-		margin-bottom: 20px;
-		text-align: justify;
-		box-shadow: 0 0 10px hsl(50, 50%, 80%);
-		max-height: 142px;
-
-		span.aya {
-			color: royalblue;
-			text-shadow: 0 1px 2px #ccc;
-		}
-		.continue {
-			margin-right: 5px;
-		}
-		h3 {
-			font-size: 15px;
-			line-height: initial;
-			margin: 0;
-			margin-bottom: 2px;
-			max-height: 24px;
-		}
-		p {
-			margin-bottom: 0;
-		}
-		.header {
-			margin-bottom: 2px;
-			line-height: inherit;
-		}
-		code, .footnote {
+	&.quran, &.aya {
+		input {
 			display: none;
 		}
 	}
-
-	.alert-note {
-		background-color: #FFFDC1;
-		border-color: #FFFC99;
-		color: darken(#7A6A53, 5%);
-		box-shadow: 0 0 10px #FFFC99;
-	}
-	.alert-error{
-		background-color:#f2dede;
-		border-color:#eed3d7;
-		color:#b94a48;
-	}
-	a.link:hover .alert-note {
-		background-color: darken(#FFFDC1, 5%);
-	}
-	a {
-		text-decoration: none;
-	}
-}
-
-#footer {
-	#address {
-		display: none;
-	}
-	&.container {
-		max-width: 600px;
-	}
-
-	#current {
-		color: #777;
-		padding: 8px 0;
-
-		.quran-address {
-			#sura {
-				width: 60px;
-			}
-			#aya {
-				width: 30px;
-			}
-			#page {
-				width: 30px;
-			}
-		}
-
-		.quran-address {
-			margin-top: -4px;
-
-			input {
-				margin-top: 2px;
-			}
+	&.search {
+		.right, .left, #prev, #next {
+			display: none;
 		}
 	}
-
-	.nav {
-		float: left;
-		margin-bottom: 0;
-	}
-	.control {
-		background: #eee;
-		box-shadow: 0px 0px 5px #eee;
-		margin-right: 5px;
-		min-width: 28px;
-
-		color: #555;
-		&:hover, &:active {
-			color: #222;
-			background: #e0e0e0;
-		}
-	}
-	a.control {
-		text-align: center;
-	}
-	.bold {
-		font-weight: bold;
-		font-size: .85em;
-		color: #666;
-	}
 }
-input, select {
-	border: none;
-	font-family: AppFont, "B Mitra", Arial;
-	text-align: right;
-	background: none;
-
-	&:focus {
-		outline: none;
-	}
-}
-select {
-	font-size: 18px;
-	border: none;
-	background: #eee;
-	text-align: right;
-	padding: 0px 6px 2px;
-	margin-bottom: 0;
-
-	&:hover, &:active {
-		color: #222;
-		background: #e0e0e0;
-	}
-}
-
-// typeahead
-.twitter-typeahead {
-	.tt-input {
-		vertical-align: initial !important;
-	}
-	.tt-dropdown-menu {
-		top: initial !important;
-		bottom: 100% !important;
-	}
-	.tt-dropdown-menu {
-		padding: 8px 0;
-		background-color: #fff;
-		border: 1px solid rgba(0, 0, 0, 0.2);
-		border-radius: 8px;
-		box-shadow: 0 5px 10px rgba(0,0,0,.2);
-	}
-	.tt-suggestion {
-		padding: 3px 20px;
-		font-size: 18px;
-		line-height: 24px;
-	}
-	.tt-suggestion.tt-cursor {
-		color: #fff;
-		background-color: #0097cf;
-	}
-	.tt-suggestion p {
-		margin: 0;
-	}
-}
-
-.loading {
-	background: url(../img/loading.gif) no-repeat center center;
-}
-#tafsir .loading {
-	height: 100px;
-}
-
-
-span.footnote {
-	font-size: .55em;
-	display: inline-block;
-	text-align: center;
-	cursor: pointer;
-	vertical-align: middle;
-	line-height: 7px;
-	padding: 5px;
-	margin: -5px;
+.header {
+	height: 36px;
+	line-height: 32px;
+	font-family: AppFont;
+	font-size: 24px;
+	color: @color1;
 	margin-bottom: 4px;
-	border-radius: 10px;
-	font-weight: bold;
-	color: #555;
-	text-shadow: 1px 0 1px #ccc;
-	cursor: pointer;
 
-	&:hover {
-		color: #049cdb;
+	& > div {
+		height: 100%;
 	}
-}
 
-#tafsir {
-	text-shadow: 0 1px 0 #efefef;
-	margin-right: -40px;
-	padding-right: 40px;
-
-	span.aya {
-		color: royalblue;
-		text-shadow: 0 1px 2px #ccc;
-	}
-	li {
-		list-style: none;
-		line-height: 24px;
-	}
-	code.page {
-		display: initial;
-		float: right;
-		font-family: AppFont;
-		font-size: 18px;
-		line-height: 24px;
-		border-radius: 0;
-		color: #555;
-		padding: 0;
-		width: 105%;
-		margin-right: -40px;
-		margin-left: -100%;
-		border: none;
-		background: none;
-
-		span {
-			background: #eee;
-			border-top: 2px solid #aaa;
-			line-height: 20px;
-
-			text-shadow: none;
-			width: 30px;
-			display: inline-block;
-			text-align: center;
-		}
-	}
-}
-
-#menu {
-	position: absolute;
-	direction: rtl;
-	margin: 0;
-	width: 124px;
-	left: -100px;
-	height: 100px;
-	top: -webkit-calc(~"50% - 50px");
-	top: calc(~"50% - 50px");
-
-	li {
-		display: block;
-		margin: 7px 0;
-
-		a {
-			padding: 0 24px 0 18px;
-			color: #ccc;
-			text-decoration: none;
-			position: relative;
-
-			&:hover {
-				background: whitesmoke;
-				color: #555;
-			}
-		}
-	}
-	i {
+	.right, .left {
+		width: 50%;
 		display: inline-block;
-		text-align: center;
-		width: 24px;
-		position: absolute;
-		right: 0px;
-		top: 4px;
+		float: right;
+		padding: 2px 5px;
+	}
+
+	.right {
+		background: @color4;
+		text-align: left;
+	}
+	.left {
+		background: @color5;
 	}
 }
 
-.modal {
-	p.option {
-		margin-top: 18px;
-	}
-	#copyright {
-		font-size: .9em;
-	}
-	p:last-child {
-		margin: 0;
-	}
-}
-.tooltip-inner {
-	font-size: 15px;
-}
-
-// phone
-
-@media (max-width: 480px) {
-	#wrap {
-		padding: 0;
-	}
-	#menu {
-		display: none;
-	}
-	#footer {
-		height: 40px;
-	}
-	#message {
-		left: 10px;
-		width: -webkit-calc(~"100% - 20px");
-		width: calc(~"100% - 20px");
-
-		#content {
-			margin-bottom: 10px;
-			padding: 5px 10px;
-		}
-	}
-
-	#quran, #tafsir {
-		margin: 5px auto;
-	}
-	#quran .page {
-		font-size: 18px;
-		line-height: 30px;
-
-		div.sura {
-			margin: 4px 0 2px;
-		}
-		span.number {
-			line-height: 14px;
-			min-width: 10px;
-		}
-	}
-	#tafsir {
-		font-size: 18px;
-		line-height: 22px;
-		padding: 0 10px;
-
-		h1, h2, h3 {
-			line-height: 20px;
-			font-size: .9em;
-		}
-		p {
-			margin-bottom: 5px;
-		}
-		code.page {
-			visibility: hidden;
-		}
-	}
+#wrap {
+	border-right: 2px solid @color5;
+	border-left: 2px solid @color5;
 }
