@@ -354,7 +354,7 @@ var TafsirView = Backbone.View.extend({
 		var prepare = Boolean(this['prepare']);
 
 		if (prepare) {
-			position = this.quranToTafsir(this['prepare'].quran);
+			position = quranToTafsir(this['prepare'].quran);
 			bid = position.lang +'/'+ position.section;
 			if (this.prepared.indexOf(bid) >= 0) return;
 			this.prepared.push(bid);
@@ -439,18 +439,6 @@ var TafsirView = Backbone.View.extend({
 			})
 		});
 	},
-	quranToTafsir: function(quran) {
-		var aya;
-		if (quran.aya == '')
-			aya = quran.sura +'_'+ quran_pages[quran.page][0].split('_')[1];
-		else
-			aya = quran.sura +'_'+ quran.aya;
-		return {lang: variables.lang, aya: aya, section: almizan_ayas[aya]};
-	},
-	tafsirToQuran: function(tafsir) {
-		parts = tafsir.aya.split('_');
-		return {sura: parts[0], aya: parts[1]};
-	},
 	checkScroll: function () {
 		// // focused section
 		// var focusCode = this.$el.find('code.section').first().next(); // code element is hidden
@@ -519,8 +507,7 @@ var AddressView = Backbone.View.extend({
 		});
 	},
 	events: {
-		'click .quran .next': 'nextPage',
-		'click .quran .prev': 'prevPage',
+		'click .control': 'controlClick',
 		'click .quran #sura': 'suraSelect',
 	},
 	render: function() {
@@ -583,11 +570,8 @@ var AddressView = Backbone.View.extend({
 		else if (position.mode == 'tafsir')
 			track('Almizan', position.tafsir);
 	},
-	nextPage: function() {
-		this.trigger('nextPage');
-	},
-	prevPage: function() {
-		this.trigger('prevPage');
+	controlClick: function(e) {
+		this.trigger($(e.target).attr('rel'));
 	},
 	suraSelect: function() {
 		this.$el.find('#sura').val('').trigger('input').focus();
@@ -602,8 +586,10 @@ var AppView = Backbone.View.extend({
 		this.tafsir = new TafsirView();
 		this.quran.on('updateAddress', this.address.render, this.address);
 		this.tafsir.on('updateAddress', this.address.render, this.address);
-		this.address.on('nextPage', this.quran.nextPage, this.quran);
-		this.address.on('prevPage', this.quran.prevPage, this.quran);
+		this.address.on('next-page', this.quran.nextPage, this.quran);
+		this.address.on('prev-page', this.quran.prevPage, this.quran);
+		this.address.on('show-tafsir', this.showTafsir);
+		this.address.on('show-quran', this.showQuran);
 
 		// message
 		$('#message .close').click(function() {
@@ -613,6 +599,9 @@ var AppView = Backbone.View.extend({
 		// set position
 		this.position = variables.position;
 		this.quran.on('updateAddress', this.tafsir.loadSection, $.extend({}, this.tafsir, {prepare: this.position}));
+	},
+	events: {
+		'keydown': 'navKey',
 	},
 	render: function() {
 		$('#message').hide();
@@ -661,28 +650,17 @@ var AppView = Backbone.View.extend({
 		$('body').find('.loading').removeClass('loading');
 		app.message('خطا در اتصال به شبکه.', 'error', '');
 	},
-	events: {
-		'keydown': 'navKey',
-		'click #navigator a[rel]': 'navigate'
+	showTafsir: function() {
+		this.position.mode = 'tafsir';
+		this.position.tafsir = quranToTafsir(this.position.quran);
+		this.render();
 	},
-	navigate: function(e) {
-		e.preventDefault();
-
-		lastMode = this.position.mode;
-		this.position.mode = $(e.target).attr('rel');
-		if (lastMode == 'quran' && this.position.mode == 'tafsir')
-			this.position.tafsir = this.tafsir.quranToTafsir(this.position.quran);
-		else if (lastMode == 'tafsir' && this.position.mode == 'quran') {
-			quran = this.tafsir.tafsirToQuran(this.position.tafsir);
-			if (quran.sura != this.position.quran.sura)
-				this.position.quran = quran;
-		}
-
-		if (lastMode != this.position.mode)
-			this.render();
+	showQuran: function() {
+		this.position.mode = 'quran';
+		this.position.quran = tafsirToQuran(this.position.tafsir);
+		this.render();
 	},
 	navKey: function(e) {
-
 		if (e.target.tagName == 'INPUT' || $('.modal').is(':visible'))
 			return;
 
@@ -739,6 +717,8 @@ var AddressRouter = Backbone.Router.extend({
 	}
 });
 
+
+// functions
 var sectionToAddress = function(section) {
 	tmp = section.replace('-', '_');
 	parts = tmp.split('_');
@@ -746,6 +726,19 @@ var sectionToAddress = function(section) {
 		parts.push(parts[1]);
 	return [Number(parts[0]), Number(parts[1]), Number(parts[2])];
 };
+var quranToTafsir = function(quran) {
+	var aya;
+	if (quran.aya == '')
+		aya = quran.sura +'_'+ quran_pages[quran.page][0].split('_')[1];
+	else
+		aya = quran.sura +'_'+ quran.aya;
+	return {lang: variables.lang, aya: aya, section: almizan_ayas[aya]};
+};
+var tafsirToQuran = function(tafsir) {
+	parts = tafsir.aya.split('_');
+	return {sura: parts[0], aya: parts[1]};
+};
+
 
 // aya inverted index
 var quran_ayas = {}, sura_ayas = {}, almizan_ayas = {};
