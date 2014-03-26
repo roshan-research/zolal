@@ -3,8 +3,6 @@ $(window).resize(function() {
 // 	$('#wrap').css('margin-top', ($('body').height() - $('#wrap').height())/2);
 
 	$('#page-style').html('#quran .page {width: '+ $('#quran').width() +'px}');
-	if ($('#quran .front').length)
-		$('#quran').scrollLeft($('#quran .front').offset().left - $('#pages').position().left);
 });
 
 var app;
