@@ -36,19 +36,19 @@ def section_ayas(id, ayas):
 
 
 def resolve_footnotes(section):
-	for footnote in section.find('.footnote:not([content])').items():
+	for footnote in section.find('.footnote:not([title])').items():
 		content = section.find('.footnote-content[rel="%s"]' % footnote.attr('rel'))
 		if content:
 			content = pq(content[0])
-			footnote.attr('content', refine_note(content.html()))
+			footnote.attr('title', refine_note(content.html()))
 			content.remove()
 
 	for footnote in section.find('.footnote-content'):
 		footnote = pq(footnote)
 		for rel in re.split(' +', re.sub(r'[^ \d]', ' ', footnote.attr('rel'))):
-			ref = section.find('.footnote:not([content])[rel="%s"]' % rel)
+			ref = section.find('.footnote:not([title])[rel="%s"]' % rel)
 			if ref:
-				pq(ref[0]).attr('content', refine_note(footnote.html()))
+				pq(ref[0]).attr('title', refine_note(footnote.html()))
 			# todo check ambigous multiple footnotes
 			# todo fix unresolved footnotes
 
@@ -67,8 +67,8 @@ def refine_html(html):
 
 		# footnotes
 		(r' ?: ?\n?</span>', r'</span>:'),
-		(r': ?\(([^{\d\na-zA-Z]{1,10}): ?(\d+)\)', r'<span class="footnote" content="\1، \2">*</span>'),
-		(r':([^{\d\na-zA-Z]{1,10})[ :،-]([0-9، ]*\d)', r'<span class="footnote" content="\1، \2">*</span>'),
+		(r': ?\(([^{\d\na-zA-Z]{1,10}): ?(\d+)\)', r'<span class="footnote" title="\1، \2">*</span>'),
+		(r':([^{\d\na-zA-Z]{1,10})[ :،-]([0-9، ]*\d)', r'<span class="footnote" title="\1، \2">*</span>'),
 
 		# punctuations
 		(r'،? ?`', r'،'),
@@ -101,6 +101,18 @@ def refine_note(text):
 	return result.strip()
 
 
+def refine_translation(section):
+	for trans in section.find('.trans').items():
+		html = trans.html()
+		html = re.sub(r'[ -]*\(\d+\) *', '', str(html))
+
+		# add aya number
+		aya = trans.attr('rel').split('_')[1]
+		if int(aya):
+			html = html + ' «%s»' % aya
+		trans.html(html + ' ')
+
+
 def refine_section(section):
 
 	# ayas
@@ -111,6 +123,7 @@ def refine_section(section):
 		item.text(text)
 
 	# structure
+	refine_translation(section)
 	for item in section.children().items():
 		if item[0].tag == 'p':
 			if len(item.text().strip()) <= 1:

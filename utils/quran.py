@@ -64,5 +64,5 @@ def read_lines(lines, ayas):
 
 def simple_aya(aya):
 	aya = re.sub('[۞۩' + 'ۖۗۚۛۙۘ' + 'ًٌٍَُِّْٓ' + 'ٰۥۦ' + ']', '', aya)
-	aya = aya.replace('ٱ', 'ا').replace('ٔ', 'ئ').replace('ىٰ', 'ا')
+	aya = aya.replace('ي', 'ی').replace('ك', 'ک').replace('ٱ', 'ا').replace('ٔ', 'ئ').replace('ىٰ', 'ا')
 	return aya
