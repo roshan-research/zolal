@@ -1,3 +1,5 @@
+@import "prefixer.less";
+
 @font-face {
 	font-family: QuranFont;
 	font-weight: normal;
@@ -32,12 +34,8 @@ body {
 	height: 100%;
 	position: relative;
 }
-body, blockquote p {
+body, blockquote p, .tooltip-inner {
 	font-size: 18px;
-}
-.btn {
-	font-size: 17px;
-	min-width: 25px;
 }
 
 .container {
@@ -46,11 +44,13 @@ body, blockquote p {
 
 #quran, #tafsir {
 	text-align: justify;
+	color: @color5;
 	overflow: auto;
 	margin: 0 auto;
 }
 
 #quran {
+	width: 100%;
 	max-width: 600px;
 	overflow: hidden;
 	direction: ltr;
@@ -72,7 +72,6 @@ body, blockquote p {
 	font-family: QuranFont;
 	font-size: 22px;
 	line-height: 42px;
-	color: @color5;
 
 	visibility: hidden;
 	&.front {
@@ -133,6 +132,64 @@ body, blockquote p {
 	}
 }
 
+#tafsir {
+	text-align: justify;
+	overflow-y: auto;
+	overflow-x: hidden;
+	font-size: 20px;
+	line-height: 25px;
+
+	h1, h2, h3 {
+		margin: 12px 0 6px;
+		line-height: 30px;
+		font-weight: bold;
+	}
+	h2 {
+		font-size: 24px;
+	}
+	h3 {
+		font-size: 22px;
+	}
+	p {
+		margin-bottom: 8px;
+
+		&.ayas {
+			margin-top: 10px;
+		}
+	}
+	code {
+		float: right;
+		visibility: hidden;
+		padding: 0;
+	}
+	em {
+		font-style: normal;
+		font-weight: bold;
+		font-size: .85em;
+	}
+	span.aya {
+		color: @color3;
+	}
+	span.footnote {
+		font-size: 70%;
+		display: inline-block;
+		vertical-align: middle;
+		line-height: 7px;
+		padding: 5px;
+		margin: -5px;
+		margin-bottom: 7px;
+		border-radius: 10px;
+		font-weight: bold;
+		cursor: pointer;
+	}
+	h1, h2, p {
+		text-shadow: 0 1px #ccc;
+	}
+	.active {
+		.animation(TAFSIR-HIGHLIGHT 1s);
+	}
+}
+
 @color1: #E8DDCB; @color2: #CDB380; @color3: #036564; @color4: #033649; @color5: #031634;
 
 body {
@@ -150,18 +207,21 @@ body {
 		display: block;
 	}
 
-	.glyphicon {
-		font-size: 12px;
+	.buttons {
 		position: absolute;
-		cursor: pointer;
-		padding: 12px 6px;
+		right: 0;
 		top: 0;
 	}
-	.next {
-		left: 0;
+	.glyphicon {
+		cursor: pointer;
+		float: right;
+		font-size: 14px;
+		padding: 11px;
+		z-index: 10;
+		top: 0;
 	}
-	.prev {
-		right: 0;
+	.glyphicon:hover {
+		background: @color3;
 	}
 
 	input {
@@ -246,4 +306,19 @@ body {
 		margin: 0;
 		padding-right: calc(~"50% + 10px");
 	}
+}
+
+
+#tafsir {
+	height: 600px;
+}
+
+// animations
+@keyframes TAFSIR-HIGHLIGHT {
+	0% { background: lighten(@color3, 20%); }
+	100% { background: none; }
+}
+@-webkit-keyframes TAFSIR-HIGHLIGHT {
+	0% { background: lighten(@color3, 20%); }
+	100% { background: none; }
 }

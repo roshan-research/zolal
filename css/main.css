@@ -32,12 +32,9 @@ body {
   position: relative;
 }
 body,
-blockquote p {
+blockquote p,
+.tooltip-inner {
   font-size: 18px;
-}
-.btn {
-  font-size: 17px;
-  min-width: 25px;
 }
 .container {
   max-width: 600px;
@@ -45,10 +42,12 @@ blockquote p {
 #quran,
 #tafsir {
   text-align: justify;
+  color: #031634;
   overflow: auto;
   margin: 0 auto;
 }
 #quran {
+  width: 100%;
   max-width: 600px;
   overflow: hidden;
   direction: ltr;
@@ -67,7 +66,6 @@ blockquote p {
   font-family: QuranFont;
   font-size: 22px;
   line-height: 42px;
-  color: #031634;
   visibility: hidden;
 }
 #quran .page.front {
@@ -117,6 +115,69 @@ blockquote p {
   box-sizing: initial;
   -moz-box-sizing: initial;
 }
+#tafsir {
+  text-align: justify;
+  overflow-y: auto;
+  overflow-x: hidden;
+  font-size: 20px;
+  line-height: 25px;
+}
+#tafsir h1,
+#tafsir h2,
+#tafsir h3 {
+  margin: 12px 0 6px;
+  line-height: 30px;
+  font-weight: bold;
+}
+#tafsir h2 {
+  font-size: 24px;
+}
+#tafsir h3 {
+  font-size: 22px;
+}
+#tafsir p {
+  margin-bottom: 8px;
+}
+#tafsir p.ayas {
+  margin-top: 10px;
+}
+#tafsir code {
+  float: right;
+  visibility: hidden;
+  padding: 0;
+}
+#tafsir em {
+  font-style: normal;
+  font-weight: bold;
+  font-size: .85em;
+}
+#tafsir span.aya {
+  color: #036564;
+}
+#tafsir span.footnote {
+  font-size: 70%;
+  display: inline-block;
+  vertical-align: middle;
+  line-height: 7px;
+  padding: 5px;
+  margin: -5px;
+  margin-bottom: 7px;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+}
+#tafsir h1,
+#tafsir h2,
+#tafsir p {
+  text-shadow: 0 1px #ccc;
+}
+#tafsir .active {
+  -webkit-animation: TAFSIR-HIGHLIGHT 1s;
+  -moz-animation: TAFSIR-HIGHLIGHT 1s;
+  -ms-animation: TAFSIR-HIGHLIGHT 1s;
+  -o-animation: TAFSIR-HIGHLIGHT 1s;
+  animation: TAFSIR-HIGHLIGHT 1s;
+}
 body {
   background: #e8ddcb;
 }
@@ -130,18 +191,21 @@ body {
 #header .front {
   display: block;
 }
-#header .glyphicon {
-  font-size: 12px;
+#header .buttons {
   position: absolute;
-  cursor: pointer;
-  padding: 12px 6px;
+  right: 0;
   top: 0;
 }
-#header .next {
-  left: 0;
+#header .glyphicon {
+  cursor: pointer;
+  float: right;
+  font-size: 14px;
+  padding: 11px;
+  z-index: 10;
+  top: 0;
 }
-#header .prev {
-  right: 0;
+#header .glyphicon:hover {
+  background: #036564;
 }
 #header input {
   padding: 0 10px;
@@ -219,4 +283,23 @@ body {
 .twitter-typeahead .tt-suggestion p {
   margin: 0;
   padding-right: calc(50% + 10px);
+}
+#tafsir {
+  height: 600px;
+}
+@keyframes TAFSIR-HIGHLIGHT {
+  0% {
+    background: #06c8c6;
+  }
+  100% {
+    background: none;
+  }
+}
+@-webkit-keyframes TAFSIR-HIGHLIGHT {
+  0% {
+    background: #06c8c6;
+  }
+  100% {
+    background: none;
+  }
 }

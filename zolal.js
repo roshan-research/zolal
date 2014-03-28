@@ -102,7 +102,6 @@ var AyaView = Backbone.View.extend({
 				if (t >= 0 && t in parts) e += parts[t].length;
 				if (b >= 0 && e > b)
 					html = [html.slice(0, b), '<span class="phrase" rel="'+ phrase['lang'] +'_'+ phrase['words'] +'">', html.slice(b, e), '</span> ', html.slice(e)].join('').trim();
-				// else console.log(data['id'] +'/'+ key);
 			});
 
 			data['html'] = html;
@@ -407,16 +406,13 @@ var TafsirView = Backbone.View.extend({
 				}
 
 				if (part.length > 0) {
-					part.css('background', '#FFFC99').animate({ backgroundColor: 'none' }, 1000);
 					container.scrollTop(part.offset().top - container.offset().top + container.scrollTop());
+					part.addClass('active');
 				}
 
 				// footnote
-				tafsir.$el.find('span.footnote').hover(function() {
-					app.message($(this).attr('content'), 'note');
-				}, function() {
-					$('#message').hide();
-				});
+				tafsir.$el.find('span.footnote').tooltip({html: true, placement: 'auto'});
+				tafsir.checkScroll();
 			}
 		};
 
@@ -440,28 +436,17 @@ var TafsirView = Backbone.View.extend({
 		});
 	},
 	checkScroll: function () {
-		// // focused section
-		// var focusCode = this.$el.find('code.section').first().next(); // code element is hidden
-		// this.$el.find('code.section').each(function() {
-		// 	if (focusCode.position().top < 0 && $(this).next().position().top > focusCode.position().top)
-		// 		focusCode = $(this).next();
-		// });
+		var current_page;
+		base = this.$el.position().top;
+		this.$el.find('code.page').each(function() {
+			if ($(this).position().top > base) {
+				current_page = $(this).attr('rel');
+				return false;
+			}
+		})
 
-		// triggerOff = 100;
-		// focus = '';
-
-		// if (focusCode.length) {
-		// 	if (focusCode.position().top - triggerOff <= 0)
-		// 		focus = focusCode.prev().text();
-		// 	else
-		// 		focus =focusCode.prev().attr('prev');
-		// }
-
-		// if (focus != '' && focus != this.position.section) {
-		// 	this.position.section = focus;
-		// 	this.position.part = '';
-		// 	this.trigger('updateAddress');
-		// }
+		parts = current_page.split(',');
+		this.trigger('tafsir-scroll', {'volume': parts[0], 'page': parts[1]})
 	}
 });
 
@@ -514,32 +499,13 @@ var AddressView = Backbone.View.extend({
 		// clone position
 		position = $.extend(true, {}, this.position);
 		if (position.mode == 'quran') {
-			if (position.quran.aya != '') {
-				slug = position.quran.sura +'_'+ position.quran.aya;
-				if (position.quran.phrase)
-					slug += '/'+ position.quran.phrase;
-				app.router.navigate('quran/'+ slug, {trigger: false, replace: true});
-			}
-			else
-				app.router.navigate('quran/p'+ position.quran.page, false);
-
 			page_sura = Number(quran_pages[position.quran.page][0].split('_')[0]);
 			this.$el.find('#sura').val(quran_suras[page_sura-1]);
 			// el.find('#page').val(position.quran.page);
+		} else if (position.mode == 'tafsir') {
+			this.$el.find('.tafsir .page').text('');
 		}
-		else if (position.mode == 'tafsir') {
-			app.router.navigate('almizan_'+ position.tafsir.lang +'/'+ this.position.tafsir.aya, false);
-			parts = sectionToAddress(position.tafsir.section);
-			position.tafsir = {'sura': quran_suras[parts[0]-1], 'mi': parts[1], 'ma': parts[2]};
 
-			controls.push('quran');
-			this.$el.find('.quran-address').hide();
-			el = this.$el.find('.tafsir-address');
-			el.show();
-			el.find('#sura').text(position.tafsir['sura']);
-			el.find('#mi').text(position.tafsir['mi']);
-			el.find('#ma').text(position.tafsir['ma']);
-		}
 		this.$el.find('.front').removeClass('front');
 		this.$el.find('.'+ position.mode).addClass('front');
 
@@ -550,8 +516,10 @@ var AddressView = Backbone.View.extend({
 				title = 'سوره '+ quran_suras[position.quran.sura-1] +'، آیه '+ refine(position.quran.aya);
 			else
 				title = 'صفحه '+ refine(position.quran.page);
-		} else if (position.mode == 'tafsir')
-			title = 'تفسیر سوره '+ position.tafsir.sura  +'، آیات '+ refine(position.tafsir.mi) +' تا '+ refine(position.tafsir.ma);
+		} else if (position.mode == 'tafsir') {
+			parts = sectionToAddress(position.tafsir.section);
+			title = 'تفسیر سوره '+ quran_suras[parts[0]] +'، آیات '+ refine(String(parts[1])) +' تا '+ refine(String(parts[2]));
+		}
 		$(document).attr('title', 'زلال' +' | '+ title);
 
 		// store position
@@ -575,6 +543,9 @@ var AddressView = Backbone.View.extend({
 	},
 	suraSelect: function() {
 		this.$el.find('#sura').val('').trigger('input').focus();
+	},
+	tafsirScroll: function(args) {
+		this.$el.find('.tafsir .page').text('جلد '+ args['volume'] +' صفحه '+ args['page']);
 	}
 });
 
@@ -586,10 +557,11 @@ var AppView = Backbone.View.extend({
 		this.tafsir = new TafsirView();
 		this.quran.on('updateAddress', this.address.render, this.address);
 		this.tafsir.on('updateAddress', this.address.render, this.address);
+		this.tafsir.on('tafsir-scroll', this.address.tafsirScroll, this.address);
 		this.address.on('next-page', this.quran.nextPage, this.quran);
 		this.address.on('prev-page', this.quran.prevPage, this.quran);
-		this.address.on('show-tafsir', this.showTafsir);
-		this.address.on('show-quran', this.showQuran);
+		this.address.on('show-tafsir', this.showTafsir, this);
+		this.address.on('show-quran', this.showQuran, this);
 
 		// message
 		$('#message .close').click(function() {
@@ -651,14 +623,12 @@ var AppView = Backbone.View.extend({
 		app.message('خطا در اتصال به شبکه.', 'error', '');
 	},
 	showTafsir: function() {
-		this.position.mode = 'tafsir';
-		this.position.tafsir = quranToTafsir(this.position.quran);
-		this.render();
+		tafsir = quranToTafsir(this.position.quran);
+		this.router.navigate('almizan_'+ tafsir.lang +'/'+ tafsir.aya, true);
 	},
 	showQuran: function() {
-		this.position.mode = 'quran';
-		this.position.quran = tafsirToQuran(this.position.tafsir);
-		this.render();
+		quran = tafsirToQuran(this.position.tafsir);
+		this.router.navigate('quran/'+ quran.sura +'_'+ quran.aya, true);
 	},
 	navKey: function(e) {
 		if (e.target.tagName == 'INPUT' || $('.modal').is(':visible'))
