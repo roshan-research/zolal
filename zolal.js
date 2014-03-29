@@ -62,7 +62,7 @@ var Bayan = Backbone.Model.extend({
 
 // views
 var AyaView = Backbone.View.extend({
-	template: _.template('<span class="aya" rel="<%= sura %>_<%= aya %>"><span class="text"><%= html %></span> <span class="number"><%= aya %></span></span>'),
+	template: _.template('<span class="aya" rel="<%= sura %>_<%= aya %>"><span class="detail"></span><span class="text"><%= html %></span> <span class="number"><%= aya %></span></span>'),
 	initialize: function () {
 		this.model.on('change', this.render, this);
 	},
@@ -104,7 +104,7 @@ var AyaView = Backbone.View.extend({
 
 		aya = this.model.get('sura') +'_'+ this.model.get('aya');
 		if (app.position.mode == 'quran') {
-			if (target.hasClass('aya'))
+			if (target.hasClass('detail'))
 				app.router.navigate('detail/'+ aya, true);
 			else
 				app.router.navigate('quran/'+ aya, true);
@@ -218,7 +218,7 @@ var QuranView = Backbone.View.extend({
 					if (item.get('aya') == 1) {
 						el.append('<div class="sura header"><div class="right">سورة</div><div class="left">'+ quran_suras[item.get('sura')-1] +'</div></div>');
 						if (item.get('sura') != 1 && item.get('sura') != 9)
-							el.append('<div class="aya bism"><span>بِسمِ اللَّهِ الرَّحمٰنِ الرَّحيمِ</span></div>');
+							el.append('<div class="aya bism"><span class="text">بِسمِ اللَّهِ الرَّحمٰنِ الرَّحيمِ</span></div>');
 					}
 					el.append(ayaView.render().el, ' ');
 				}

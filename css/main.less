@@ -78,30 +78,36 @@ body, blockquote p, .tooltip-inner {
 }
 
 #quran .aya, #detail .aya {
-	font-family: QuranFont;
-	font-size: 22px;
 	line-height: 42px;
 
-	span.mark {
+	.text {
+		font-size: 22px;
+		font-family: QuranFont;
+	}
+	.mark {
 		color: @color3;
 		margin-right: 6px;
 	}
-	span.number {
-		font-family: AppFont;
-		font-weight: bold;
-		font-size: .65em;
-		color: lighten(@color1, 10%);
-		background: @color2;
-		padding: 4px 5px 2px 4px;
-		border-radius: 50px;
-		min-width: 15px;
-		text-align: center;
-		display: inline-block;
-		line-height: 18px;
-		margin: 0 1px 0 3px;
-		box-sizing: initial;
-		-moz-box-sizing: initial;
-	}
+}
+
+#quran .aya .number {
+	font-family: AppFont;
+	font-weight: bold;
+	font-size: .65em;
+	color: lighten(@color1, 10%);
+	background: @color2;
+	padding: 4px 5px 2px 4px;
+	border-radius: 50px;
+	min-width: 15px;
+	text-align: center;
+	display: inline-block;
+	line-height: 18px;
+	margin: 0 1px 0 3px;
+	box-sizing: initial;
+	-moz-box-sizing: initial;
+}
+#detail .aya .number {
+	display: none;
 }
 
 #quran .page {
@@ -123,7 +129,7 @@ body, blockquote p, .tooltip-inner {
 		}
 	}
 
-	span.aya {
+	.aya {
 		cursor: pointer;
 
 		&.active {
@@ -132,21 +138,35 @@ body, blockquote p, .tooltip-inner {
 				background: darken(@color1, 5%);
 			}
 
-			&:before {
-				position: absolute;
-				content: "";
-				background: lighten(@color3, 10%);
-				height: 45px;
-				width: 20px;
-				right: -20px;
-			}
-
 			.phrase {
 				color: #2A6496;
 
 				&:hover, &.active {
 					color: #428BCA;
 				}
+			}
+
+			.detail {
+				position: absolute;
+				background: lighten(@color3, 10%);
+				height: 45px;
+				width: 10px;
+				right: -10px;
+				transition: width .2s ease, right .2s ease;
+			}
+			.detail:hover {
+				width: 30px;
+				right: -30px;
+			}
+			.detail:before {
+				content: "";
+				height: 45px;
+				width: 20px;
+				right: -20px;
+				position: absolute;
+				border-top: 22px solid transparent;
+				border-bottom: 22px solid transparent;
+				border-left: 20px solid lighten(@color3, 10%);
 			}
 		}
 	}
