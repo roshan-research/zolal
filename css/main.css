@@ -39,9 +39,13 @@ blockquote p,
 .container {
   max-width: 600px;
 }
+#views {
+  height: 600px;
+}
 #quran,
 #tafsir,
 #detail {
+  height: 100%;
   text-align: justify;
   color: #031634;
   overflow: auto;
@@ -303,9 +307,6 @@ body {
 .twitter-typeahead .tt-suggestion p {
   margin: 0;
   padding-right: calc(50% + 10px);
-}
-#tafsir {
-  height: 600px;
 }
 @keyframes TAFSIR-HIGHLIGHT {
   0% {

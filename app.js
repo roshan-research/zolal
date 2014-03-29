@@ -6,8 +6,6 @@ if ('chrome' in window && chrome.app.isInstalled)
 
 $(window).resize(function() {
 // 	$('#wrap').css('margin-top', ($('body').height() - $('#wrap').height())/2);
-
-	$('#page-style').html('#quran .page {width: '+ $('#quran').width() +'px}');
 });
 
 var app;
