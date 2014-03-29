@@ -40,11 +40,18 @@ blockquote p,
   max-width: 600px;
 }
 #quran,
-#tafsir {
+#tafsir,
+#detail {
   text-align: justify;
   color: #031634;
   overflow: auto;
   margin: 0 auto;
+  display: none;
+}
+#quran.front,
+#tafsir.front,
+#detail.front {
+  display: block;
 }
 #quran {
   width: 100%;
@@ -62,10 +69,35 @@ blockquote p,
   direction: rtl;
   overflow-y: auto;
 }
-#quran .page {
+#quran .aya,
+#detail .aya {
   font-family: QuranFont;
   font-size: 22px;
   line-height: 42px;
+}
+#quran .aya span.mark,
+#detail .aya span.mark {
+  color: #036564;
+  margin-right: 6px;
+}
+#quran .aya span.number,
+#detail .aya span.number {
+  font-family: AppFont;
+  font-weight: bold;
+  font-size: .65em;
+  color: #f8f4ee;
+  background: #cdb380;
+  padding: 4px 5px 2px 4px;
+  border-radius: 50px;
+  min-width: 15px;
+  text-align: center;
+  display: inline-block;
+  line-height: 18px;
+  margin: 0 1px 0 3px;
+  box-sizing: initial;
+  -moz-box-sizing: initial;
+}
+#quran .page {
   visibility: hidden;
 }
 #quran .page.front {
@@ -88,32 +120,20 @@ blockquote p,
 #quran .page span.aya.active .text {
   background: #e0d1b9;
 }
+#quran .page span.aya.active:before {
+  position: absolute;
+  content: "";
+  background: #049795;
+  height: 45px;
+  width: 20px;
+  right: -20px;
+}
 #quran .page span.aya.active .phrase {
   color: #2A6496;
 }
 #quran .page span.aya.active .phrase:hover,
 #quran .page span.aya.active .phrase.active {
   color: #428BCA;
-}
-#quran .page span.mark {
-  color: #036564;
-  margin-right: 6px;
-}
-#quran .page span.number {
-  font-family: AppFont;
-  font-weight: bold;
-  font-size: .65em;
-  color: #f8f4ee;
-  background: #cdb380;
-  padding: 4px 5px 2px 4px;
-  border-radius: 50px;
-  min-width: 15px;
-  text-align: center;
-  display: inline-block;
-  line-height: 18px;
-  margin: 0 1px 0 3px;
-  box-sizing: initial;
-  -moz-box-sizing: initial;
 }
 #tafsir {
   text-align: justify;

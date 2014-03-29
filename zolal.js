@@ -1,23 +1,5 @@
-var store = false;
+
 var server = 'http://zolal-files.ap01.aws.af.cm/';
-
-if ('chrome' in window && chrome.app.isInstalled)
-	store = true;
-
-
-// functions
-var numchars = {'0': '۰', '1': '۱', '2': '۲', '3': '۳', '4': '۴', '5': '۵', '6': '۶', '7': '۷', '8': '۸', '9': '۹'};
-var refine = function(str) {
-	return String(str).replace(/[0-9]/g, function(c) { return numchars[c]; });
-};
-var renumchars = {'۰': '0', '۱': '1', '۲': '2', '۳': '3', '۴': '4', '۵': '5', '۶': '6', '۷': '7', '۸': '8', '۹': '9'};
-var rerefine = function(str) {
-	return String(str).replace(/[۰-۹]/g, function(c) { return renumchars[c]; });
-};
-
-var track = function(title, data) {
-	mixpanel.track(title, data);
-}
 
 // read variables
 appStorage = new Backbone.LocalStorage('App');
@@ -26,7 +8,7 @@ if (!appStorage.find({id: 'variables'})) {
 	defaults = {
 		id: 'variables',
 		lang: 'fa',
-		position: {mode: 'quran', quran: {page: 1, sura: 1, aya: ''}, tafsir: {section: '1-1:5'}}
+		position: {mode: 'quran', quran: {page: 1, sura: 1, aya: ''}, tafsir: {section: '1_1-5'}}
 	};
 
 	appStorage.update(defaults);
@@ -120,15 +102,13 @@ var AyaView = Backbone.View.extend({
 	click: function(e) {
 		target = $(e.target);
 
-		// update quran address
-		app.quran.position.aya = this.model.get('aya');
-		app.quran.position.sura = this.model.get('sura');
-		if (target.hasClass('phrase') && target.parent().parent().hasClass('active'))
-			app.quran.position.phrase = target.attr('rel');
-		else
-			app.quran.position.phrase = '';
-
-		app.quran.render();
+		aya = this.model.get('sura') +'_'+ this.model.get('aya');
+		if (app.position.mode == 'quran') {
+			if (target.hasClass('aya'))
+				app.router.navigate('detail/'+ aya, true);
+			else
+				app.router.navigate('quran/'+ aya, true);
+		}
 	}
 });
 
@@ -138,9 +118,6 @@ var QuranView = Backbone.View.extend({
 		this.collection = new Quran();
 	},
 	render: function() {
-		if (this.position.aya != '')
-			this.position.page = quran_ayas[this.position.sura+ '_'+ this.position.aya];
-
 		this.loadPage(this.position.page);
 
 		// update address
@@ -240,7 +217,7 @@ var QuranView = Backbone.View.extend({
 					if (item.get('aya') == 1) {
 						el.append('<div class="sura header"><div class="right">سورة</div><div class="left">'+ quran_suras[item.get('sura')-1] +'</div></div>');
 						if (item.get('sura') != 1 && item.get('sura') != 9)
-							el.append('<div class="bism"><span>بِسمِ اللَّهِ الرَّحمٰنِ الرَّحيمِ</span></div>');
+							el.append('<div class="aya bism"><span>بِسمِ اللَّهِ الرَّحمٰنِ الرَّحيمِ</span></div>');
 					}
 					el.append(ayaView.render().el, ' ');
 				}
@@ -278,58 +255,6 @@ var QuranView = Backbone.View.extend({
 				});
 			}
 		});
-	},
-	nextPage: function() {
-		this.position.aya = '';
-		this.position.page += 1;
-		if (this.position.page > 604) {
-			this.position.page = 604;
-			return false;
-		}
-
-		this.render();
-		return true;
-	},
-	prevPage: function() {
-		this.position.aya = '';
-		this.position.page -= 1;
-		if (this.position.page < 1) {
-			this.position.page = 1;
-			return false;
-		}
-
-		this.render();
-		return true;
-	},
-	nextAya: function() {
-		this.position.phrase = '';
-		if (this.position.aya == '')
-			this.position.aya = Number(quran_pages[Number(this.position.page)][0].split('_')[1]);
-		else if (this.position.aya < sura_ayas[this.position.sura])
-			this.position.aya += 1;
-		else if (this.position.aya == sura_ayas[this.position.sura] && this.position.sura < quran_suras.length) {
-			this.position.sura += 1;
-			this.position.aya = 1;
-		} else
-			return false;
-
-		this.render();
-		return true;
-	},
-	prevAya: function() {
-		this.position.phrase = '';
-		if (this.position.aya == '')
-			this.position.aya = Number(this.$el.find('.front .aya').first().attr('rel').split('_')[1]);
-		else if (this.position.aya > 1)
-			this.position.aya -= 1;
-		else if (this.position.aya == 1 && this.position.sura > 1) {
-			this.position.sura -= 1;
-			this.position.aya = sura_ayas[this.position.sura];
-		} else
-			return false;
-
-		this.render();
-		return true;
 	}
 });
 
@@ -502,8 +427,10 @@ var AddressView = Backbone.View.extend({
 			page_sura = Number(quran_pages[position.quran.page][0].split('_')[0]);
 			this.$el.find('#sura').val(quran_suras[page_sura-1]);
 			// el.find('#page').val(position.quran.page);
+		} else if (position.mode == 'detail') {
+			this.$el.find('.detail .left').text(position.detail.aya +' سوره '+ quran_suras[position.detail.sura-1]);
 		} else if (position.mode == 'tafsir') {
-			this.$el.find('.tafsir .page').text('');
+			this.$el.find('.tafsir .left').text('');
 		}
 
 		this.$el.find('.front').removeClass('front');
@@ -554,7 +481,9 @@ var AppView = Backbone.View.extend({
 	initialize: function() {
 		this.address = new AddressView();
 		this.quran = new QuranView();
+		this.detail = new DetailView();
 		this.tafsir = new TafsirView();
+
 		this.quran.on('updateAddress', this.address.render, this.address);
 		this.tafsir.on('updateAddress', this.address.render, this.address);
 		this.tafsir.on('tafsir-scroll', this.address.tafsirScroll, this.address);
@@ -562,6 +491,8 @@ var AppView = Backbone.View.extend({
 		this.address.on('prev-page', this.quran.prevPage, this.quran);
 		this.address.on('show-tafsir', this.showTafsir, this);
 		this.address.on('show-quran', this.showQuran, this);
+		this.address.on('next-aya', this.nextAyaDetail, this);
+		this.address.on('prev-aya', this.prevAyaDetail, this);
 
 		// message
 		$('#message .close').click(function() {
@@ -579,15 +510,18 @@ var AppView = Backbone.View.extend({
 		$('#message').hide();
 		this.quran.lastPosition = '';
 		this.address.position = this.position;
+		this.address.render();
+
+		this.$el.find('#views > .front').removeClass('front');
+		this.$el.find('#views #'+ this.position.mode).addClass('front');
 
 		if (this.position.mode == 'quran') {
-			this.quran.$el.show();
-			this.tafsir.$el.hide();
 			this.quran.position = this.position.quran;
 			this.quran.render();
+		} else if (this.position.mode == 'detail') {
+			this.detail.position = this.position.detail;
+			this.detail.render();
 		} else if (this.position.mode == 'tafsir') {
-			this.quran.$el.hide();
-			this.tafsir.$el.show();
 			this.tafsir.position = this.position.tafsir;
 			this.tafsir.render();
 		}
@@ -630,23 +564,70 @@ var AppView = Backbone.View.extend({
 		quran = tafsirToQuran(this.position.tafsir);
 		this.router.navigate('quran/'+ quran.sura +'_'+ quran.aya, true);
 	},
+	nextQuranPage: function() {
+		page = this.position.quran.page;
+		page += 1; if (page > 604) page = 604;
+		this.router.navigate('quran/p'+ page, true);
+	},
+	prevQuranPage: function() {
+		page = this.position.quran.page;
+		page -= 1; if (page < 1) page = 1;
+		this.router.navigate('quran/p'+ page, true);
+	},
+	nextQuranAya: function() {
+		quran = this.position.quran;
+		if (quran.aya == '') {
+			first_aya = quran_pages[Number(quran.page)][0].split('_');
+			quran.sura = Number(first_aya[0]);
+			quran.aya = Number(first_aya[1]);
+		}
+		this.router.navigate('quran/'+ nextAya(quran.sura, quran.aya), true);
+	},
+	prevQuranAya: function() {
+		quran = this.position.quran;
+		if (quran.aya == '') {
+			first_aya = quran_pages[Number(quran.page)][0].split('_');
+			quran.sura = Number(first_aya[0]);
+			quran.aya = Number(first_aya[1]);
+		}
+		this.router.navigate('quran/'+ prevAya(quran.sura, quran.aya), true);
+	},
+	nextAyaDetail: function() {
+		detail = this.position.detail;
+		this.router.navigate('detail/'+ nextAya(detail.sura, detail.aya), true);
+	},
+	prevAyaDetail: function() {
+		detail = this.position.detail;
+		this.router.navigate('detail/'+ prevAya(detail.sura, detail.aya), true);
+	},
 	navKey: function(e) {
 		if (e.target.tagName == 'INPUT' || $('.modal').is(':visible'))
 			return;
 
-		refresh = false;
+		prevent = true;
 		if (this.position.mode == 'quran') {
 			if(e.keyCode == 37) // left arrow
-				refresh = this.quran.nextPage();
-			else if(e.keyCode == 38) // up arrow
-				refresh = this.quran.prevAya();
+				this.nextQuranPage();
 			else if(e.keyCode == 39) // right arrow
-				refresh = this.quran.prevPage();
+				this.prevQuranPage();
+			else if(e.keyCode == 38) // up arrow
+				this.prevQuranAya();
 			else if(e.keyCode == 40) // down arrow
-				refresh = this.quran.nextAya();
+				this.nextQuranAya();
+			else
+				prevent = false;
 		}
+		else if (this.position.mode == 'detail') {
+			if(e.keyCode == 37) // left arrow
+				this.nextAyaDetail();
+			else if(e.keyCode == 39) // right arrow
+				this.prevAyaDetail();
+			else
+				prevent = false;
+		} else
+			prevent = false;
 
-		if (refresh)
+		if (prevent)
 			e.preventDefault();
 	}
 });
@@ -656,6 +637,7 @@ var AddressRouter = Backbone.Router.extend({
 		'quran/p:page': 'quranPage',
 		'quran/:aya': 'quranAya',
 		'quran/:aya/:phrase': 'quranPhrase',
+		'detail/:aya': 'ayaDetail',
 		'almizan_:lang/:aya': 'almizanAya'
 	},
 	quranPage: function(page) {
@@ -667,14 +649,19 @@ var AddressRouter = Backbone.Router.extend({
 		app.render();
 	},
 	quranAya: function(aya) {
-		this.quranPhrase(aya, '');
-	},
-	quranPhrase: function(aya, phrase) {
 		if (!(aya in quran_ayas))
 			return;
 
 		app.position.mode = 'quran';
-		app.position.quran = {'page': '', 'sura': Number(aya.split('_')[0]), 'aya': Number(aya.split('_')[1]), 'phrase': phrase};
+		app.position.quran = {'page': quran_ayas[aya], 'sura': Number(aya.split('_')[0]), 'aya': Number(aya.split('_')[1])};
+		app.render();
+	},
+	ayaDetail: function(aya) {
+		if (!(aya in quran_ayas))
+			return;
+
+		app.position.mode = 'detail';
+		app.position.detail = {sura: Number(aya.split('_')[0]), aya: Number(aya.split('_')[1])};
 		app.render();
 	},
 	almizanAya: function(lang, aya) {
@@ -682,13 +669,40 @@ var AddressRouter = Backbone.Router.extend({
 			return;
 
 		app.position.mode = 'tafsir';
-		app.position.tafsir = {'lang': lang, 'aya': aya, section: almizan_ayas[aya]};
+		app.position.tafsir = {lang: lang, aya: aya, section: almizan_ayas[aya]};
 		app.render();
 	}
 });
 
+var DetailView = Backbone.View.extend({
+	el: $('#detail'),
+	initialize: function () {
+		//
+	},
+	render: function () {
+		id = this.position.sura +'_'+ this.position.aya;
+		var aya = new Aya({id: id});
+		aya.fetch();
 
-// functions
+		var ayaView = new AyaView({model: aya});
+
+		this.$el.empty();
+		this.$el.append(ayaView.render().el);
+		this.$el.append('<div>'+ aya.get('trans') +'</div>');
+	},
+});
+
+
+// helpers
+var numchars = {'0': '۰', '1': '۱', '2': '۲', '3': '۳', '4': '۴', '5': '۵', '6': '۶', '7': '۷', '8': '۸', '9': '۹'};
+var refine = function(str) {
+	return String(str).replace(/[0-9]/g, function(c) { return numchars[c]; });
+};
+var renumchars = {'۰': '0', '۱': '1', '۲': '2', '۳': '3', '۴': '4', '۵': '5', '۶': '6', '۷': '7', '۸': '8', '۹': '9'};
+var rerefine = function(str) {
+	return String(str).replace(/[۰-۹]/g, function(c) { return renumchars[c]; });
+};
+
 var sectionToAddress = function(section) {
 	tmp = section.replace('-', '_');
 	parts = tmp.split('_');
@@ -708,6 +722,29 @@ var tafsirToQuran = function(tafsir) {
 	parts = tafsir.aya.split('_');
 	return {sura: parts[0], aya: parts[1]};
 };
+
+var nextAya = function(sura, aya) {
+	if (aya < sura_ayas[sura])
+		aya += 1;
+	else if (aya == sura_ayas[sura] && sura < quran_suras.length) {
+		sura += 1;
+		aya = 1;
+	}
+	return sura +'_'+ aya;
+}
+var prevAya = function(sura, aya) {
+	if (aya > 1)
+		aya -= 1;
+	else if (aya == 1 && sura > 1) {
+		sura -= 1;
+		aya = sura_ayas[sura];
+	}
+	return sura +'_'+ aya;
+}
+
+var track = function(title, data) {
+	mixpanel.track(title, data);
+}
 
 
 // aya inverted index

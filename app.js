@@ -1,4 +1,9 @@
 
+var store = false;
+if ('chrome' in window && chrome.app.isInstalled)
+	store = true;
+
+
 $(window).resize(function() {
 // 	$('#wrap').css('margin-top', ($('body').height() - $('#wrap').height())/2);
 
@@ -7,8 +12,6 @@ $(window).resize(function() {
 
 var app;
 $(document).ready(function() {
-	$(window).resize();
-
 	app = new AppView();
 	app.router = new AddressRouter();
 	Backbone.history.start();
@@ -26,10 +29,10 @@ $(document).ready(function() {
 		}
 	}
 
+	$(window).resize();
 	track('Zolal');
 });
 
-$(window).load($(window).resize);
 
 // settings dialog
 $('select#language').val(variables.lang);
