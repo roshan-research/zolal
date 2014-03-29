@@ -69,30 +69,6 @@ var AyaView = Backbone.View.extend({
 	render: function () {
 		data = this.model.toJSON();
 		data['html'] = data['text'].replace(/[ ]*([ۖۗۚۛۙۘ])[ ]*/g, '<span class="mark">\$1 </span>');
-
-		if (Object.keys(data['phrases']).length) {
-			html = data['html'];
-			parts = data['text'].replace(/[ۖۗۚۛۙۘ]/g, '').split(' ');
-
-			_.each(data['phrases'], function (phrase) {
-				if (phrase['lang'] != variables.lang)
-					return;
-
-				key = phrase['words'].split('-');
-				f = Number(key[0])-1; t = Number(key[1])-1;
-				b = html.indexOf(parts[f]); e = html.indexOf(parts[t], b);
-				if (t >= 0 && t in parts) e += parts[t].length;
-				if (b >= 0 && e > b)
-					html = [html.slice(0, b), '<span class="phrase" rel="'+ phrase['lang'] +'_'+ phrase['words'] +'">', html.slice(b, e), '</span> ', html.slice(e)].join('').trim();
-			});
-
-			data['html'] = html;
-			if (this.el.tagName == 'SPAN') {
-				this.$el.find('.text').html(html);
-				return this;
-			}
-		}
-
 		this.setElement(this.template(data));
 		return this;
 	},
@@ -164,24 +140,6 @@ var QuranView = Backbone.View.extend({
 				aya = quran.collection.get(id);
 				active.removeClass('active');
 				quran.$el.find('.aya[rel='+ id +']').addClass('active');
-
-				if (quran.position.phrase != '' && quran.position.phrase in aya.get('phrases')) {
-					quran.$el.find('.aya[rel='+ id +'] .phrase[rel="'+ quran.position.phrase +'"]').addClass('active');
-
-					phr = aya.get('phrases')[quran.position.phrase];
-					html = phr['html'];
-					if ('head' in phr)
-						html = phr['head'] + html;
-
-					app.message(html, 'note', '#'+ phr['link']);
-
-					msg = $('#message #content');
-					if (msg.children().length == 2)
-						msg.children().first().addClass('header');
-
-				} else if (variables.lang == 'fa' && aya.get('trans'))
-					app.message(aya.get('trans'), 'note', '');
-
 			} else
 				active.removeClass('active');
 
@@ -495,11 +453,6 @@ var AppView = Backbone.View.extend({
 		this.address.on('next-aya', this.nextAyaDetail, this);
 		this.address.on('prev-aya', this.prevAyaDetail, this);
 
-		// message
-		$('#message .close').click(function() {
-			$('#message').hide();
-		});
-
 		// set position
 		this.position = variables.position;
 		this.quran.on('updateAddress', this.tafsir.loadSection, $.extend({}, this.tafsir, {prepare: this.position}));
@@ -508,7 +461,6 @@ var AppView = Backbone.View.extend({
 		'keydown': 'navKey',
 	},
 	render: function() {
-		$('#message').hide();
 		this.quran.lastPosition = '';
 		this.address.position = this.position;
 		this.address.render();
@@ -527,35 +479,8 @@ var AppView = Backbone.View.extend({
 			this.tafsir.render();
 		}
 	},
-	message: function(html, mode, link) {
-		msg = $('#message #content');
-		msg.removeClass('alert-block alert-error alert-success alert-info');
-
-		msg.html(html);
-		msg.addClass('alert-'+ mode);
-
-		if (link) {
-			msg.parent().attr('href', link);
-			msg.parent().addClass('link');
-		}
-		else {
-			msg.parent().removeAttr('href');
-			msg.parent().removeClass('link');
-		}
-
-		box = $('#message');
-		box.removeClass('top').show();
-		aya = $('.aya.active');
-		if (aya && aya.offset().top + aya.height() - box.offset().top + 10 > 0)
-			box.addClass('top');
-
-		box.find('#content').dotdotdot({ellipsis : ' ... '});
-		if (box.find('h3').length)
-			box.find('h3').dotdotdot({ellipsis : ' ... '});
-	},
 	connectionError: function() {
 		$('body').find('.loading').removeClass('loading');
-		app.message('خطا در اتصال به شبکه.', 'error', '');
 	},
 	showTafsir: function() {
 		tafsir = quranToTafsir(this.position.quran);
@@ -689,7 +614,8 @@ var DetailView = Backbone.View.extend({
 
 		this.$el.empty();
 		this.$el.append(ayaView.render().el);
-		this.$el.append('<div>'+ aya.get('trans') +'</div>');
+		if (variables.lang == 'fa')
+			this.$el.append('<div>'+ aya.get('trans') +'</div>');
 	},
 });
 
