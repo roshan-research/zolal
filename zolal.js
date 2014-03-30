@@ -138,14 +138,14 @@ var Almizan = Backbone.Collection.extend({
 				if (page && head)
 					return false;
 			});
-			aya.insertPhrase({words: parts[3], lang: parts[0], html: parent.html(), link: 'almizan_'+ parts[0] +'/'+ parts[1] +'_'+ parts[2]});
+			aya.insertPhrase({words: parts[3], lang: parts[0], html: parent.html(), link: 'almizan_'+ parts[0] +'/'+ parts[1] +'_'+ parts[2] +'/'+ parts[3]});
 		});
 	}
 });
 
 // views
 var AyaView = Backbone.View.extend({
-	template: _.template('<span class="aya" rel="<%= sura %>_<%= aya %>"><span class="detail"></span><span class="text"><%= html %></span> <span class="number"><%= aya %></span></span>'),
+	template: _.template('<span class="aya-text" rel="<%= sura %>_<%= aya %>"><span class="detail"></span><span class="text"><%= html %></span> <span class="number"><%= aya %></span></span>'),
 	render: function () {
 		data = this.model.toJSON();
 		data['html'] = data['text'].replace(/[ ]*([ۖۗۚۛۙۘ])[ ]*/g, '<span class="mark">\$1 </span>');
@@ -207,7 +207,7 @@ var QuranView = Backbone.View.extend({
 				if (item.get('aya') == 1) {
 					el.append('<div class="sura header"><div class="right">سورة</div><div class="left">'+ quran_suras[item.get('sura')-1] +'</div></div>');
 					if (item.get('sura') != 1 && item.get('sura') != 9)
-						el.append('<div class="aya bism"><span class="text">بِسمِ اللَّهِ الرَّحمٰنِ الرَّحيمِ</span></div>');
+						el.append('<div class="aya-text bism"><span class="text">بِسمِ اللَّهِ الرَّحمٰنِ الرَّحيمِ</span></div>');
 				}
 				el.append(ayaView.render().el, ' ');
 			}
@@ -254,7 +254,7 @@ var QuranView = Backbone.View.extend({
 			id = this.position.sura +'_'+ this.position.aya;
 			aya = this.collection.get(id);
 			active.removeClass('active');
-			this.$el.find('.aya[rel='+ id +']').addClass('active');
+			this.$el.find('.aya-text[rel='+ id +']').addClass('active');
 		} else
 			active.removeClass('active');
 
@@ -284,11 +284,11 @@ var TafsirView = Backbone.View.extend({
 		this.$el.removeClass('loading');
 		this.$el.scrollTop(0);
 
-		// bold selected part
-		quran = app.position.quran;
-		part = this.$el.find('code.aya[rel='+ position.aya +']').parent();
-		if (quran.phrase)
-			part = this.$el.find('em[rel='+ quran.phrase.split('_')[0] +'_'+ quran.sura + '_'+ quran.aya +'_'+ quran.phrase.split('_')[1] +']').parent();
+		// bold active part
+		if (this.position.phrase)
+			part = this.$el.find('em[rel='+ this.position.lang +'_'+ this.position.aya +'_'+ this.position.phrase +']').parent();
+		else
+			part = this.$el.find('code.aya[rel='+ this.position.aya +']').parent();
 
 		if (part.length > 0) {
 			container = this.$el;
@@ -567,9 +567,9 @@ var AddressRouter = Backbone.Router.extend({
 	routes: {
 		'quran/p:page': 'quranPage',
 		'quran/:aya': 'quranAya',
-		'quran/:aya/:phrase': 'quranPhrase',
 		'detail/:aya': 'ayaDetail',
-		'almizan_:lang/:aya': 'almizanAya'
+		'almizan_:lang/:aya': 'almizanAya',
+		'almizan_:lang/:aya/:phrase': 'almizanPhrase',
 	},
 	quranPage: function(page) {
 		if (isNaN(page) || page < 0 || page > 605)
@@ -596,11 +596,14 @@ var AddressRouter = Backbone.Router.extend({
 		app.render();
 	},
 	almizanAya: function(lang, aya) {
+		this.almizanPhrase(lang, aya, '');
+	},
+	almizanPhrase: function(lang, aya, phrase) {
 		if (!(aya in almizan_ayas))
 			return;
 
 		app.position.mode = 'tafsir';
-		app.position.tafsir = {lang: lang, aya: aya, section: almizan_ayas[aya]};
+		app.position.tafsir = {lang: lang, section: almizan_ayas[aya], aya: aya, phrase: phrase};
 		app.render();
 	}
 });
@@ -636,7 +639,7 @@ var DetailView = Backbone.View.extend({
 			if (phrase['lang'] != variables.lang)
 				return;
 			start = Number(phrase['words'].split('-')[0]); end = Number(phrase['words'].split('-')[1]);
-			detail.$el.find('#phrases').append('<div class="phrase" rel="'+ phrase['lang'] +'_'+ phrase['words'] +'"><span class="aya"><span class="text">'+ words.slice(start-1, end).join(' ') +'</span></span>'+ phrase['html'] +'</div>');
+			detail.$el.find('#phrases').append('<div class="phrase" rel="'+ phrase['lang'] +'_'+ phrase['words'] +'"><a href="#'+ phrase['link'] +'"><span class="aya-text"><span class="text">'+ words.slice(start-1, end).join(' ') +'</span></span></a>'+ phrase['html'] +'</div>');
 		});
 	}
 });

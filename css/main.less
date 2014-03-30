@@ -47,6 +47,8 @@ body, blockquote p, .tooltip-inner {
 }
 #quran, #tafsir, #detail {
 	height: 100%;
+	overflow-y: auto;
+	overflow-x: hidden !important;
 	text-align: justify;
 	color: @color5;
 	overflow: auto;
@@ -77,37 +79,41 @@ body, blockquote p, .tooltip-inner {
 	}
 }
 
-#quran .aya, #detail .aya {
+.aya-text {
 	line-height: 42px;
+	font-size: 22px;
+
+	&.active {
+		.text {
+			background: darken(@color1, 5%);
+		}
+	}
 
 	.text {
-		font-size: 22px;
 		font-family: QuranFont;
 	}
+
 	.mark {
 		color: @color3;
 		margin-right: 6px;
 	}
-}
 
-#quran .aya .number {
-	font-family: AppFont;
-	font-weight: bold;
-	font-size: .65em;
-	color: lighten(@color1, 10%);
-	background: @color2;
-	padding: 4px 5px 2px 4px;
-	border-radius: 50px;
-	min-width: 15px;
-	text-align: center;
-	display: inline-block;
-	line-height: 18px;
-	margin: 0 1px 0 3px;
-	box-sizing: initial;
-	-moz-box-sizing: initial;
-}
-#detail .aya .number {
-	display: none;
+	.number {
+		font-family: AppFont;
+		font-weight: bold;
+		font-size: .65em;
+		color: lighten(@color1, 10%);
+		background: @color2;
+		padding: 4px 5px 2px 4px;
+		border-radius: 50px;
+		min-width: 15px;
+		text-align: center;
+		display: inline-block;
+		line-height: 18px;
+		margin: 0 1px 0 3px;
+		box-sizing: initial;
+		-moz-box-sizing: initial;
+	}
 }
 
 #quran .page {
@@ -129,23 +135,10 @@ body, blockquote p, .tooltip-inner {
 		}
 	}
 
-	.aya {
+	.aya-text {
 		cursor: pointer;
 
 		&.active {
-			.text {
-				// text-shadow: 0px 2px 3px fade(@color3, 40%);
-				background: darken(@color1, 5%);
-			}
-
-			.phrase {
-				color: #2A6496;
-
-				&:hover, &.active {
-					color: #428BCA;
-				}
-			}
-
 			.detail {
 				position: absolute;
 				background: lighten(@color3, 10%);
@@ -172,10 +165,8 @@ body, blockquote p, .tooltip-inner {
 	}
 }
 
-#tafsir {
+.tafsir-content {
 	text-align: justify;
-	overflow-y: auto;
-	overflow-x: hidden;
 	font-size: 20px;
 	line-height: 25px;
 
@@ -227,6 +218,33 @@ body, blockquote p, .tooltip-inner {
 	}
 	.active {
 		.animation(TAFSIR-HIGHLIGHT 1s);
+	}
+}
+
+#detail {
+	#aya {
+		margin-top: 10px;
+	}
+
+	#translation {
+		margin: 10px 0 20px;
+	}
+
+	.phrase {
+		background: darken(@color1, 5%);
+		margin-bottom: 10px;
+		padding: 5px 0;
+
+		.aya-text {
+			color: @color5;
+			font-size: 18px;
+			line-height: 25px;
+			float: right;
+			background: lighten(@color3, 20%);
+			padding: 0 15px;
+			margin-left: 10px;
+			margin-top: -5px;
+		}
 	}
 }
 
