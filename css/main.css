@@ -242,16 +242,21 @@ body {
 #header .front {
   display: block;
 }
-#header .buttons {
+#header .buttons-right {
   position: absolute;
-  right: 0;
   top: 0;
+  right: 0;
+}
+#header .buttons-left {
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 #header .glyphicon {
   cursor: pointer;
-  float: right;
   font-size: 14px;
   padding: 11px;
+  float: right;
   z-index: 10;
   top: 0;
 }
@@ -275,7 +280,7 @@ body {
 #header #sura {
   direction: rtl;
   cursor: pointer;
-  padding-left: 30px;
+  padding-left: 80px;
   float: left;
   width: 50%;
 }

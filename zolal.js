@@ -492,8 +492,12 @@ var AppView = Backbone.View.extend({
 		this.router.navigate('almizan_'+ tafsir.lang +'/'+ tafsir.aya, true);
 	},
 	showQuran: function() {
-		quran = tafsirToQuran(this.position.tafsir);
-		this.router.navigate('quran/'+ quran.sura +'_'+ quran.aya, true);
+		if (this.position.mode == 'detail')
+			this.router.navigate('quran/'+ this.position.detail.sura +'_'+ this.position.detail.aya, true);
+		else if (this.position.mode == 'tafsir') {
+			quran = tafsirToQuran(this.position.tafsir);
+			this.router.navigate('quran/'+ quran.sura +'_'+ quran.aya, true);
+		}
 	},
 	nextQuranPage: function() {
 		page = this.position.quran.page;
