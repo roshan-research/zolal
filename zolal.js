@@ -39,10 +39,9 @@ var tafsirDb = {
 
 // models
 var Aya = Backbone.Model.extend({
-	defaults: {'phrases': {}},
 	insertPhrase: function(phrase) {
 		key = phrase['lang'] +'_'+ phrase['words'];
-		if (! (key in this.get('phrases'))) {
+		if (!this.get('phrases') || !(key in this.get('phrases'))) {
 			item = {}; item[key] = phrase;
 			this.set('phrases', $.extend(item, this.get('phrases')));
 		}
@@ -51,7 +50,39 @@ var Aya = Backbone.Model.extend({
 });
 
 var Quran = Backbone.Collection.extend({
-	model: Aya
+	model: Aya,
+	loadPage: function(page, callback) {
+		var collection = this;
+		ayas = quran_pages[page];
+		(new Aya({id: ayas[0]})).fetch({
+			success: function() {
+				for (a in ayas) {
+					aya = new Aya({id: ayas[a]});
+					aya.fetch();
+					collection.add(aya);
+				}
+				if (callback) callback(page);
+			},
+			error: function () {
+				$.ajax({
+					context: {page: page},
+					url: server +'quran/p'+ page,
+					success: function(data){
+						_.each(data.split('\n'), function(item) {
+							if (item) {
+								item = $.parseJSON(item);
+								aya = new Aya(item);
+								aya.save();
+								collection.add(aya);
+							}
+						});
+						if (callback) callback(this.page);
+					},
+					error: app.connectionError
+				});
+			}
+		});
+	}
 });
 
 var Bayan = Backbone.Model.extend({
@@ -60,12 +91,61 @@ var Bayan = Backbone.Model.extend({
 });
 
 
+var Almizan = Backbone.Collection.extend({
+	initialize: function() {
+		this.loaded = [];
+	},
+	loadBayan: function(id, callback) {
+		var almizan = this;
+		var bayan = new Bayan({id: id});
+		bayan.fetch({
+			success: function (bayan) {
+				almizan.extractPhrases(bayan);
+				if (callback) callback(bayan);
+			},
+			error: $.proxy(function (bayan) {
+				$.ajax({
+					context: {id: bayan.get('id')},
+					url: server +'almizan_'+ bayan.get('id'),
+					success: function(item){
+						bayan = new Bayan({id: this.id, content: item});
+						bayan.save();
+						almizan.extractPhrases(bayan);
+						if (callback) callback(bayan);
+					},
+					error: app.connectionError
+				});
+			})
+		});
+	},
+	extractPhrases: function(bayan) {
+		if (this.loaded.indexOf(bayan.get('id')) < 0)
+			this.loaded.push(bayan.get('id'));
+
+		var almizan = this;
+		$(bayan.get('content')).find('em[rel]').each(function() {
+			parts = $(this).attr('rel').split('_'); key = parts[1] +'_'+ parts[2];
+			aya = almizan.quran.get(key);
+			if (! aya) return;
+
+			var page, head;
+			parent = $(this).parent();
+			parent.prevAll().each(function(){
+				if (!head && $(this)[0].tagName == 'H3')
+					head = '<h3>'+ $(this).html() +'</h3>';
+				if (!page && $(this).find('.page').length)
+					page = $(this).find('.page').attr('rel');
+				if (page && head)
+					return false;
+			});
+			aya.insertPhrase({words: parts[3], lang: parts[0], html: parent.html(), link: 'almizan_'+ parts[0] +'/'+ parts[1] +'_'+ parts[2]});
+		});
+	}
+});
+
 // views
 var AyaView = Backbone.View.extend({
 	template: _.template('<span class="aya" rel="<%= sura %>_<%= aya %>"><span class="detail"></span><span class="text"><%= html %></span> <span class="number"><%= aya %></span></span>'),
-	initialize: function () {
-		this.model.on('change', this.render, this);
-	},
 	render: function () {
 		data = this.model.toJSON();
 		data['html'] = data['text'].replace(/[ ]*([ۖۗۚۛۙۘ])[ ]*/g, '<span class="mark">\$1 </span>');
@@ -118,46 +198,39 @@ var QuranView = Backbone.View.extend({
 				quran.$el.find('.page[rel='+ quran.position.page +']').addClass('front');
 			});
 	},
+	renderPage: function(page) {
+		var el = this.$el.find('.page[rel='+ page +'] .ayas');
+		el.parent().removeClass('loading');
+		_.each(this.collection.models, function (item) {
+			if (item.get('page') == page) {
+				var ayaView = new AyaView({model: item});
+				if (item.get('aya') == 1) {
+					el.append('<div class="sura header"><div class="right">سورة</div><div class="left">'+ quran_suras[item.get('sura')-1] +'</div></div>');
+					if (item.get('sura') != 1 && item.get('sura') != 9)
+						el.append('<div class="aya bism"><span class="text">بِسمِ اللَّهِ الرَّحمٰنِ الرَّحيمِ</span></div>');
+				}
+				el.append(ayaView.render().el, ' ');
+			}
+		});
+		el.children().hide().fadeIn();
+		this.updateSelectedAya();
+	},
 	loadPage: function(page) {
 		if (page > 604 || page < 1)
 			return;
 
-		// functions
-		var quran = this;
-		var doesExist = function(p) {
-			return quran.$el.find('.page[rel='+ p +']').length > 0;
-		};
-		var updateSelectedAya = function() {
-			active = quran.$el.find('.active');
-
-			if (quran.position.aya != '') {
-				// don't update it
-				pos = quran.position; last = quran.lastPosition;
-				if (last && pos.sura == last.sura && pos.aya == last.aya && pos.phrase == last.phrase)
-					return;
-
-				id = quran.position.sura +'_'+ quran.position.aya;
-				aya = quran.collection.get(id);
-				active.removeClass('active');
-				quran.$el.find('.aya[rel='+ id +']').addClass('active');
-			} else
-				active.removeClass('active');
-
-			quran.lastPosition = $.extend({}, quran.position);
-		};
-
 		// show loaded page
-		if (doesExist(page)) {
-			updateSelectedAya();
+		if (this.isRendered(page)) {
+			this.updateSelectedAya();
 			return;
 		}
 
 		// add new page
 		pages = this.$el.find('#pages');
 		newPage = $('<div class="page loading" rel="'+ page +'"><div class="ayas"></div></div>');
-		if (doesExist(page + 1)) {
+		if (this.isRendered(page + 1)) {
 			pages.append(newPage);
-		} else if (doesExist(page - 1)) {
+		} else if (this.isRendered(page - 1)) {
 			first = pages.children().first();
 			off = first.offset().left;
 			pages.prepend(newPage);
@@ -167,53 +240,28 @@ var QuranView = Backbone.View.extend({
 			pages.append(newPage);
 		}
 
-		var renderPage = function(page) {
-			el = quran.$el.find('.page[rel='+ page +'] .ayas');
-			el.parent().removeClass('loading');
-			_.each(quran.collection.models, function (item) {
-				if (item.get('page') == page) {
-					var ayaView = new AyaView({model: item});
-					if (item.get('aya') == 1) {
-						el.append('<div class="sura header"><div class="right">سورة</div><div class="left">'+ quran_suras[item.get('sura')-1] +'</div></div>');
-						if (item.get('sura') != 1 && item.get('sura') != 9)
-							el.append('<div class="aya bism"><span class="text">بِسمِ اللَّهِ الرَّحمٰنِ الرَّحيمِ</span></div>');
-					}
-					el.append(ayaView.render().el, ' ');
-				}
-			});
-			el.children().hide().fadeIn();
-			updateSelectedAya();
-		};
+		this.collection.loadPage(page, $.proxy(this.renderPage, this));
+	},
+	updateSelectedAya: function() {
+		active = this.$el.find('.active');
 
-		ayas = quran_pages[page];
-		(new Aya({id: ayas[0]})).fetch({
-			success: function() {
-				for (a in ayas) {
-					aya = new Aya({id: ayas[a]});
-					aya.fetch();
-					quran.collection.add(aya);
-				}
-				renderPage(page);
-			},
-			error: function () {
-				$.ajax({
-					context: {page: page},
-					url: server +'quran/p'+ page,
-					success: function(data){
-						_.each(data.split('\n'), function(item) {
-							if (item) {
-								item = $.parseJSON(item);
-								aya = new Aya(item);
-								aya.save();
-								quran.collection.add(aya);
-							}
-						});
-						renderPage(this.page);
-					},
-					error: app.connectionError
-				});
-			}
-		});
+		if (this.position.aya != '') {
+			// don't update it
+			pos = this.position; last = this.lastPosition;
+			if (last && pos.sura == last.sura && pos.aya == last.aya && pos.phrase == last.phrase)
+				return;
+
+			id = this.position.sura +'_'+ this.position.aya;
+			aya = this.collection.get(id);
+			active.removeClass('active');
+			this.$el.find('.aya[rel='+ id +']').addClass('active');
+		} else
+			active.removeClass('active');
+
+		this.lastPosition = $.extend({}, this.position);
+	},
+	isRendered: function(page) {
+		return this.$el.find('.page[rel='+ page +']').length > 0;
 	}
 });
 
@@ -221,15 +269,36 @@ var TafsirView = Backbone.View.extend({
 	el: $("#tafsir"),
 	initialize: function() {
 		this.sections = almizan_sections;
-		this.prepared = [];
+	},
+	events: {
+		'scroll': 'checkScroll'
 	},
 	render: function() {
 		this.$el.empty();
 		this.trigger('updateAddress');
 		this.loadSection();
 	},
-	events: {
-		'scroll': 'checkScroll'
+	renderBayan: function (bayan) {
+		// content
+		this.$el.html(bayan.get('content'));
+		this.$el.removeClass('loading');
+		this.$el.scrollTop(0);
+
+		// bold selected part
+		quran = app.position.quran;
+		part = this.$el.find('code.aya[rel='+ position.aya +']').parent();
+		if (quran.phrase)
+			part = this.$el.find('em[rel='+ quran.phrase.split('_')[0] +'_'+ quran.sura + '_'+ quran.aya +'_'+ quran.phrase.split('_')[1] +']').parent();
+
+		if (part.length > 0) {
+			container = this.$el;
+			container.scrollTop(part.offset().top - container.offset().top + container.scrollTop());
+			part.addClass('active');
+		}
+
+		// footnote
+		this.$el.find('span.footnote').tooltip({html: true, placement: 'auto'});
+		this.checkScroll();
 	},
 	loadSection: function() {
 		var tafsir = this;
@@ -239,85 +308,15 @@ var TafsirView = Backbone.View.extend({
 		if (prepare) {
 			position = quranToTafsir(this['prepare'].quran);
 			bid = position.lang +'/'+ position.section;
-			if (this.prepared.indexOf(bid) >= 0) return;
-			this.prepared.push(bid);
+			if (this.almizan.loaded.indexOf(bid) >= 0)
+				return;
 		}
 
 		// show loading element
 		if (!prepare && this.$el.children().length == 0)
 			this.$el.addClass('loading');
 
-		var loadBayan = function (bayan, prepare) {
-			if (prepare) {
-				// phrases
-				var quran = app.quran;
-				$(bayan.get('content')).find('em[rel]').each(function() {
-					parts = $(this).attr('rel').split('_'); key = parts[1] +'_'+ parts[2];
-					aya = quran.collection.get(key);
-					if (! aya) return;
-
-					var page, head;
-					parent = $(this).parent();
-					parent.prevAll().each(function(){
-						if (!head && $(this)[0].tagName == 'H3')
-							head = '<h3>'+ $(this).html() +'</h3>';
-						if (!page && $(this).find('.page').length)
-							page = $(this).find('.page').attr('rel');
-						if (page && head)
-							return false;
-					});
-					html = parent.html();
-					if (parent[0].tagName == 'H3') {
-						head = '<h3>'+ parent.html() +'</h3>';
-						html = '';
-					}
-					aya.insertPhrase({words: parts[3], lang: parts[0], head: (head ? head : ''), html: html, link: 'almizan_'+ parts[0] +'/'+ parts[1] +'_'+ parts[2]});
-				});
-			} else {
-				// content
-				tafsir.$el.html(bayan.get('content'));
-				tafsir.$el.removeClass('loading');
-				tafsir.$el.scrollTop(0);
-
-				container = tafsir.$el;
-				part = tafsir.$el.find('code.aya[rel='+ position.aya +']').parent();
-
-				// bold selected phrase
-				quran = app.position.quran;
-				if (quran.phrase) {
-					parts = quran.phrase.split('_');
-					part = $('#tafsir em[rel='+ parts[0] +'_'+ quran.sura + '_'+ quran.aya +'_'+ parts[1] +']').parent();
-				}
-
-				if (part.length > 0) {
-					container.scrollTop(part.offset().top - container.offset().top + container.scrollTop());
-					part.addClass('active');
-				}
-
-				// footnote
-				tafsir.$el.find('span.footnote').tooltip({html: true, placement: 'auto'});
-				tafsir.checkScroll();
-			}
-		};
-
-		bayan = new Bayan({id: position.lang +'/'+ position.section});
-		bayan.fetch({
-			success: function (bayan) {
-				loadBayan(bayan, prepare);
-			},
-			error: $.proxy(function (bayan) {
-				$.ajax({
-					context: {id: bayan.get('id')},
-					url: server +'almizan_'+ bayan.get('id'),
-					success: function(item){
-						bayan = new Bayan({id: this.id, content: item});
-						bayan.save();
-						loadBayan(bayan, prepare);
-					},
-					error: app.connectionError
-				}, {prepare: prepare});
-			})
-		});
+		this.almizan.loadBayan(position.lang +'/'+ position.section, prepare ? null : $.proxy(this.renderBayan, this));
 	},
 	checkScroll: function () {
 		var current_page;
@@ -431,7 +430,7 @@ var AddressView = Backbone.View.extend({
 		this.$el.find('#sura').val('').trigger('input').focus();
 	},
 	tafsirScroll: function(args) {
-		this.$el.find('.tafsir .page').text('جلد '+ args['volume'] +' صفحه '+ args['page']);
+		this.$el.find('.tafsir .left').text('جلد '+ args['volume'] +' صفحه '+ args['page']);
 	}
 });
 
@@ -442,6 +441,12 @@ var AppView = Backbone.View.extend({
 		this.quran = new QuranView();
 		this.detail = new DetailView();
 		this.tafsir = new TafsirView();
+
+		this.tafsir.almizan = new Almizan();
+		this.tafsir.almizan.quran = this.quran.collection;
+
+		this.detail.quran = this.quran.collection;
+		this.detail.almizan = this.tafsir.almizan;
 
 		this.quran.on('updateAddress', this.address.render, this.address);
 		this.tafsir.on('updateAddress', this.address.render, this.address);
@@ -602,21 +607,38 @@ var AddressRouter = Backbone.Router.extend({
 
 var DetailView = Backbone.View.extend({
 	el: $('#detail'),
-	initialize: function () {
-		//
-	},
 	render: function () {
 		id = this.position.sura +'_'+ this.position.aya;
-		var aya = new Aya({id: id});
-		aya.fetch();
+		this.quran.loadPage(quran_ayas[id], $.proxy(this.renderDetails, this));
 
-		var ayaView = new AyaView({model: aya});
-
-		this.$el.empty();
-		this.$el.append(ayaView.render().el);
-		if (variables.lang == 'fa')
-			this.$el.append('<div>'+ aya.get('trans') +'</div>');
+		// phrases
+		this.$el.find('#phrases').empty();
+		tafsir = quranToTafsir(this.position);
+		bid = tafsir.lang +'/'+ tafsir.section;
+		if (this.almizan.loaded.indexOf(bid) >= 0)
+			this.renderPhrases();
+		else
+			this.almizan.loadBayan(bid, $.proxy(this.renderPhrases, this));
 	},
+	renderDetails: function() {
+		this.aya = this.quran.get(id);
+
+		ayaView = new AyaView({model: this.aya});
+		this.$el.find('#aya').html(ayaView.render().el);
+
+		if (variables.lang == 'fa')
+			this.$el.find('#translation').text(this.aya.get('trans'));
+	},
+	renderPhrases: function() {
+		var words = this.aya.get('text').replace(/[ۖۗۚۛۙۘ]/g, '').split(' ');
+		var detail = this;
+		_.each(this.aya.get('phrases'), function (phrase) {
+			if (phrase['lang'] != variables.lang)
+				return;
+			start = Number(phrase['words'].split('-')[0]); end = Number(phrase['words'].split('-')[1]);
+			detail.$el.find('#phrases').append('<div class="phrase" rel="'+ phrase['lang'] +'_'+ phrase['words'] +'"><span class="aya"><span class="text">'+ words.slice(start-1, end).join(' ') +'</span></span>'+ phrase['html'] +'</div>');
+		});
+	}
 });
 
 
