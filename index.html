@@ -12,57 +12,55 @@
 </head>
 <body>
 	<div id="wrap" class="container">
-		<div id="views">
-			<div id="header">
-				<div class="header search">
-					<input id="search" type="text">
+		<div id="header">
+			<div class="header search">
+				<input id="search" type="text">
+			</div>
+			<div class="header quran front">
+				<div class="buttons-right">
+					<span rel="show-tafsir" class="control glyphicon glyphicon-book"></span>
+					<span rel="settings" class="control glyphicon glyphicon-cog"></span>
 				</div>
-				<div class="header quran front">
-					<div class="buttons-right">
-						<span rel="show-tafsir" class="control glyphicon glyphicon-book"></span>
-						<span rel="settings" class="control glyphicon glyphicon-cog"></span>
-					</div>
-					<div class="right">سورة</div>
-					<input id="sura" type="text">
-					<div class="buttons-left">
-						<span rel="next-page" class="control pull-left glyphicon glyphicon-chevron-left"></span>
-						<span rel="prev-page" class="control pull-left glyphicon glyphicon-chevron-right"></span>
-					</div>
-				</div>
-				<div class="header detail">
-					<div class="buttons-right">
-						<span rel="show-quran" class="control glyphicon glyphicon-book"></span>
-						<span rel="settings" class="control glyphicon glyphicon-cog"></span>
-					</div>
-					<div class="right">آیه</div>
-					<div class="left"></div>
-					<div class="buttons-left">
-						<span rel="prev-aya" class="control glyphicon glyphicon-chevron-right"></span>
-						<span rel="next-aya" class="control glyphicon glyphicon-chevron-left"></span>
-					</div>
-				</div>
-				<div class="header tafsir">
-					<div class="buttons-right">
-						<span rel="show-quran" class="control glyphicon glyphicon-book"></span>
-						<span rel="settings" class="control glyphicon glyphicon-cog"></span>
-					</div>
-					<div class="right">تفسیر المیزان</div>
-					<div class="left"></div>
+				<div class="right">سورة</div>
+				<input id="sura" type="text">
+				<div class="buttons-left">
+					<span rel="next-page" class="control pull-left glyphicon glyphicon-chevron-left"></span>
+					<span rel="prev-page" class="control pull-left glyphicon glyphicon-chevron-right"></span>
 				</div>
 			</div>
-
-			<div id="quran">
-				<style id="page-style"></style>
-				<div id="pages"></div>
+			<div class="header detail">
+				<div class="buttons-right">
+					<span rel="show-quran" class="control glyphicon glyphicon-book"></span>
+					<span rel="settings" class="control glyphicon glyphicon-cog"></span>
+				</div>
+				<div class="right">آیه</div>
+				<div class="left"></div>
+				<div class="buttons-left">
+					<span rel="prev-aya" class="control glyphicon glyphicon-chevron-right"></span>
+					<span rel="next-aya" class="control glyphicon glyphicon-chevron-left"></span>
+				</div>
 			</div>
-
-			<div id="tafsir" class="tafsir-content"></div>
-
-			<div id="detail">
-				<div id="aya" class="aya-text active"></div>
-				<div id="translation" class="tafsir-content"></div>
-				<div id="phrases" class="tafsir-content"></div>
+			<div class="header tafsir">
+				<div class="buttons-right">
+					<span rel="show-quran" class="control glyphicon glyphicon-book"></span>
+					<span rel="settings" class="control glyphicon glyphicon-cog"></span>
+				</div>
+				<div class="right">تفسیر المیزان</div>
+				<div class="left"></div>
 			</div>
+		</div>
+
+		<div id="quran">
+			<style id="page-style"></style>
+			<div id="pages"></div>
+		</div>
+
+		<div id="tafsir" class="tafsir-content"></div>
+
+		<div id="detail" class="fill">
+			<div id="aya" class="aya-text active"></div>
+			<div id="translation" class="tafsir-content"></div>
+			<div id="phrases" class="tafsir-content"></div>
 		</div>
 
 		<div rel="download" class="modal hide fade">

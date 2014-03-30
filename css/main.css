@@ -51,7 +51,6 @@ blockquote p,
   text-align: justify;
   color: #031634;
   overflow: auto;
-  margin: 0 auto;
   display: none;
 }
 #quran.front,
@@ -125,27 +124,30 @@ blockquote p,
 #quran .page .aya-text {
   cursor: pointer;
 }
-#quran .page .aya-text.active .detail {
-  position: absolute;
-  background: #049795;
-  height: 45px;
-  width: 10px;
-  right: -10px;
-  transition: width .2s ease, right .2s ease;
-}
-#quran .page .aya-text.active .detail:hover {
-  width: 30px;
-  right: -30px;
-}
 #quran .page .aya-text.active .detail:before {
   content: "";
-  height: 45px;
-  width: 20px;
-  right: -20px;
+  direction: ltr;
+  background: #049795;
   position: absolute;
-  border-top: 22px solid transparent;
-  border-bottom: 22px solid transparent;
-  border-left: 20px solid #049795;
+  color: #e8ddcb;
+  font-size: 90%;
+  height: 45px;
+  width: 7px;
+  right: -2px;
+  transition: width .2s ease, right .3s ease;
+}
+#quran .page .aya-text.active .detail:after {
+  content: "";
+  position: absolute;
+  width: 30px;
+  height: 45px;
+  right: -15px;
+}
+#quran .page .aya-text.active .detail:hover:before {
+  content: "توضیح";
+  text-align: center;
+  width: 60px;
+  right: -15px;
 }
 .tafsir-content {
   text-align: justify;
@@ -202,11 +204,11 @@ blockquote p,
   text-shadow: 0 1px #ccc;
 }
 .tafsir-content .active {
-  -webkit-animation: TAFSIR-HIGHLIGHT 1s;
-  -moz-animation: TAFSIR-HIGHLIGHT 1s;
-  -ms-animation: TAFSIR-HIGHLIGHT 1s;
-  -o-animation: TAFSIR-HIGHLIGHT 1s;
-  animation: TAFSIR-HIGHLIGHT 1s;
+  -webkit-animation: TAFSIR-HIGHLIGHT 1.5s;
+  -moz-animation: TAFSIR-HIGHLIGHT 1.5s;
+  -ms-animation: TAFSIR-HIGHLIGHT 1.5s;
+  -o-animation: TAFSIR-HIGHLIGHT 1.5s;
+  animation: TAFSIR-HIGHLIGHT 1.5s;
 }
 #detail #aya {
   margin-top: 10px;
@@ -217,7 +219,8 @@ blockquote p,
 #detail .phrase {
   background: #e0d1b9;
   margin-bottom: 10px;
-  padding: 5px 0;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 #detail .phrase .aya-text {
   color: #031634;
@@ -225,9 +228,9 @@ blockquote p,
   line-height: 25px;
   float: right;
   background: #06c8c6;
-  padding: 0 15px;
   margin-left: 10px;
   margin-top: -5px;
+  padding-left: 10px;
 }
 body {
   background: #e8ddcb;
@@ -314,6 +317,12 @@ body {
   border-right: 2px solid #031634;
   border-left: 2px solid #031634;
 }
+.fill {
+  padding-right: 10px;
+  padding-left: 10px;
+  margin-right: -10px;
+  margin-left: -10px;
+}
 .twitter-typeahead {
   width: 100%;
 }
@@ -342,7 +351,7 @@ body {
 }
 @keyframes TAFSIR-HIGHLIGHT {
   0% {
-    background: #06c8c6;
+    background: #e0d1b9;
   }
   100% {
     background: none;
@@ -350,7 +359,7 @@ body {
 }
 @-webkit-keyframes TAFSIR-HIGHLIGHT {
   0% {
-    background: #06c8c6;
+    background: #e0d1b9;
   }
   100% {
     background: none;

@@ -470,8 +470,8 @@ var AppView = Backbone.View.extend({
 		this.address.position = this.position;
 		this.address.render();
 
-		this.$el.find('#views > .front').removeClass('front');
-		this.$el.find('#views #'+ this.position.mode).addClass('front');
+		this.$el.find('#wrap > .front').removeClass('front');
+		this.$el.find('#wrap > #'+ this.position.mode).addClass('front');
 
 		if (this.position.mode == 'quran') {
 			this.quran.position = this.position.quran;
@@ -643,7 +643,7 @@ var DetailView = Backbone.View.extend({
 			if (phrase['lang'] != variables.lang)
 				return;
 			start = Number(phrase['words'].split('-')[0]); end = Number(phrase['words'].split('-')[1]);
-			detail.$el.find('#phrases').append('<div class="phrase" rel="'+ phrase['lang'] +'_'+ phrase['words'] +'"><a href="#'+ phrase['link'] +'"><span class="aya-text"><span class="text">'+ words.slice(start-1, end).join(' ') +'</span></span></a>'+ phrase['html'] +'</div>');
+			detail.$el.find('#phrases').append('<div class="phrase fill" rel="'+ phrase['lang'] +'_'+ phrase['words'] +'"><a href="#'+ phrase['link'] +'"><span class="aya-text fill"><span class="text">'+ words.slice(start-1, end).join(' ') +'</span></span></a>'+ phrase['html'] +'</div>');
 		});
 	}
 });
