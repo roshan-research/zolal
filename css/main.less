@@ -16,6 +16,15 @@
 	src: url('../fonts/AppFontBd.ttf') format('truetype');
 }
 
+/* bootstrap */
+
+.nav {
+	padding-right: 0;
+	padding-left: 0;
+}
+
+/* zolal */
+
 * {
 	box-sizing: border-box;
 }
@@ -380,6 +389,78 @@ body {
 	}
 }
 
+#menu {
+	overflow-y: hidden;
+
+	.modal-body {
+		padding-bottom: 0;
+	}
+
+	.close {
+		font-family: Helvetica;
+		margin-top: 5px;
+		margin-left: 5px;
+	}
+
+	.tab-content {
+		margin-top: 30px;
+		min-height: 100px;
+	}
+	#options p {
+		margin-bottom: 15px;
+	}
+
+	.nav {
+		li {
+			float: right;
+
+			a {
+				padding: 7px 15px 5px;
+			}
+			a:hover {
+				background-color: initial;
+				border-bottom: 3px solid #eee;
+			}
+		}
+		li.active {
+			a {
+				background-color: #eee;
+				border-bottom: 3px solid #46b8da;
+			}
+		}
+	}
+
+	p {
+		text-align: justify;
+	}
+
+	select {
+		display: inline-block;
+		width: initial;
+		font-size: 18px;
+		padding: 2px 6px;
+	}
+
+	#download-tafsir {
+		font-size: 18px;
+		padding: 2px 8px 3px;
+		margin-top: -5px;
+
+		.glyphicon {
+			top: 5px;
+		}
+	}
+
+	.modal-footer {
+		font-size: 90%;
+		padding: 10px 20px;
+	}
+}
+
+.progrecss[data-progrecss]:after {
+	background-color: @color5 !important;
+	box-shadow: 0 0 1px @color5 !important;
+}
 
 // animations
 @keyframes TAFSIR-HIGHLIGHT {

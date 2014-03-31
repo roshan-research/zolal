@@ -33,14 +33,12 @@ $(document).ready(function() {
 
 
 // settings dialog
-$('select#language').val(variables.lang);
-$('#apply-settings').click(function() {
+$('select#language').val(variables.lang).change(function() {
 	$('#pages').html('');
-	variables.lang = $('select#language').val();
+	variables.lang = $(this).val();
 	app.position.tafsir.lang = variables.lang;
 	app.render();
 });
-$('a[data-toggle=tooltip]').tooltip();
 
 // gestures
 $(document).ready(function() {
@@ -130,5 +128,5 @@ var download_tafsir = function() {
 	}
 
 	urls = _.map(almizan_sections, function(section) { return 'almizan_'+ variables.lang +'/'+ section; });
-	requestUrls(urls, 0, isStored, storeData, $('html'));
+	requestUrls(urls, 0, isStored, storeData, $('#wrap'));
 };

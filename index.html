@@ -19,7 +19,7 @@
 			<div class="header quran front">
 				<div class="buttons-right">
 					<span rel="show-tafsir" class="control glyphicon glyphicon-book"></span>
-					<span rel="settings" class="control glyphicon glyphicon-cog"></span>
+					<span rel="menu" class="control glyphicon glyphicon-cog"></span>
 				</div>
 				<div class="right">سورة</div>
 				<input id="sura" type="text">
@@ -31,7 +31,7 @@
 			<div class="header detail">
 				<div class="buttons-right">
 					<span rel="show-quran" class="control glyphicon glyphicon-book"></span>
-					<span rel="settings" class="control glyphicon glyphicon-cog"></span>
+					<span rel="menu" class="control glyphicon glyphicon-cog"></span>
 				</div>
 				<div class="right">آیه</div>
 				<div class="left"></div>
@@ -43,7 +43,7 @@
 			<div class="header tafsir">
 				<div class="buttons-right">
 					<span rel="show-quran" class="control glyphicon glyphicon-book"></span>
-					<span rel="settings" class="control glyphicon glyphicon-cog"></span>
+					<span rel="menu" class="control glyphicon glyphicon-cog"></span>
 				</div>
 				<div class="right">تفسیر المیزان</div>
 				<div class="left"></div>
@@ -62,48 +62,45 @@
 			<div id="translation" class="tafsir-content"></div>
 			<div id="phrases" class="tafsir-content"></div>
 		</div>
+	</div>
 
-		<div rel="download" class="modal hide fade">
-			<div class="modal-header">
-				<h3>دریافت داده‌ها</h3>
-			</div>
-			<div class="modal-body">
-				<p class="store-hide">برای استفاده بدون اتصال به اینترنت می‌توانید <a href="https://chrome.google.com/webstore/detail/cmhmgigldkolppfbfdadehjlmfgblgin" target="_blank">زلال در کروم</a> را نصب کنید.</p>
-				<div class="store-display" style="display: none">
-					<p>برای استفاده بدون اتصال به اینترنت، داده‌ها را دریافت کنید:</p>
-					<p style="text-align: left">
-						<a href="#" id="download-tafsir" class="btn"><i class="icon-download-alt"></i> دریافت تفسیر</a>
+	<div id="menu" class="modal fade">
+	<div class="modal-dialog">
+	<div class="modal-content">
+		<div class="modal-body">
+			<button type="button" class="close pull-left" data-dismiss="modal" aria-hidden="true">&times;</button>
+
+			<ul class="nav">
+				<li class="active"><a href="#options" data-toggle="tab">تنظیمات</a></li>
+				<li><a href="#about" data-toggle="tab">درباره زلال</a></li>
+			</ul>
+
+			<div class="tab-content">
+				<div class="tab-pane active" id="options">
+					<p class="option">زبان نمایش تفسیر: <select id="language" class="form-control"><option value="fa">فارسی</option><option value="ar">عربی</option></select></p>
+
+					<p class="store-hide">
+						برای استفاده بدون اتصال به اینترنت می‌توانید <a href="https://chrome.google.com/webstore/detail/cmhmgigldkolppfbfdadehjlmfgblgin" target="_blank">زلال در کروم</a> را نصب کنید.
 					</p>
+					<p class="store-display" style="display: none">
+						استفاده بدون اتصال به اینترنت: <a href="#" id="download-tafsir" class="btn btn-info"><span class="glyphicon glyphicon-download"></span> دریافت تفسیر</a>
+					</p>
+				</div>
+
+				<div class="tab-pane" id="about">
+					<p>قرآن عمیق است و همه آرزو داریم که کمی بیشتر با آن آشنا شویم. ایده طراحی زلال، قرآنی بود که با نگاه به ظاهر آن، کمی از عمقش نیز پیداست؛ درست مثل آب روان. آنچه پیش روی شماست، <a href="http://www.sobhe.ir/blog/deep-quran/" target="_blank">اولین گام ما</a> برای دستیابی به این هدف دور است و البته ما مشتاق برداشتن قدم‌های بعد هستیم.</p>
+
+					<p>شنیدن نظر شما در مورد این ایده و البته راه طی شده برای رسیدن به آن، برای ما اهمیت دارد. سهم شما از توسعه این پروژه <a href="mailto:zolal@sobhe.ir" target="_blank">نوشتن نامه برای ما</a> است.</p>
+
+					<p>با تشکر از آتلیه <a href="http://3x4studio.ir" target="_blank">سه در چهار</a> برای طراحی ظاهر زلال و همچنین پروژه <a href="http://tanzil.net" target="_blank">تنزیل</a> برای فراهم کردن ترجمه قرآن.</p>
 				</div>
 			</div>
 		</div>
-		<div rel="settings" class="modal hide fade">
-			<div class="modal-header">
-				<h3>تنظیمات</h3>
-			</div>
-			<div class="modal-body">
-				<p class="option">زبان تفسیر: <select id="language" class="control input-small"><option value="fa">فارسی</option><option value="ar">عربی</option></select></p>
-			</div>
-			<div class="modal-footer" style="text-align: left">
-				<a href="#" data-dismiss="modal" class="btn">لغو</a>
-				<a id="apply-settings" href="#" class="btn btn-primary" data-dismiss="modal">تایید</a>
-			</div>
+		<div class="modal-footer">
+			<div id="copyright">حاصل همکاری <a href="http://www.sobhe.ir/" target="_blank">سُبحه</a> و <a href="http://www.noorsoft.org/" target="_blank">مرکزی تحقیقات کامپیوتری علوم اسلامی «نور»</a></div>
 		</div>
-		<div rel="about" class="modal hide fade">
-			<div class="modal-header">
-				<h3>درباره زلال</h3>
-			</div>
-			<div class="modal-body">
-				<p>قرآن عمیق است و همه آرزو داریم که کمی بیشتر با آن آشنا شویم. ایده طراحی زلال، قرآنی بود که با نگاه به ظاهر آن، کمی از عمقش نیز پیداست؛ درست مثل آب روان. آنچه پیش روی شماست، <a href="http://www.sobhe.ir/blog/deep-quran/" target="_blank">اولین گام ما</a> برای دستیابی به این هدف دور است و البته ما مشتاق برداشتن قدم‌های بعد هستیم.</p>
-
-				<p>شنیدن نظر شما در مورد این ایده و البته راه طی شده برای رسیدن به آن، برای ما اهمیت دارد. سهم شما از توسعه این پروژه نوشتن نامه برای <a href="mailto:zolal@sobhe.ir">ما</a> است.</p>
-
-				<p>با تشکر از پروژه <a href="http://tanzil.net" target="_blank">تنزیل</a> برای متن قرآن.</p>
-			</div>
-			<div class="modal-footer">
-				<div id="copyright">حاصل همکاری <a href="http://www.sobhe.ir/" target="_blank">سُبحه</a> و <a href="http://www.noorsoft.org/" target="_blank">مرکزی تحقیقات کامپیوتری علوم اسلامی «نور»</a></div>
-			</div>
-		</div>
+	</div>
+	</div>
 	</div>
 
 	<script type="text/javascript" src="js/jquery.js"></script>

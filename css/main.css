@@ -13,6 +13,12 @@
   font-weight: bold;
   src: url('../fonts/AppFontBd.ttf') format('truetype');
 }
+/* bootstrap */
+.nav {
+  padding-right: 0;
+  padding-left: 0;
+}
+/* zolal */
 * {
   box-sizing: border-box;
 }
@@ -348,6 +354,63 @@ body {
 .twitter-typeahead .tt-suggestion p {
   margin: 0;
   padding-right: calc(50% + 10px);
+}
+#menu {
+  overflow-y: hidden;
+}
+#menu .modal-body {
+  padding-bottom: 0;
+}
+#menu .close {
+  font-family: Helvetica;
+  margin-top: 5px;
+  margin-left: 5px;
+}
+#menu .tab-content {
+  margin-top: 30px;
+  min-height: 100px;
+}
+#menu #options p {
+  margin-bottom: 15px;
+}
+#menu .nav li {
+  float: right;
+}
+#menu .nav li a {
+  padding: 7px 15px 5px;
+}
+#menu .nav li a:hover {
+  background-color: initial;
+  border-bottom: 3px solid #eee;
+}
+#menu .nav li.active a {
+  background-color: #eee;
+  border-bottom: 3px solid #46b8da;
+}
+#menu p {
+  text-align: justify;
+}
+#menu select {
+  display: inline-block;
+  width: initial;
+  font-size: 18px;
+  padding: 2px 6px;
+}
+#menu #download-tafsir {
+  font-size: 18px;
+  padding: 2px 8px 3px;
+  margin-top: -5px;
+}
+#menu #download-tafsir .glyphicon {
+  top: 5px;
+}
+#menu .modal-footer {
+  font-size: 90%;
+  padding: 10px 20px;
+}
+.progrecss[data-progrecss]:after {
+  background-color: #031634 !important;
+  box-shadow: 0 0 1px #031634 !important;
 }
 @keyframes TAFSIR-HIGHLIGHT {
   0% {

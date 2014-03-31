@@ -455,6 +455,7 @@ var AppView = Backbone.View.extend({
 		this.address.on('prev-page', this.quran.prevPage, this.quran);
 		this.address.on('show-tafsir', this.showTafsir, this);
 		this.address.on('show-quran', this.showQuran, this);
+		this.address.on('menu', this.showMenu, this);
 		this.address.on('next-aya', this.nextAyaDetail, this);
 		this.address.on('prev-aya', this.prevAyaDetail, this);
 
@@ -534,6 +535,9 @@ var AppView = Backbone.View.extend({
 	prevAyaDetail: function() {
 		detail = this.position.detail;
 		this.router.navigate('detail/'+ prevAya(detail.sura, detail.aya), true);
+	},
+	showMenu: function() {
+		this.$el.find('#menu').modal();
 	},
 	navKey: function(e) {
 		if (e.target.tagName == 'INPUT' || $('.modal').is(':visible'))
