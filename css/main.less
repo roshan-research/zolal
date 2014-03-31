@@ -51,9 +51,6 @@ body, blockquote p, .tooltip-inner {
 	max-width: 600px;
 }
 
-#views {
-	height: 600px;
-}
 #quran, #tafsir, #detail {
 	height: 100%;
 	overflow-y: auto;
@@ -84,6 +81,40 @@ body, blockquote p, .tooltip-inner {
 			direction: rtl;
 			overflow-y: auto;
 		}
+	}
+
+	// page indicator
+	#page {
+		font-size: 20px;
+		line-height: 46px;
+		cursor: pointer;
+		position: absolute;
+		left: 0;
+		width: 0;
+		height: 45px;
+	}
+	#page:after {
+		content: "";
+		position: absolute;
+		width: 30px;
+		height: inherit;
+		left: -15px;
+	}
+	#page:before {
+		content: "";
+		background: @color5;
+		position: absolute;
+		color: @color1;
+		height: inherit;
+		width: 7px;
+		left: -2px;
+		transition: width .2s ease, left .3s ease;
+	}
+	#page:hover:before {
+		content: attr(rel);
+		text-align: center;
+		width: 60px;
+		left: -15px;
 	}
 }
 
@@ -149,8 +180,7 @@ body, blockquote p, .tooltip-inner {
 		&.active {
 			.detail:before {
 				content: "";
-				direction: ltr;
-				background: lighten(@color3, 10%);
+				background: @color4;
 				position: absolute;
 				color: @color1;
 				font-size: 90%;
@@ -351,7 +381,7 @@ body {
 
 #wrap {
 	padding: 0 10px;
-	border-right: 2px solid @color5;
+	border-right: 2px solid @color4;
 	border-left: 2px solid @color5;
 }
 .fill {
