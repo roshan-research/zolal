@@ -451,8 +451,8 @@ var AppView = Backbone.View.extend({
 		this.quran.on('updateAddress', this.address.render, this.address);
 		this.tafsir.on('updateAddress', this.address.render, this.address);
 		this.tafsir.on('tafsir-scroll', this.address.tafsirScroll, this.address);
-		this.address.on('next-page', this.quran.nextPage, this.quran);
-		this.address.on('prev-page', this.quran.prevPage, this.quran);
+		this.address.on('next-page', this.nextQuranPage, this);
+		this.address.on('prev-page', this.prevQuranPage, this);
 		this.address.on('show-tafsir', this.showTafsir, this);
 		this.address.on('show-quran', this.showQuran, this);
 		this.address.on('menu', this.showMenu, this);
