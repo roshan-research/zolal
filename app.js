@@ -5,7 +5,7 @@ if ('chrome' in window && chrome.app.isInstalled)
 
 
 $(window).resize(function() {
-// 	$('#wrap').css('margin-top', ($('body').height() - $('#wrap').height())/2);
+	$('.twitter-typeahead .tt-dropdown-menu').css('max-height', $('#views').height());
 });
 
 var app;

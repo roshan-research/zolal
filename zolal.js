@@ -178,7 +178,7 @@ var QuranView = Backbone.View.extend({
 			axis: 'y',
 			containment: 'parent',
 			drag: function(e, ui) {
-				ui.helper.attr('rel', offsetToPage(ui.offset.top));
+				ui.helper.attr('rel', offsetToPage(ui.position.top));
 			},
 			stop: function(e, ui) {
 				app.router.navigate('quran/p'+ ui.helper.attr('rel'), true);
@@ -491,8 +491,8 @@ var AppView = Backbone.View.extend({
 		this.address.position = this.position;
 		this.address.render();
 
-		this.$el.find('#wrap > .front').removeClass('front');
-		this.$el.find('#wrap > #'+ this.position.mode).addClass('front');
+		this.$el.find('#views > .front').removeClass('front');
+		this.$el.find('#views > #'+ this.position.mode).addClass('front');
 
 		if (this.position.mode == 'quran') {
 			this.quran.position = this.position.quran;
@@ -723,7 +723,6 @@ var prevAya = function(sura, aya) {
 }
 
 var offsetToPage = function(offset) {
-	offset -= $('#quran').position().top;
 	height = $('.page').height() - $('#page').height();
 	page = Math.round((offset / height) * 604);
 
@@ -734,7 +733,6 @@ var offsetToPage = function(offset) {
 var pageToOffset = function(page) {
 	height = $('.page').height() - $('#page').height();
 	offset = height * (page / 604);
-	offset += $('#quran').position().top;
 	return offset;
 }
 

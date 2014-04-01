@@ -45,6 +45,16 @@ blockquote p,
 .container {
   max-width: 600px;
 }
+#wrap {
+  padding: 0;
+  border-right: 2px solid #033649;
+  border-left: 2px solid #031634;
+}
+#views {
+  padding: 0 10px;
+  position: relative;
+  height: calc(100% - 60px);
+}
 #quran,
 #tafsir,
 #detail {
@@ -69,9 +79,10 @@ blockquote p,
 }
 #quran #pages {
   width: 100000px;
+  height: 100%;
 }
 #quran #pages .page {
-  height: 600px;
+  height: 100%;
   margin-right: 10px;
   float: left;
   direction: rtl;
@@ -147,8 +158,10 @@ blockquote p,
 }
 #quran .page div.bism {
   text-align: center;
-  font-size: .9em;
   margin-top: -4px;
+}
+#quran .page div.bism span {
+  font-size: 90%;
 }
 #quran .page div.sura {
   margin-top: 8px;
@@ -271,7 +284,7 @@ body {
 }
 #header {
   position: relative;
-  margin-top: 20px;
+  margin: 20px 10px 0;
 }
 #header > div {
   display: none;
@@ -346,11 +359,6 @@ body {
 .header .left {
   background: #031634;
 }
-#wrap {
-  padding: 0 10px;
-  border-right: 2px solid #033649;
-  border-left: 2px solid #031634;
-}
 .fill {
   padding-right: 10px;
   padding-left: 10px;
@@ -362,7 +370,6 @@ body {
 }
 .twitter-typeahead .tt-dropdown-menu {
   width: 100%;
-  max-height: 600px;
   overflow-y: auto;
   background-color: #033649;
 }
@@ -380,7 +387,7 @@ body {
   background-color: #036564;
 }
 .twitter-typeahead .tt-suggestion p {
-  margin: 0;
+  margin-bottom: 2px;
   padding-right: calc(50% + 10px);
 }
 #menu {
