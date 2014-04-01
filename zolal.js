@@ -358,8 +358,12 @@ var AddressView = Backbone.View.extend({
 		var suraTokens = function(name) {
 			name = name.replace('ي', 'ی').replace('ك', 'ک').replace('أ', 'ا').replace('إ', 'ا').replace('ؤ', 'و').replace('ة', 'ه');
 
+			if (name[0] == '‌')
+				name = name.substr(1);
+
 			tokens = name.split('‌');
 			tokens.push(name);
+			tokens.push('‌'); // general token
 			if (name.substr(0, 2) == 'ال')
 				tokens.push(name.substr(2));
 			return tokens;
@@ -443,7 +447,7 @@ var AddressView = Backbone.View.extend({
 		this.trigger($(e.target).attr('rel'));
 	},
 	suraSelect: function() {
-		this.$el.find('#sura').val('').trigger('input').focus();
+		this.$el.find('#sura').val(' ').trigger('input').val('‌').trigger('input').focus();
 	},
 	tafsirScroll: function(args) {
 		this.$el.find('.tafsir .left').text('جلد '+ args['volume'] +' صفحه '+ args['page']);
