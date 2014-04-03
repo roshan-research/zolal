@@ -271,7 +271,7 @@ body, blockquote p, .tooltip-inner {
 		text-shadow: 0 1px #ccc;
 	}
 	.active {
-		.animation(TAFSIR-HIGHLIGHT 1.5s ease);
+		.animation(TAFSIR-HIGHLIGHT 1s ease);
 	}
 }
 
@@ -507,10 +507,12 @@ body {
 
 // animations
 @keyframes TAFSIR-HIGHLIGHT {
-	0% { background: darken(@color1, 5%); }
+	0% { background: none; }
+	5% { background: darken(@color1, 5%); }
 	100% { background: none; }
 }
 @-webkit-keyframes TAFSIR-HIGHLIGHT {
-	0% { background: darken(@color1, 5%); }
+	0% { background: none; }
+	5% { background: darken(@color1, 5%); }
 	100% { background: none; }
 }

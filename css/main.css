@@ -250,11 +250,11 @@ blockquote p,
   text-shadow: 0 1px #ccc;
 }
 .tafsir-text .active {
-  -webkit-animation: TAFSIR-HIGHLIGHT 1.5s ease;
-  -moz-animation: TAFSIR-HIGHLIGHT 1.5s ease;
-  -ms-animation: TAFSIR-HIGHLIGHT 1.5s ease;
-  -o-animation: TAFSIR-HIGHLIGHT 1.5s ease;
-  animation: TAFSIR-HIGHLIGHT 1.5s ease;
+  -webkit-animation: TAFSIR-HIGHLIGHT 1s ease;
+  -moz-animation: TAFSIR-HIGHLIGHT 1s ease;
+  -ms-animation: TAFSIR-HIGHLIGHT 1s ease;
+  -o-animation: TAFSIR-HIGHLIGHT 1s ease;
+  animation: TAFSIR-HIGHLIGHT 1s ease;
 }
 #detail #aya {
   margin-top: 10px;
@@ -456,6 +456,9 @@ body {
 }
 @keyframes TAFSIR-HIGHLIGHT {
   0% {
+    background: none;
+  }
+  5% {
     background: #e0d1b9;
   }
   100% {
@@ -464,6 +467,9 @@ body {
 }
 @-webkit-keyframes TAFSIR-HIGHLIGHT {
   0% {
+    background: none;
+  }
+  5% {
     background: #e0d1b9;
   }
   100% {
