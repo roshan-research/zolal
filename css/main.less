@@ -63,8 +63,7 @@ body, blockquote p, .tooltip-inner {
 }
 #quran, #tafsir, #detail {
 	height: 100%;
-	overflow-y: auto;
-	overflow-x: hidden !important;
+	overflow: hidden !important;
 	text-align: justify;
 	color: @color5;
 	overflow: auto;
@@ -220,7 +219,7 @@ body, blockquote p, .tooltip-inner {
 	}
 }
 
-.tafsir-content {
+.tafsir-text {
 	text-align: justify;
 	font-size: 20px;
 	line-height: 25px;
@@ -272,7 +271,7 @@ body, blockquote p, .tooltip-inner {
 		text-shadow: 0 1px #ccc;
 	}
 	.active {
-		.animation(TAFSIR-HIGHLIGHT 1.5s);
+		.animation(TAFSIR-HIGHLIGHT 1.5s ease);
 	}
 }
 
@@ -393,7 +392,7 @@ body {
 	}
 }
 
-.fill {
+.fill, .slimScrollDiv, .slimScrollDiv > div:first-child, .tafsir-text .active {
 	padding-right: 10px;
 	padding-left: 10px;
 	margin-right: -10px;
@@ -498,6 +497,12 @@ body {
 .progrecss[data-progrecss]:after {
 	background-color: @color5 !important;
 	box-shadow: 0 0 1px @color5 !important;
+}
+
+.slimScrollBar {
+	color: @color5 !important;
+	left: -2px !important;
+	border-radius: 0 !important;
 }
 
 // animations

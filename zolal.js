@@ -282,7 +282,7 @@ var QuranView = Backbone.View.extend({
 });
 
 var TafsirView = Backbone.View.extend({
-	el: $("#tafsir"),
+	el: $("#tafsir .content"),
 	initialize: function() {
 		this.sections = almizan_sections;
 	},
@@ -308,7 +308,7 @@ var TafsirView = Backbone.View.extend({
 
 		if (part.length > 0) {
 			container = this.$el;
-			container.scrollTop(part.offset().top - container.offset().top + container.scrollTop());
+			container.slimScroll({scrollTo: part.offset().top - container.offset().top + container.scrollTop()});
 			part.addClass('active');
 		}
 
@@ -344,8 +344,10 @@ var TafsirView = Backbone.View.extend({
 			}
 		})
 
-		parts = current_page.split(',');
-		this.trigger('tafsir-scroll', {'volume': parts[0], 'page': parts[1]})
+		if (current_page) {
+			parts = current_page.split(',');
+			this.trigger('tafsir-scroll', {'volume': parts[0], 'page': parts[1]})
+		}
 	}
 });
 
@@ -637,7 +639,7 @@ var AddressRouter = Backbone.Router.extend({
 });
 
 var DetailView = Backbone.View.extend({
-	el: $('#detail'),
+	el: $('#detail .content'),
 	render: function () {
 		id = this.position.sura +'_'+ this.position.aya;
 		this.quran.loadPage(quran_ayas[id], $.proxy(this.renderDetails, this));

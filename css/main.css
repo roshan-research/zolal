@@ -59,8 +59,7 @@ blockquote p,
 #tafsir,
 #detail {
   height: 100%;
-  overflow-y: auto;
-  overflow-x: hidden !important;
+  overflow: hidden !important;
   text-align: justify;
   color: #031634;
   overflow: auto;
@@ -196,44 +195,44 @@ blockquote p,
   width: 60px;
   right: -15px;
 }
-.tafsir-content {
+.tafsir-text {
   text-align: justify;
   font-size: 20px;
   line-height: 25px;
 }
-.tafsir-content h1,
-.tafsir-content h2,
-.tafsir-content h3 {
+.tafsir-text h1,
+.tafsir-text h2,
+.tafsir-text h3 {
   margin: 12px 0 6px;
   line-height: 30px;
   font-weight: bold;
 }
-.tafsir-content h2 {
+.tafsir-text h2 {
   font-size: 24px;
 }
-.tafsir-content h3 {
+.tafsir-text h3 {
   font-size: 22px;
 }
-.tafsir-content p {
+.tafsir-text p {
   margin-bottom: 8px;
 }
-.tafsir-content p.ayas {
+.tafsir-text p.ayas {
   margin-top: 10px;
 }
-.tafsir-content code {
+.tafsir-text code {
   float: right;
   visibility: hidden;
   padding: 0;
 }
-.tafsir-content em {
+.tafsir-text em {
   font-style: normal;
   font-weight: bold;
   font-size: .85em;
 }
-.tafsir-content span.aya {
+.tafsir-text span.aya {
   color: #036564;
 }
-.tafsir-content span.footnote {
+.tafsir-text span.footnote {
   font-size: 70%;
   display: inline-block;
   vertical-align: middle;
@@ -245,17 +244,17 @@ blockquote p,
   font-weight: bold;
   cursor: pointer;
 }
-.tafsir-content h1,
-.tafsir-content h2,
-.tafsir-content p {
+.tafsir-text h1,
+.tafsir-text h2,
+.tafsir-text p {
   text-shadow: 0 1px #ccc;
 }
-.tafsir-content .active {
-  -webkit-animation: TAFSIR-HIGHLIGHT 1.5s;
-  -moz-animation: TAFSIR-HIGHLIGHT 1.5s;
-  -ms-animation: TAFSIR-HIGHLIGHT 1.5s;
-  -o-animation: TAFSIR-HIGHLIGHT 1.5s;
-  animation: TAFSIR-HIGHLIGHT 1.5s;
+.tafsir-text .active {
+  -webkit-animation: TAFSIR-HIGHLIGHT 1.5s ease;
+  -moz-animation: TAFSIR-HIGHLIGHT 1.5s ease;
+  -ms-animation: TAFSIR-HIGHLIGHT 1.5s ease;
+  -o-animation: TAFSIR-HIGHLIGHT 1.5s ease;
+  animation: TAFSIR-HIGHLIGHT 1.5s ease;
 }
 #detail #aya {
   margin-top: 10px;
@@ -359,7 +358,10 @@ body {
 .header .left {
   background: #031634;
 }
-.fill {
+.fill,
+.slimScrollDiv,
+.slimScrollDiv > div:first-child,
+.tafsir-text .active {
   padding-right: 10px;
   padding-left: 10px;
   margin-right: -10px;
@@ -446,6 +448,11 @@ body {
 .progrecss[data-progrecss]:after {
   background-color: #031634 !important;
   box-shadow: 0 0 1px #031634 !important;
+}
+.slimScrollBar {
+  color: #031634 !important;
+  left: -2px !important;
+  border-radius: 0 !important;
 }
 @keyframes TAFSIR-HIGHLIGHT {
   0% {
