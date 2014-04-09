@@ -446,13 +446,15 @@ body {
   padding: 10px 20px;
 }
 .progrecss[data-progrecss]:after {
-  background-color: #031634 !important;
-  box-shadow: 0 0 1px #031634 !important;
+  background-color: #033649 !important;
+  box-shadow: 0 0 1px #033649 !important;
+  opacity: 1 !important;
 }
 .slimScrollBar {
   color: #031634 !important;
   left: -2px !important;
   border-radius: 0 !important;
+  cursor: pointer;
 }
 @keyframes TAFSIR-HIGHLIGHT {
   0% {

@@ -565,31 +565,53 @@ var AppView = Backbone.View.extend({
 		if (e.target.tagName == 'INPUT' || $('.modal').is(':visible'))
 			return;
 
-		prevent = true;
+		page_up = e.keyCode == 33;
+		page_down = e.keyCode == 34;
+		left_arrow = e.keyCode == 37;
+		up_arrow = e.keyCode == 38;
+		right_arrow = e.keyCode == 39;
+		down_arrow = e.keyCode == 40;
+
 		if (this.position.mode == 'quran') {
-			if(e.keyCode == 37) // left arrow
+			if(left_arrow)
 				this.nextQuranPage();
-			else if(e.keyCode == 39) // right arrow
+			else if(right_arrow)
 				this.prevQuranPage();
-			else if(e.keyCode == 38) // up arrow
+			else if(up_arrow)
 				this.prevQuranAya();
-			else if(e.keyCode == 40) // down arrow
+			else if(down_arrow)
 				this.nextQuranAya();
 			else
-				prevent = false;
+				return;
+		}
+		else if (up_arrow || down_arrow || page_up || page_down) {
+			if (this.position.mode == 'detail')
+				element = this.detail.$el;
+			else if (this.position.mode == 'tafsir')
+				element = this.tafsir.$el;
+			else
+				return;
+
+			if (up_arrow)
+				element.slimScroll({ scrollBy: -30 });
+			else if (down_arrow)
+				element.slimScroll({ scrollBy: 30 });
+			else if (page_up)
+				element.slimScroll({ scrollBy: -1*element.height() });
+			else if (page_down)
+				element.slimScroll({ scrollBy: element.height() });
 		}
 		else if (this.position.mode == 'detail') {
-			if(e.keyCode == 37) // left arrow
+			if(left_arrow)
 				this.nextAyaDetail();
-			else if(e.keyCode == 39) // right arrow
+			else if(right_arrow)
 				this.prevAyaDetail();
 			else
-				prevent = false;
+				return;
 		} else
-			prevent = false;
+				return;
 
-		if (prevent)
-			e.preventDefault();
+		e.preventDefault();
 	}
 });
 
