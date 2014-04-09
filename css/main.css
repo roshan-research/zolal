@@ -456,6 +456,9 @@ body {
   border-radius: 0 !important;
   cursor: pointer;
 }
+::-webkit-scrollbar {
+  display: none;
+}
 @keyframes TAFSIR-HIGHLIGHT {
   0% {
     background: none;
