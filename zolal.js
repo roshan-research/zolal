@@ -198,14 +198,14 @@ var QuranView = Backbone.View.extend({
 		this.loadPage(this.position.page+1);
 
 		// show page
-		this.$el.find('#page-style').html('#quran .page {width: '+ this.$el.width() +'px}');
+		this.$el.find('#page-style').html('#quran .page {width: '+ this.$el.outerWidth() +'px}');
 		var quran = this;
 		el = this.$el.find('.page[rel='+ this.position.page +']');
 		pages = this.$el.find('#pages');
 		front = pages.find('.front');
 		el.addClass('front');
 		if (front.attr('rel') != this.position.page)
-			this.$el.stop().animate({ scrollLeft: el.offset().left - pages.offset().left }, (front.length ? 400 : 0), function() {
+			this.$el.stop().animate({ scrollLeft: el.offset().left - pages.offset().left + 10}, (front.length ? 400 : 0), function() {
 				front.removeClass('front');
 				quran.$el.find('.page[rel='+ quran.position.page +']').addClass('front');
 			});
