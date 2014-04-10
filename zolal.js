@@ -27,9 +27,16 @@ var tafsirDb = {
 	id: 'tafsirs',
 	migrations:[
 		{
-			version: '1.0',
+			version: 1,
 			migrate: function (transaction, next) {
 				transaction.db.createObjectStore('tafsirs');
+				next();
+			}
+		}, {
+			version: 2,
+			migrate: function (transaction, next) {
+				transaction.objectStore('tafsirs').clear();
+				localStorage.clear();
 				next();
 			}
 		}
@@ -148,7 +155,9 @@ var AyaView = Backbone.View.extend({
 	template: _.template('<span class="aya-text" rel="<%= sura %>_<%= aya %>"><span class="detail"></span><span class="text"><%= html %></span> <span class="number"><%= aya %></span></span>'),
 	render: function () {
 		data = this.model.toJSON();
-		data['html'] = data['text'].replace(/[ ]*([ۖۗۚۛۙۘ])[ ]*/g, '<span class="mark">\$1 </span>');
+		text = data['text'];
+		text = text.replace(/َٰ/g, 'ٰ').replace(/ُۢ/g, 'ٌ'); // font refinement
+		data['html'] = text.replace(/[ ]*([ۖۗۚۛۙۘ])[ ]*/g, '<span class="mark">\$1 </span>');
 		this.setElement(this.template(data));
 		return this;
 	},
