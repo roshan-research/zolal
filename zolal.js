@@ -397,7 +397,7 @@ var AddressView = Backbone.View.extend({
 		});
 	},
 	events: {
-		'click .control': 'controlClick',
+		'click .glyphicon': 'controlClick',
 		'click .quran #sura': 'suraSelect',
 	},
 	render: function() {
@@ -406,7 +406,6 @@ var AddressView = Backbone.View.extend({
 		if (position.mode == 'quran') {
 			page_sura = Number(quran_pages[position.quran.page][0].split('_')[0]);
 			this.$el.find('#sura').val(quran_suras[page_sura-1]);
-			// el.find('#page').val(position.quran.page);
 		} else if (position.mode == 'detail') {
 			this.$el.find('.detail .left').text(position.detail.aya +' سوره '+ quran_suras[position.detail.sura-1]);
 		} else if (position.mode == 'tafsir') {

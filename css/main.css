@@ -229,9 +229,6 @@ blockquote p,
   font-weight: bold;
   font-size: .85em;
 }
-.tafsir-text span.aya {
-  color: #036564;
-}
 .tafsir-text span.footnote {
   font-size: 70%;
   display: inline-block;
