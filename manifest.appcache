@@ -19,8 +19,8 @@ js/meta.js
 css/bootstrap.css
 css/progrecss.css
 css/main.css
-font/AppFont.ttf
-font/AppFontBd.ttf
+fonts/AppFont.ttf
+fonts/AppFontBd.ttf
 fonts/QuranFont.woff
 fonts/glyphicons-halflings-regular.woff
 img/loading.gif
