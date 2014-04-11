@@ -1,7 +1,7 @@
 @font-face {
   font-family: QuranFont;
   font-weight: normal;
-  src: url('../fonts/QuranFont.ttf') format('truetype');
+  src: url('../fonts/QuranFont.woff') format('woff'), url('../fonts/QuranFont.ttf') format('truetype');
 }
 @font-face {
   font-family: AppFont;
@@ -71,7 +71,6 @@ blockquote p,
   display: block;
 }
 #quran {
-  width: 100%;
   max-width: 600px;
   overflow: hidden;
   direction: ltr;
@@ -120,8 +119,8 @@ blockquote p,
   left: -15px;
 }
 .aya-text {
-  line-height: 42px;
-  font-size: 22px;
+  line-height: 40px;
+  font-size: 24px;
 }
 .aya-text.active .text {
   background: #e0d1b9;
@@ -131,12 +130,12 @@ blockquote p,
 }
 .aya-text .mark {
   color: #036564;
-  margin-right: 6px;
+  margin-right: 5px;
 }
 .aya-text .number {
   font-family: AppFont;
   font-weight: bold;
-  font-size: .65em;
+  font-size: 55%;
   color: #f8f4ee;
   background: #cdb380;
   padding: 4px 5px 2px 4px;
@@ -145,7 +144,7 @@ blockquote p,
   text-align: center;
   display: inline-block;
   line-height: 18px;
-  margin: 0 1px 0 3px;
+  margin: 0 1px;
   box-sizing: initial;
   -moz-box-sizing: initial;
 }
@@ -170,13 +169,14 @@ blockquote p,
 }
 #quran .page .aya-text {
   cursor: pointer;
+  word-spacing: -3px;
 }
 #quran .page .aya-text.active .detail:before {
   content: "";
   background: #033649;
   position: absolute;
   color: #e8ddcb;
-  font-size: 90%;
+  font-size: 20px;
   height: 45px;
   width: 7px;
   right: -2px;

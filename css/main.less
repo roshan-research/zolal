@@ -3,7 +3,7 @@
 @font-face {
 	font-family: QuranFont;
 	font-weight: normal;
-	src: url('../fonts/QuranFont.ttf') format('truetype');
+	src: url('../fonts/QuranFont.woff') format('woff'), url('../fonts/QuranFont.ttf') format('truetype');
 }
 @font-face {
 	font-family: AppFont;
@@ -128,8 +128,8 @@ body, blockquote p, .tooltip-inner {
 }
 
 .aya-text {
-	line-height: 42px;
-	font-size: 22px;
+	line-height: 40px;
+	font-size: 24px;
 
 	&.active {
 		.text {
@@ -143,13 +143,13 @@ body, blockquote p, .tooltip-inner {
 
 	.mark {
 		color: @color3;
-		margin-right: 6px;
+		margin-right: 5px;
 	}
 
 	.number {
 		font-family: AppFont;
 		font-weight: bold;
-		font-size: .65em;
+		font-size: 55%;
 		color: lighten(@color1, 10%);
 		background: @color2;
 		padding: 4px 5px 2px 4px;
@@ -158,7 +158,7 @@ body, blockquote p, .tooltip-inner {
 		text-align: center;
 		display: inline-block;
 		line-height: 18px;
-		margin: 0 1px 0 3px;
+		margin: 0 1px;
 		box-sizing: initial;
 		-moz-box-sizing: initial;
 	}
@@ -188,6 +188,7 @@ body, blockquote p, .tooltip-inner {
 
 	.aya-text {
 		cursor: pointer;
+		word-spacing: -3px;
 
 		&.active {
 			.detail:before {
@@ -195,7 +196,7 @@ body, blockquote p, .tooltip-inner {
 				background: @color4;
 				position: absolute;
 				color: @color1;
-				font-size: 90%;
+				font-size: 20px;
 				height: 45px;
 				width: 7px;
 				right: -2px;
