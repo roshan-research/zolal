@@ -1,8 +1,9 @@
 CACHE MANIFEST
-# 2014 Feb 27
+# 2014 Apr 11
 
 CACHE:
 zolal.js
+app.js
 js/jquery.js
 js/underscore.js
 js/backbone.js
@@ -11,17 +12,17 @@ js/backbone.indexedDb.js
 js/jquery-ui.js
 js/jquery.mobile.js
 js/jquery.dotdotdot.js
+js/jquery.slimscroll.js
 js/bootstrap.js
 js/typeahead.js
 js/meta.js
 css/bootstrap.css
 css/progrecss.css
 css/main.css
-css/font-awesome.css
-font/QuranFont.otf
 font/AppFont.ttf
 font/AppFontBd.ttf
-font/FontAwesome.woff
+fonts/QuranFont.woff
+fonts/glyphicons-halflings-regular.woff
 img/loading.gif
 img/fav.png
 
