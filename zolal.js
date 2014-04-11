@@ -156,7 +156,7 @@ var AyaView = Backbone.View.extend({
 	render: function () {
 		data = this.model.toJSON();
 		text = data['text'];
-		text = text.replace(/َٰ/g, 'ٰ').replace(/ُۢ/g, 'ٌ'); // font refinement
+		text = text.replace(/َٰ/g, 'ٰ').replace(/ُۢ/g, 'ٌ').replace(/[۪۫]/g, ''); // font refinement
 		data['html'] = text.replace(/[ ]*([ۖۗۚۛۙۘ])[ ]*/g, '<span class="mark">\$1 </span>');
 		this.setElement(this.template(data));
 		return this;
