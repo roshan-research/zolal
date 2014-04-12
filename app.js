@@ -39,19 +39,16 @@ $('select#language').val(variables.lang).change(function() {
 	variables.lang = $(this).val();
 	app.position.tafsir.lang = variables.lang;
 	app.render();
+	$('.modal').modal('hide');
 });
 
 // gestures
 $(document).ready(function() {
 	$('body').on( 'swipeleft', function () {
-		if (app.position.mode == 'quran')
-			if (app.quran.prevPage())
-				app.render();
+		app.$el.find('.front').find('.glyphicon-chevron-right').click();
 	});
 	$('body').on( 'swiperight', function () {
-		if (app.position.mode == 'quran')
-			if (app.quran.nextPage())
-				app.render();
+		app.$el.find('.front').find('.glyphicon-chevron-left').click();
 	});
 });
 

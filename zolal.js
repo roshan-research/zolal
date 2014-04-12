@@ -237,7 +237,6 @@ var QuranView = Backbone.View.extend({
 				el.append(ayaView.render().el, ' ');
 			}
 		});
-		el.children().hide().fadeIn();
 		this.updateSelectedAya();
 	},
 	loadPage: function(page) {

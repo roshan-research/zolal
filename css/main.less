@@ -522,3 +522,20 @@ body {
 	5% { background: darken(@color1, 5%); }
 	100% { background: none; }
 }
+
+
+@media (max-width: 768px) {
+	#wrap {
+		overflow: hidden;
+	}
+	#header {
+		margin: 0;
+	}
+	#views {
+		height: calc(~"100% - 40px");
+	}
+	.aya-text {
+		line-height: 32px;
+		font-size: 20px;
+	}
+}
