@@ -10,7 +10,7 @@ js/backbone.js
 js/backbone.localStorage.js
 js/backbone.indexedDb.js
 js/jquery-ui.js
-js/jquery.mobile.js
+js/jquery.touchSwipe.js
 js/jquery.dotdotdot.js
 js/jquery.slimscroll.js
 js/bootstrap.js

@@ -44,11 +44,16 @@ $('select#language').val(variables.lang).change(function() {
 
 // gestures
 $(document).ready(function() {
-	$('body').on( 'swipeleft', function () {
-		app.$el.find('.front').find('.glyphicon-chevron-right').click();
-	});
-	$('body').on( 'swiperight', function () {
-		app.$el.find('.front').find('.glyphicon-chevron-left').click();
+	$("#views").swipe({
+		tap: function(e) {
+			$(e.target).click();
+		},
+		swipeLeft: function() {
+			app.$el.find('.front').find('.glyphicon-chevron-right').click();
+		},
+		swipeRight: function() {
+			app.$el.find('.front').find('.glyphicon-chevron-left').click();
+		}
 	});
 });
 
