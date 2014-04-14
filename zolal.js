@@ -459,7 +459,8 @@ var AddressView = Backbone.View.extend({
 		this.$el.find('#sura').val(' ').trigger('input').val('‌').trigger('input').focus();
 	},
 	tafsirScroll: function(args) {
-		this.$el.find('.tafsir .left').text('جلد '+ args['volume'] +' صفحه '+ args['page']);
+		if (args['volume'] && args['page'])
+			this.$el.find('.tafsir .left').text('المیزان، ج'+ args['volume'] +' ص'+ args['page']);
 	}
 });
 
