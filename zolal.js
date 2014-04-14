@@ -691,6 +691,8 @@ var DetailView = Backbone.View.extend({
 
 		if (variables.lang == 'fa')
 			this.$el.find('#translation').text(this.aya.get('trans'));
+		else
+			this.$el.find('#translation').empty();
 	},
 	renderPhrases: function() {
 		var words = this.aya.get('text').replace(/[ۖۗۚۛۙۘ]/g, '').split(' ');
