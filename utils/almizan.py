@@ -171,14 +171,14 @@ def resolve_phrase(text, tokens, stems, book):
 	#resolve aya tokens with or without Alif-Lam
 	for aya, token_list in tokens.items():
 		for t, token in enumerate(token_list):
-			if text == token or (token[:2] == 'ال' and text == token[2:]) or (token[:1] in 'بکف' and text == token[1:]):
+			if text == token or (token[:2] == 'ال' and text == token[2:]) or (token[:1] in 'لبکف' and text == token[1:]):
 				return '{0}_{1}_{2}-{2}'.format(book, aya, t+1)
 
 	#resolve aya stems
 	text = isri.stem(text.replace('‌', ''))
 	for aya, stem_list in stems.items():
-		for s, stem in enumerate(stem_list):
-			if text == stem:
+		for s, stm in enumerate(stem_list):
+			if text == stm:
 				rel = '{0}_{1}_{2}-{2}'.format(book, aya, s+1)
 				break
 
