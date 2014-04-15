@@ -1,14 +1,21 @@
 
+var app;
 var store = false;
+
+
+// chrome app
 if ('chrome' in window && chrome.app.isInstalled)
 	store = true;
 
 
-$(window).resize(function() {
-	$('.twitter-typeahead .tt-dropdown-menu').css('max-height', $('#views').height());
-});
+// crosswalk app
+if (screen.lockOrientation) {
+	screen.lockOrientation('portrait');
+	store = true;
+}
 
-var app;
+
+// app init
 $(document).ready(function() {
 	app = new AppView();
 	app.router = new AddressRouter();
@@ -30,6 +37,9 @@ $(document).ready(function() {
 	$(window).resize();
 	track('Zolal');
 });
+$(window).resize(function() {
+	$('.twitter-typeahead .tt-dropdown-menu').css('max-height', $('#views').height());
+});
 
 
 // settings dialog
@@ -40,6 +50,7 @@ $('select#language').val(variables.lang).change(function() {
 	app.render();
 	$('.modal').modal('hide');
 });
+
 
 // gestures
 $(document).ready(function() {
