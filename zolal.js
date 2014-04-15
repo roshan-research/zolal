@@ -290,7 +290,7 @@ var QuranView = Backbone.View.extend({
 });
 
 var TafsirView = Backbone.View.extend({
-	el: $("#tafsir .content"),
+	el: $("#tafsir"),
 	initialize: function() {
 		this.sections = almizan_sections;
 	},
@@ -298,13 +298,13 @@ var TafsirView = Backbone.View.extend({
 		'scroll': 'checkScroll'
 	},
 	render: function() {
-		this.$el.empty();
+		this.$el.find('.content').empty();
 		this.trigger('updateAddress');
 		this.loadSection();
 	},
 	renderBayan: function (bayan) {
 		// content
-		this.$el.html(bayan.get('content'));
+		this.$el.find('.content').html(bayan.get('content'));
 		this.$el.removeClass('loading');
 		this.$el.scrollTop(0);
 
@@ -315,8 +315,7 @@ var TafsirView = Backbone.View.extend({
 			part = this.$el.find('code.aya[rel='+ this.position.aya +']').parent();
 
 		if (part.length > 0) {
-			container = this.$el;
-			container.slimScroll({scrollTo: part.offset().top - container.offset().top + container.scrollTop()});
+			this.$el.scrollTop(part.offset().top - this.$el.offset().top + this.$el.scrollTop());
 			part.addClass('active');
 		}
 
@@ -601,13 +600,13 @@ var AppView = Backbone.View.extend({
 				return;
 
 			if (up_arrow)
-				element.slimScroll({ scrollBy: -30 });
+				element.scrollTop(element.scrollTop() - 30);
 			else if (down_arrow)
-				element.slimScroll({ scrollBy: 30 });
+				element.scrollTop(element.scrollTop() + 30);
 			else if (page_up)
-				element.slimScroll({ scrollBy: -1*element.height() });
+				element.scrollTop(element.scrollTop() - element.height());
 			else if (page_down)
-				element.slimScroll({ scrollBy: element.height() });
+				element.scrollTop(element.scrollTop() + element.height());
 		}
 		else if (this.position.mode == 'detail') {
 			if(left_arrow)

@@ -6,7 +6,6 @@ if ('chrome' in window && chrome.app.isInstalled)
 
 $(window).resize(function() {
 	$('.twitter-typeahead .tt-dropdown-menu').css('max-height', $('#views').height());
-	$('#tafsir .content, #detail .content').slimScroll({height: 'auto', position: 'left', opacity: '1'});
 });
 
 var app;
