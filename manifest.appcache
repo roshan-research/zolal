@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# 2014 Apr 11
+# 2014 Apr 15
 
 CACHE:
 zolal.js
@@ -10,9 +10,9 @@ js/backbone.js
 js/backbone.localStorage.js
 js/backbone.indexedDb.js
 js/jquery-ui.js
+js/jquery-ui.touch-punch.js
 js/jquery.touchSwipe.js
 js/jquery.dotdotdot.js
-js/jquery.slimscroll.js
 js/bootstrap.js
 js/typeahead.js
 js/meta.js
