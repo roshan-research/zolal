@@ -1,6 +1,7 @@
 
 var app;
 var store = false;
+var server = 'http://zolal-files.ap01.aws.af.cm/';
 
 
 // chrome app
@@ -56,7 +57,8 @@ $('select#language').val(variables.lang).change(function() {
 $(document).ready(function() {
 	$("#views").swipe({
 		tap: function(e) {
-			$(e.target).click();
+			if (e.type != 'mouseup')
+				$(e.target).click();
 		},
 		swipeLeft: function() {
 			app.$el.find('.front').find('.glyphicon-chevron-right').click();

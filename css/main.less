@@ -188,33 +188,6 @@ body, blockquote p, .tooltip-inner {
 	.aya-text {
 		cursor: pointer;
 		word-spacing: -3px;
-
-		&.active {
-			.detail:before {
-				content: "";
-				background: @color4;
-				position: absolute;
-				color: @color1;
-				font-size: 20px;
-				height: 45px;
-				width: 7px;
-				right: -2px;
-				transition: width .2s ease, right .3s ease;
-			}
-			.detail:after {
-				content: "";
-				position: absolute;
-				width: 30px;
-				height: 45px;
-				right: -15px;
-			}
-			.detail:hover:before {
-				content: "توضیح";
-				text-align: center;
-				width: 60px;
-				right: -15px;
-			}
-		}
 	}
 }
 

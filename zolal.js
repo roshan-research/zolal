@@ -1,6 +1,4 @@
 
-var server = 'http://zolal-files.ap01.aws.af.cm/';
-
 // read variables
 appStorage = new Backbone.LocalStorage('App');
 if (!appStorage.find({id: 'variables'})) {
@@ -152,7 +150,7 @@ var Almizan = Backbone.Collection.extend({
 
 // views
 var AyaView = Backbone.View.extend({
-	template: _.template('<span class="aya-text" rel="<%= sura %>_<%= aya %>"><span class="detail"></span><span class="text"><%= html %></span> <span class="number"><%= aya %></span></span>'),
+	template: _.template('<span class="aya-text" rel="<%= sura %>_<%= aya %>"><span class="text"><%= html %></span> <span class="number"><%= aya %></span></span>'),
 	render: function () {
 		data = this.model.toJSON();
 		text = data['text'];
@@ -164,12 +162,10 @@ var AyaView = Backbone.View.extend({
 	events: {
 		'click': 'click'
 	},
-	click: function(e) {
-		target = $(e.target);
-
+	click: function() {
 		aya = this.model.get('sura') +'_'+ this.model.get('aya');
 		if (app.position.mode == 'quran') {
-			if (target.hasClass('detail'))
+			if (this.$el.hasClass('active'))
 				app.router.navigate('detail/'+ aya, true);
 			else
 				app.router.navigate('quran/'+ aya, true);
