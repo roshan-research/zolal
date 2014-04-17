@@ -366,10 +366,8 @@ body {
 }
 
 .fill, .tafsir-text .active, .page {
-	padding-right: 10px;
-	padding-left: 10px;
-	margin-right: -10px;
-	margin-left: -10px;
+	padding: 0 10px;
+	margin: 0 -10px;
 }
 
 .twitter-typeahead {
@@ -493,6 +491,27 @@ body {
 
 /* media */
 
+@media (max-width: 480px) {
+	.aya-text {
+		line-height: 32px;
+		font-size: 20px;
+
+		.number {
+			padding: 3px 4px 0px 3px;
+		}
+	}
+	#quran #page:before {
+		width: 5px;
+	}
+	.fill, .tafsir-text .active, .page {
+		padding: 0 5px;
+		margin: 0 -5px;
+	}
+	#views {
+		padding: 0 5px;
+	}
+}
+
 @media (max-width: 768px) {
 	#wrap {
 		overflow: hidden;
@@ -506,9 +525,5 @@ body {
 	}
 	#views {
 		height: calc(~"100% - 40px");
-	}
-	.aya-text {
-		line-height: 32px;
-		font-size: 20px;
 	}
 }
