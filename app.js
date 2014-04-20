@@ -2,18 +2,16 @@
 var app;
 var store = false;
 var server = 'http://zolal-files.ap01.aws.af.cm/';
+var chrome_app = 'chrome' in window && chrome.app.isInstalled;
+var android_app = Boolean(screen.lockOrientation);
 
 
-// chrome app
-if ('chrome' in window && chrome.app.isInstalled)
+// apps
+if (chrome_app || android_app)
 	store = true;
 
-
-// crosswalk app
-if (screen.lockOrientation) {
+if (android_app)
 	screen.lockOrientation('portrait');
-	store = true;
-}
 
 
 // app init
@@ -49,7 +47,7 @@ $('select#language').val(variables.lang).change(function() {
 	variables.lang = $(this).val();
 	app.position.tafsir.lang = variables.lang;
 	app.render();
-	$('.modal').modal('hide');
+	show_tafsir_stats();
 });
 
 
@@ -71,32 +69,21 @@ $(document).ready(function() {
 
 
 // download
-var requestUrls = function(urls, index, isStored, storeData, progressBar) {
-	if (progressBar)
-		var progress = function(percent) { progressBar.attr('data-progrecss', Math.round(percent)) };
-
-	if (index >= urls.length) {
-		if (progressBar) {
-			progress(100);
-			progressBar.removeClass('progrecss');
-		}
-		return;
-	}
-
-	if (progressBar)
-		progressBar.addClass('progrecss');
+var requestUrls = function(urls, index, isStored, storeData, progress) {
+	if (index >= urls.length && progress)
+		progress(100);
 
 	isStored(urls[index], function() {
-			if (progressBar) progress(100*index/urls.length);
-			requestUrls(urls, index+1, isStored, storeData, progressBar);
+			if (progress) progress(100*index/urls.length);
+			requestUrls(urls, index+1, isStored, storeData, progress);
 		},	function() {
 		settings = {
 			context: {url: urls[index]},
 			url: server + urls[index],
 			success: function(data) {
 				storeData(this.url, data);
-				if (progressBar) progress(100*index/urls.length);
-				requestUrls(urls, index+1, isStored, storeData, progressBar);
+				if (progress) progress(100*index/urls.length);
+				requestUrls(urls, index+1, isStored, storeData, progress);
 			},
 			error : function(xhr, textStatus) {
 				setTimeout(function() { $.ajax(this.settings); }, 1000);
@@ -128,9 +115,23 @@ var download_quran = function() {
 	requestUrls(urls, 0, isStored, storeData, false);
 };
 
+var tafsir_progress = function(percent) {
+	if (percent == 100) {
+		$('#download-state').hide();
+		$('#complete-state').show();
+		$('#download-progress').removeClass('active');
+	}
+	else {
+		$('#download-state').show();
+		$('#complete-state').hide();
+	}
+
+	$('#download-progress .progress-bar').width(Math.round(percent) +'%');
+};
+
 var download_tafsir = function() {
-	$('.modal').modal('hide');
 	$('#download-tafsir').attr('disabled', 'disabled');
+	$('#download-progress').addClass('active');
 	track('Almizan Download', {'lang': variables.lang});
 
 	var storeData = function(url, data) {
@@ -143,5 +144,17 @@ var download_tafsir = function() {
 	}
 
 	urls = _.map(almizan_sections, function(section) { return 'almizan_'+ variables.lang +'/'+ section; });
-	requestUrls(urls, 0, isStored, storeData, $('#wrap'));
+	requestUrls(urls, 0, isStored, storeData, tafsir_progress);
 };
+
+var show_tafsir_stats = function() {
+	almizan = new Almizan();
+	almizan.fetch({
+		success: function() {
+			sections = almizan.models.filter(function(item) {
+				return item.id.substr(0,2) == variables.lang;
+			})
+			tafsir_progress(100 * sections.length / almizan_sections.length);
+		}
+	});
+}

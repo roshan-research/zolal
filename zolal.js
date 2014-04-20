@@ -97,6 +97,9 @@ var Bayan = Backbone.Model.extend({
 
 
 var Almizan = Backbone.Collection.extend({
+	database: tafsirDb,
+	storeName: 'tafsirs',
+	model: Bayan,
 	initialize: function() {
 		this.loaded = [];
 	},
@@ -563,6 +566,7 @@ var AppView = Backbone.View.extend({
 	},
 	showMenu: function() {
 		this.$el.find('#menu').modal();
+		show_tafsir_stats();
 	},
 	navKey: function(e) {
 		if (e.target.tagName == 'INPUT' || $('.modal').is(':visible'))

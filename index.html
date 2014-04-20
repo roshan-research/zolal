@@ -90,9 +90,18 @@
 					<p class="store-hide">
 						برای استفاده بدون اتصال به اینترنت می‌توانید <a href="https://chrome.google.com/webstore/detail/cmhmgigldkolppfbfdadehjlmfgblgin" target="_blank">زلال در کروم</a> را نصب کنید.
 					</p>
-					<p class="store-display" style="display: none">
-						استفاده بدون اتصال به اینترنت: <a href="#" id="download-tafsir" class="btn btn-info"><span class="glyphicon glyphicon-download"></span> دریافت تفسیر</a>
-					</p>
+					<div class="store-display" style="display: none">
+						<div id="download-state" style="display: none">
+							<p style="margin-bottom: 5px">بخش‌های دریافت شده تفسیر: </p>
+							<div id="download-progress" class="progress progress-striped">
+								<div class="progress-bar progress-bar-info" role="progressbar"></div>
+							</div>
+							<a href="#" id="download-tafsir" class="btn btn-link"><span class="glyphicon glyphicon-download"></span> دریافت همه بخش‌ها برای استفاده بدون اتصال</a>
+						</div>
+						<div id="complete-state" style="display: none">
+							همه بخش‌های تفسیر دریافت شده‌اند.
+						</div>
+					</div>
 				</div>
 
 				<div class="tab-pane" id="about">
@@ -125,8 +134,6 @@
 	<script type="text/javascript" src="js/jquery-ui.js"></script>
 	<script type="text/javascript" src="js/jquery-ui.touch-punch.js"></script>
 	<script type="text/javascript" src="js/jquery.touchSwipe.js"></script>
-
-	<link rel="stylesheet" type="text/css" href="css/progrecss.css">
 
 	<script type="text/javascript">
 		(function(e,b){if(!b.__SV){var a,f,i,g;window.mixpanel=b;a=e.createElement("script");a.type="text/javascript";a.async=!0;a.src=("https:"===e.location.protocol?"https:":"http:")+'//cdn.mxpnl.com/libs/mixpanel-2.2.min.js';f=e.getElementsByTagName("script")[0];f.parentNode.insertBefore(a,f);b._i=[];b.init=function(a,e,d){function f(b,h){var a=h.split(".");2==a.length&&(b=b[a[0]],h=a[1]);b[h]=function(){b.push([h].concat(Array.prototype.slice.call(arguments,0)))}}var c=b;"undefined"!==typeof d?c=b[d]=[]:d="mixpanel";c.people=c.people||[];c.toString=function(b){var a="mixpanel";"mixpanel"!==d&&(a+="."+d);b||(a+=" (stub)");return a};c.people.toString=function(){return c.toString(1)+".people (stub)"};i="disable track track_pageview track_links track_forms register register_once alias unregister identify name_tag set_config people.set people.increment people.append people.track_charge people.clear_charges people.delete_user".split(" ");for(g=0;g<i.length;g++)f(c,i[g]);b._i.push([a,e,d])};b.__SV=1.2}})(document,window.mixpanel||[]); mixpanel.init("08646e83029019f7dd879c063c73d480");
