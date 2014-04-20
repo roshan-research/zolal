@@ -59,7 +59,6 @@ blockquote p,
 #tafsir,
 #detail {
   height: 100%;
-  overflow: hidden !important;
   text-align: justify;
   color: #031634;
   overflow: auto;
@@ -69,6 +68,9 @@ blockquote p,
 #tafsir.front,
 #detail.front {
   display: block;
+}
+.loading {
+  background: url(../img/loading.gif) no-repeat center center;
 }
 #quran {
   max-width: 600px;
@@ -170,30 +172,6 @@ blockquote p,
 #quran .page .aya-text {
   cursor: pointer;
   word-spacing: -3px;
-}
-#quran .page .aya-text.active .detail:before {
-  content: "";
-  background: #033649;
-  position: absolute;
-  color: #e8ddcb;
-  font-size: 20px;
-  height: 45px;
-  width: 7px;
-  right: -2px;
-  transition: width .2s ease, right .3s ease;
-}
-#quran .page .aya-text.active .detail:after {
-  content: "";
-  position: absolute;
-  width: 30px;
-  height: 45px;
-  right: -15px;
-}
-#quran .page .aya-text.active .detail:hover:before {
-  content: "توضیح";
-  text-align: center;
-  width: 60px;
-  right: -15px;
 }
 .tafsir-text {
   text-align: justify;
@@ -300,8 +278,8 @@ body {
 }
 #header .glyphicon {
   cursor: pointer;
-  font-size: 14px;
-  padding: 11px;
+  font-size: 16px;
+  padding: 12px;
   float: right;
   z-index: 10;
   top: 0;
@@ -314,7 +292,7 @@ body {
   background: #031634;
   outline: none;
   border: none;
-  height: 36px;
+  height: 40px;
   width: 100%;
 }
 #header span.twitter-typeahead {
@@ -327,11 +305,12 @@ body {
   direction: rtl;
   cursor: pointer;
   padding-left: 80px;
+  padding-right: 7px;
   float: left;
   width: 50%;
 }
 .header {
-  height: 36px;
+  height: 40px;
   line-height: 32px;
   font-family: AppFont;
   font-size: 24px;
@@ -346,7 +325,7 @@ body {
   width: 50%;
   display: inline-block;
   float: right;
-  padding: 2px 5px;
+  padding: 4px 7px 4px 5px;
 }
 .header .right {
   background: #033649;
@@ -356,14 +335,10 @@ body {
   background: #031634;
 }
 .fill,
-.slimScrollDiv,
-.slimScrollDiv > div:first-child,
 .tafsir-text .active,
 .page {
-  padding-right: 10px;
-  padding-left: 10px;
-  margin-right: -10px;
-  margin-left: -10px;
+  padding: 0 10px;
+  margin: 0 -10px;
 }
 .twitter-typeahead {
   width: 100%;
@@ -388,7 +363,7 @@ body {
 }
 .twitter-typeahead .tt-suggestion p {
   margin-bottom: 2px;
-  padding-right: calc(50% + 10px);
+  padding-right: calc(50% + 7px);
 }
 #menu {
   overflow-y: hidden;
@@ -402,7 +377,7 @@ body {
   margin-left: 5px;
 }
 #menu .tab-content {
-  margin-top: 30px;
+  margin-top: 25px;
   min-height: 100px;
 }
 #menu #options p {
@@ -430,11 +405,12 @@ body {
   width: initial;
   font-size: 18px;
   padding: 2px 6px;
+  border-color: #eee;
 }
 #menu #download-tafsir {
   font-size: 18px;
-  padding: 2px 8px 3px;
-  margin-top: -5px;
+  margin-top: -20px;
+  padding: 0;
 }
 #menu #download-tafsir .glyphicon {
   top: 5px;
@@ -448,15 +424,10 @@ body {
   box-shadow: 0 0 1px #033649 !important;
   opacity: 1 !important;
 }
-.slimScrollBar {
-  color: #031634 !important;
-  left: -2px !important;
-  border-radius: 0 !important;
-  cursor: pointer;
-}
-::-webkit-scrollbar {
+.page::-webkit-scrollbar {
   display: none;
 }
+/* animations */
 @keyframes TAFSIR-HIGHLIGHT {
   0% {
     background: none;
@@ -477,5 +448,47 @@ body {
   }
   100% {
     background: none;
+  }
+}
+/* media */
+@media (max-width: 480px) {
+  #views {
+    padding: 0 5px;
+  }
+  #quran #page:before {
+    width: 5px;
+  }
+  .fill,
+  .tafsir-text .active,
+  .page {
+    padding: 0 5px;
+    margin: 0 -5px;
+  }
+  .aya-text {
+    line-height: 32px;
+    font-size: 20px;
+  }
+  .aya-text .number {
+    padding: 3px 4px 0px 3px;
+  }
+}
+@media (max-width: 768px) {
+  #wrap {
+    overflow: hidden;
+  }
+  #header {
+    margin: 0;
+  }
+  #header .glyphicon-chevron-left,
+  #header .glyphicon-chevron-right {
+    display: none;
+  }
+  #views {
+    height: calc(100% - 40px);
+  }
+}
+@media (min-width: 480px) and (max-width: 768px) {
+  html {
+    zoom: 130%;
   }
 }
