@@ -493,13 +493,11 @@ body {
 /* media */
 
 @media (max-width: 480px) {
-	.aya-text {
-		line-height: 32px;
-		font-size: 20px;
-
-		.number {
-			padding: 3px 4px 0px 3px;
-		}
+	html {
+		zoom: 100%;
+	}
+	#views {
+		padding: 0 5px;
 	}
 	#quran #page:before {
 		width: 5px;
@@ -508,12 +506,20 @@ body {
 		padding: 0 5px;
 		margin: 0 -5px;
 	}
-	#views {
-		padding: 0 5px;
+	.aya-text {
+		line-height: 32px;
+		font-size: 20px;
+
+		.number {
+			padding: 3px 4px 0px 3px;
+		}
 	}
 }
 
 @media (max-width: 768px) {
+	html {
+		zoom: 120%;
+	}
 	#wrap {
 		overflow: hidden;
 	}
