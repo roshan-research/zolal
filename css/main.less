@@ -493,9 +493,6 @@ body {
 /* media */
 
 @media (max-width: 480px) {
-	html {
-		zoom: 100%;
-	}
 	#views {
 		padding: 0 5px;
 	}
@@ -517,9 +514,6 @@ body {
 }
 
 @media (max-width: 768px) {
-	html {
-		zoom: 120%;
-	}
 	#wrap {
 		overflow: hidden;
 	}
@@ -532,5 +526,11 @@ body {
 	}
 	#views {
 		height: calc(~"100% - 40px");
+	}
+}
+
+@media (min-width: 480px) and (max-width: 768px) {
+	html {
+		zoom: 130%;
 	}
 }

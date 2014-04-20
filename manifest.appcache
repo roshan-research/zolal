@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# 2014 Apr 15
+# 2014 Apr 20
 
 CACHE:
 zolal.js
@@ -17,7 +17,6 @@ js/bootstrap.js
 js/typeahead.js
 js/meta.js
 css/bootstrap.css
-css/progrecss.css
 css/main.css
 fonts/AppFont.ttf
 fonts/AppFontBd.ttf
