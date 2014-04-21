@@ -440,9 +440,10 @@ var AddressView = Backbone.View.extend({
 
 		// metrics
 		position = this.position;
-		if (position.mode == 'quran')
-			track('Quran', position.quran);
-		else if (position.mode == 'detail')
+		if (position.mode == 'quran') {
+			if (! position.quran.aya)
+				track('Quran', position.quran);
+		} else if (position.mode == 'detail')
 			track('Detail', {aya: position.detail.sura +'_'+ position.detail.aya});
 		else if (position.mode == 'tafsir')
 			track('Almizan', position.tafsir);
@@ -766,8 +767,13 @@ var pageToOffset = function(page) {
 	return offset;
 }
 
+
+// track
+var trackedData;
 var track = function(title, data) {
-	mixpanel.track(title, data);
+	if (data != trackedData)
+		mixpanel.track(title, data);
+	trackedData = data;
 }
 
 
