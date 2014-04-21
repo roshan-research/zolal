@@ -10,8 +10,13 @@ var android_app = Boolean(screen.lockOrientation);
 if (chrome_app || android_app)
 	store = true;
 
-if (android_app)
+if (android_app) {
 	screen.lockOrientation('portrait');
+
+	// menu button
+	document.addEventListener('menubutton', function() { app.address.trigger('menu'); }, false);
+	$('[rel=menu]').hide();
+}
 
 
 // app init
