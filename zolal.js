@@ -440,13 +440,10 @@ var AddressView = Backbone.View.extend({
 
 		// metrics
 		position = this.position;
-		if (position.mode == 'quran') {
-			if (position.quran.aya) {
-				if (position.quran.phrase)
-					track('Quran Phrase', position.quran);
-			} else
-				track('Quran', position.quran);
-		}
+		if (position.mode == 'quran')
+			track('Quran', position.quran);
+		else if (position.mode == 'detail')
+			track('Detail', {aya: position.detail.sura +'_'+ position.detail.aya});
 		else if (position.mode == 'tafsir')
 			track('Almizan', position.tafsir);
 	},
