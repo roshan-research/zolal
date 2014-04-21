@@ -169,9 +169,9 @@ var AyaView = Backbone.View.extend({
 		aya = this.model.get('sura') +'_'+ this.model.get('aya');
 		if (app.position.mode == 'quran') {
 			if (this.$el.hasClass('active'))
-				app.router.navigate('detail/'+ aya, true);
+				app.router.navigate('detail/'+ aya, {trigger: true});
 			else
-				app.router.navigate('quran/'+ aya, true);
+				app.router.navigate('quran/'+ aya, {trigger: true, replace: true});
 		}
 	}
 });
@@ -189,7 +189,7 @@ var QuranView = Backbone.View.extend({
 				ui.helper.attr('rel', offsetToPage(ui.position.top));
 			},
 			stop: function(e, ui) {
-				app.router.navigate('quran/p'+ ui.helper.attr('rel'), true);
+				app.router.navigate('quran/p'+ ui.helper.attr('rel'), {trigger: true});
 			}
 		});
 	},
@@ -394,7 +394,7 @@ var AddressView = Backbone.View.extend({
 			if (name == 'sura') {
 				id = selected.id;
 				if (id > 0 && id != app.position.quran.sura)
-					app.router.navigate('quran/'+ id +'_1', true);
+					app.router.navigate('quran/'+ id +'_1', {trigger: true});
 				sura_select.blur();
 			}
 		});
@@ -518,25 +518,25 @@ var AppView = Backbone.View.extend({
 	},
 	showTafsir: function() {
 		tafsir = quranToTafsir(this.position.quran);
-		this.router.navigate('almizan_'+ tafsir.lang +'/'+ tafsir.aya, true);
+		this.router.navigate('almizan_'+ tafsir.lang +'/'+ tafsir.aya, {trigger: true});
 	},
 	showQuran: function() {
 		if (this.position.mode == 'detail')
-			this.router.navigate('quran/'+ this.position.detail.sura +'_'+ this.position.detail.aya, true);
+			this.router.navigate('quran/'+ this.position.detail.sura +'_'+ this.position.detail.aya, {trigger: true});
 		else if (this.position.mode == 'tafsir') {
 			quran = tafsirToQuran(this.position.tafsir);
-			this.router.navigate('quran/'+ quran.sura +'_'+ quran.aya, true);
+			this.router.navigate('quran/'+ quran.sura +'_'+ quran.aya, {trigger: true});
 		}
 	},
 	nextQuranPage: function() {
 		page = this.position.quran.page;
 		page += 1; if (page > 604) page = 604;
-		this.router.navigate('quran/p'+ page, true);
+		this.router.navigate('quran/p'+ page, {trigger: true, replace: true});
 	},
 	prevQuranPage: function() {
 		page = this.position.quran.page;
 		page -= 1; if (page < 1) page = 1;
-		this.router.navigate('quran/p'+ page, true);
+		this.router.navigate('quran/p'+ page, {trigger: true, replace: true});
 	},
 	nextQuranAya: function() {
 		quran = this.position.quran;
@@ -545,7 +545,7 @@ var AppView = Backbone.View.extend({
 			quran.sura = Number(first_aya[0]);
 			quran.aya = Number(first_aya[1]);
 		}
-		this.router.navigate('quran/'+ nextAya(quran.sura, quran.aya), true);
+		this.router.navigate('quran/'+ nextAya(quran.sura, quran.aya), {trigger: true, replace: true});
 	},
 	prevQuranAya: function() {
 		quran = this.position.quran;
@@ -554,15 +554,15 @@ var AppView = Backbone.View.extend({
 			quran.sura = Number(first_aya[0]);
 			quran.aya = Number(first_aya[1]);
 		}
-		this.router.navigate('quran/'+ prevAya(quran.sura, quran.aya), true);
+		this.router.navigate('quran/'+ prevAya(quran.sura, quran.aya), {trigger: true, replace: true});
 	},
 	nextAyaDetail: function() {
 		detail = this.position.detail;
-		this.router.navigate('detail/'+ nextAya(detail.sura, detail.aya), true);
+		this.router.navigate('detail/'+ nextAya(detail.sura, detail.aya), {trigger: true, replace: true});
 	},
 	prevAyaDetail: function() {
 		detail = this.position.detail;
-		this.router.navigate('detail/'+ prevAya(detail.sura, detail.aya), true);
+		this.router.navigate('detail/'+ prevAya(detail.sura, detail.aya), {trigger: true, replace: true});
 	},
 	showMenu: function() {
 		this.$el.find('#menu').modal();
