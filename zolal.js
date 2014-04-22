@@ -182,16 +182,12 @@ var QuranView = Backbone.View.extend({
 		this.collection = new Quran();
 
 		// page indicator
-		this.$el.find('#page').draggable({
-			axis: 'y',
-			containment: 'parent',
-			drag: function(e, ui) {
-				ui.helper.attr('rel', offsetToPage(ui.position.top));
-			},
-			stop: function(e, ui) {
-				app.router.navigate('quran/p'+ ui.helper.attr('rel'), {trigger: true});
-			}
-		});
+		this.pageElement = new Draggabilly($('#page')[0], {axis: 'y', containment: true})
+			.on('dragMove', function(instance) {
+				instance.element.setAttribute('rel', offsetToPage(instance.position.y));
+			}).on('dragEnd', function(instance) {
+				app.router.navigate('quran/p'+ instance.element.getAttribute('rel'), {trigger: true});
+			});
 	},
 	render: function() {
 		this.loadPage(this.position.page);
