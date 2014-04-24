@@ -27,9 +27,9 @@ def section_ayas(id, ayas):
 
 	for a in range(int(aya.split('-')[0]), int(aya.split('-')[1])+1):
 		aya = '%s_%d' % (sura, a)
-		text = simple_aya(ayas[aya]['text'])
+		text = ayas[aya]['raw']
 		html += '<span class="aya" rel="%s">%s «%d»</span> ' % (aya, text, a)
-		tokens[aya] = text.replace('ة','ه').replace('ؤ','و').replace('ّ', '').split(' ')
+		tokens[aya] = text.split(' ')
 		stems[aya] = list(map(isri.stem, tokens[aya]))
 
 	return html, tokens, stems

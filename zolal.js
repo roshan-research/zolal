@@ -37,6 +37,12 @@ var tafsirDb = {
 				localStorage.clear();
 				next();
 			}
+		}, {
+			version: 3,
+			migrate: function (transaction, next) {
+				localStorage.clear();
+				next();
+			}
 		}
 	]
 };
@@ -683,7 +689,7 @@ var DetailView = Backbone.View.extend({
 		this.$el.find('#aya').html(ayaView.render().el);
 
 		if (variables.lang == 'fa')
-			this.$el.find('#translation').text(this.aya.get('trans'));
+			this.$el.find('#translation').text(this.aya.get('fa'));
 		else
 			this.$el.find('#translation').empty();
 	},

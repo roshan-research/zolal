@@ -1,7 +1,7 @@
 
 import json
 from path import path
-from quran import read_quran, read_translation, read_lines
+from quran import read_quran, read_simple, read_translation, read_lines
 from almizan import read_tafsir, section_ayas, resolve_footnotes, refine_section, resolve_phrases
 
 
@@ -13,6 +13,7 @@ if __name__ == '__main__':
 
 	# read quran data
 	ayas, suras = read_quran(open(data / 'quran.txt'))
+	read_simple(open(data / 'quran-simple.txt'), ayas)
 	read_translation(open(data / 'quran-translation.txt'), ayas)
 	pages = read_lines(open(data / 'quran-lines.txt'), ayas)
 

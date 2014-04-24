@@ -27,13 +27,22 @@ def read_quran(quran):
 	return ayas, suras
 
 
+def read_simple(simple, ayas):
+	for line in simple:
+		line = line.strip().split('|')
+		if len(line) != 3 or line[1] == '0':
+			continue
+
+		ayas['%s_%s' % (line[0], line[1])]['raw'] = line[2]
+
+
 def read_translation(translation, ayas):
 	for line in translation:
 		line = line.strip().split('|')
 		if len(line) != 3:
 			continue
 
-		ayas['%s_%s' % (line[0], line[1])]['trans'] = line[2]
+		ayas['%s_%s' % (line[0], line[1])]['fa'] = line[2]
 
 
 def read_lines(lines, ayas):
@@ -63,6 +72,6 @@ def read_lines(lines, ayas):
 
 
 def simple_aya(aya):
-	aya = re.sub('[۞۩' + 'ۖۗۚۛۙۘۢ' + 'ًٌٍَُِّْٓ' + 'ٰۥۦ' + ']', '', aya)
-	aya = aya.replace('ي', 'ی').replace('ك', 'ک').replace('ٱ', 'ا').replace('ٔ', 'ئ').replace('یٰ', 'ا').replace('ۧ', 'ی')
+	aya = re.sub('[ًٌٍَُِّْٰٓ]', '', aya)
+	aya = aya.replace('ي', 'ی').replace('ك', 'ک')
 	return aya
