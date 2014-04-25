@@ -337,7 +337,7 @@ var TafsirView = Backbone.View.extend({
 		}
 
 		// show loading element
-		if (!prepare && this.$el.children().length == 0)
+		if (!prepare)
 			this.$el.addClass('loading');
 
 		this.almizan.loadBayan(position.lang +'/'+ position.section, prepare ? null : $.proxy(this.renderBayan, this));
@@ -417,7 +417,7 @@ var AddressView = Backbone.View.extend({
 		} else if (position.mode == 'detail') {
 			this.$el.find('.detail .left').text(position.detail.aya +' سوره '+ quran_suras[position.detail.sura-1]);
 		} else if (position.mode == 'tafsir') {
-			this.$el.find('.tafsir .left').text('');
+			this.$el.find('.tafsir .left').text('المیزان');
 		}
 
 		this.$el.find('.front').removeClass('front');
