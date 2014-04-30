@@ -221,11 +221,6 @@ blockquote p,
   font-weight: bold;
   cursor: pointer;
 }
-.tafsir-text h1,
-.tafsir-text h2,
-.tafsir-text p {
-  text-shadow: 0 1px #ccc;
-}
 .tafsir-text .active {
   -webkit-animation: TAFSIR-HIGHLIGHT 1s ease;
   -moz-animation: TAFSIR-HIGHLIGHT 1s ease;
