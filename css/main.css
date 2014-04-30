@@ -106,7 +106,7 @@ blockquote p,
 }
 #quran #page:before {
   content: "";
-  background: #031634;
+  background: #036564;
   position: absolute;
   color: #e8ddcb;
   height: inherit;
@@ -114,7 +114,9 @@ blockquote p,
   left: -2px;
   transition: width .2s ease, left .3s ease;
 }
-#quran #page:hover:before {
+#quran #page:hover:before,
+#quran #page.is-dragging:before,
+#quran #page.active:before {
   content: attr(rel);
   text-align: center;
   width: 60px;
@@ -475,6 +477,7 @@ body {
 @media (max-width: 768px) {
   #wrap {
     overflow: hidden;
+    border: none;
   }
   #header {
     margin: 0;
@@ -485,6 +488,14 @@ body {
   }
   #views {
     height: calc(100% - 40px);
+  }
+  #quran .page div.sura {
+    margin-right: -10px;
+    margin-left: -10px;
+  }
+  #quran #page.is-dragging:before,
+  #quran #page.active:before {
+    left: 0;
   }
 }
 @media (min-width: 480px) and (max-width: 768px) {

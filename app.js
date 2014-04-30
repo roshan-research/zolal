@@ -60,8 +60,12 @@ $('select#language').val(variables.lang).change(function() {
 $(document).ready(function() {
 	$("#views").swipe({
 		tap: function(e) {
-			if (e.type != 'mouseup')
+			if (e.type != 'mouseup') {
 				$(e.target).click();
+
+				if (e.target.id == 'page')
+					$(e.target).toggleClass('active');
+			}
 		},
 		swipeLeft: function() {
 			app.$el.find('.front').find('.glyphicon-chevron-right').click();

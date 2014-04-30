@@ -114,7 +114,7 @@ body, blockquote p, .tooltip-inner {
 	}
 	#page:before {
 		content: "";
-		background: @color5;
+		background: @color3;
 		position: absolute;
 		color: @color1;
 		height: inherit;
@@ -122,7 +122,7 @@ body, blockquote p, .tooltip-inner {
 		left: -2px;
 		transition: width .2s ease, left .3s ease;
 	}
-	#page:hover:before {
+	#page:hover:before, #page.is-dragging:before, #page.active:before {
 		content: attr(rel);
 		text-align: center;
 		width: 60px;
@@ -520,6 +520,7 @@ body {
 @media (max-width: 768px) {
 	#wrap {
 		overflow: hidden;
+		border: none;
 	}
 	#header {
 		margin: 0;
@@ -530,6 +531,15 @@ body {
 	}
 	#views {
 		height: calc(~"100% - 40px");
+	}
+	#quran {
+		.page div.sura {
+			margin-right: -10px;
+			margin-left: -10px;
+		}
+		#page.is-dragging:before, #page.active:before {
+			left: 0;
+		}
 	}
 }
 
