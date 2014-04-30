@@ -62,6 +62,7 @@ var Aya = Backbone.Model.extend({
 
 var Quran = Backbone.Collection.extend({
 	model: Aya,
+	localStorage: new Backbone.LocalStorage('Quran'),
 	loadPage: function(page, callback) {
 		var collection = this;
 		ayas = quran_pages[page];

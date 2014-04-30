@@ -19,8 +19,8 @@ if (android_app) {
 }
 
 
-// app init
-$(document).ready(function() {
+// app initialization
+var initApp = function() {
 	app = new AppView();
 	app.router = new AddressRouter();
 	Backbone.history.start();
@@ -33,14 +33,17 @@ $(document).ready(function() {
 		$('.store-hide').hide();
 		$('#download-tafsir').click(download_tafsir);
 
-		if (!Boolean(localStorage.Quran) || localStorage.Quran.split(',').length < 6230) {
+		if (!localStorage.Quran || localStorage.Quran.split(',').length < 6230)
 			download_quran();
-		}
 	}
 
+	$('#views').removeClass('loading');
 	$(window).resize();
 	track('Zolal');
-});
+}
+
+
+// window
 $(window).resize(function() {
 	$('.twitter-typeahead .tt-dropdown-menu').css('max-height', $('#views').height());
 });
@@ -57,23 +60,21 @@ $('select#language').val(variables.lang).change(function() {
 
 
 // gestures
-$(document).ready(function() {
-	$("#views").swipe({
-		tap: function(e) {
-			if (e.type != 'mouseup') {
-				$(e.target).click();
+$("#views").swipe({
+	tap: function(e) {
+		if (e.type != 'mouseup') {
+			$(e.target).click();
 
-				if (e.target.id == 'page')
-					$(e.target).toggleClass('active');
-			}
-		},
-		swipeLeft: function() {
-			app.$el.find('.front').find('.glyphicon-chevron-right').click();
-		},
-		swipeRight: function() {
-			app.$el.find('.front').find('.glyphicon-chevron-left').click();
+			if (e.target.id == 'page')
+				$(e.target).toggleClass('active');
 		}
-	});
+	},
+	swipeLeft: function() {
+		app.$el.find('.front').find('.glyphicon-chevron-right').click();
+	},
+	swipeRight: function() {
+		app.$el.find('.front').find('.glyphicon-chevron-left').click();
+	}
 });
 
 
@@ -165,5 +166,25 @@ var show_tafsir_stats = function() {
 			})
 			tafsir_progress(100 * sections.length / almizan_sections.length);
 		}
+	});
+}
+
+
+// main
+if (!android_app || localStorage.Quran)
+	initApp();
+else {
+	// read quran.dat before app init
+	$.get('quran.dat', function(data) {
+		var ids = [];
+		data.split('\n').forEach(function(aya) {
+			if (!aya) return;
+			id = aya.substr(aya.indexOf('id') + 6).slice(0, -2);
+			localStorage['Quran-'+ id] = aya;
+			ids.push(id);
+		});
+		localStorage.Quran = ids.join(',');
+
+		initApp();
 	});
 }

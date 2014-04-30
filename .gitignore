@@ -5,3 +5,4 @@ utils/deploy/zolal.js
 *.exe
 *.pyc
 *.zip
+*.dat

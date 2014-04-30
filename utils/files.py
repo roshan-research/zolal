@@ -18,10 +18,12 @@ if __name__ == '__main__':
 	pages = read_lines(open(data / 'quran-lines.txt'), ayas)
 
 	# write quran pages
+	quran_file = open('../quran.dat', 'w')
 	for page, ids in pages.items():
 		page_file = open(files / 'quran' / ('p%d' % page), 'w')
-		for id in ids:
-			print(json.dumps(ayas[id], ensure_ascii=False), file=page_file)
+		page = '\n'.join([json.dumps(ayas[id], ensure_ascii=False) for id in ids])
+		print(page, file=page_file)
+		print(page, file=quran_file)
 
 	# almizan
 	almizan_sections = []
