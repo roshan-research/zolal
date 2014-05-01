@@ -774,7 +774,7 @@ var pageToOffset = function(page) {
 // track
 var trackedData;
 var track = function(title, data) {
-	if (data != trackedData)
+	if ('mixpanel' in window && data != trackedData)
 		mixpanel.track(title, data);
 	trackedData = data;
 }

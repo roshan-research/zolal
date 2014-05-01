@@ -21,6 +21,8 @@ if (android_app) {
 
 // app initialization
 var initApp = function() {
+	$('#views').removeClass('loading');
+
 	app = new AppView();
 	app.router = new AddressRouter();
 	Backbone.history.start();
@@ -37,7 +39,6 @@ var initApp = function() {
 			download_quran();
 	}
 
-	$('#views').removeClass('loading');
 	$(window).resize();
 	track('Zolal');
 }
