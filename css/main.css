@@ -306,6 +306,9 @@ body {
   float: left;
   width: 50%;
 }
+#header #search {
+  direction: rtl;
+}
 .header {
   height: 40px;
   line-height: 32px;
@@ -360,7 +363,13 @@ body {
 }
 .twitter-typeahead .tt-suggestion p {
   margin-bottom: 2px;
+  text-align: justify;
+}
+.twitter-typeahead .tt-dataset-sura p {
   padding-right: calc(50% + 7px);
+}
+.twitter-typeahead .tt-suggestion b {
+  font-size: 85%;
 }
 #menu {
   overflow-y: hidden;

@@ -404,6 +404,46 @@ var AddressView = Backbone.View.extend({
 		sura_select.bind('typeahead:closed', function() {
 			app.address.render();
 		});
+
+		// search input
+		var search_input = this.$el.find('#search');
+		var ayaTokens = function(text) {
+			text = text.trim().replace('أ', 'ا').replace('إ', 'ا').replace('ؤ', 'و').replace('ة', 'ه');
+			return text.split(' ');
+		}
+
+		quran = new Quran();
+		quran.fetch();
+
+		this.aya_items = new Bloodhound({
+			local: quran.map(function(aya) { return {text: aya.get('raw'), id: aya.get('id')}; }),
+			datumTokenizer: function(d) { return ayaTokens(d.text); },
+			queryTokenizer: ayaTokens,
+			limit: 20
+		});
+
+		search_input.typeahead({hint: false, autoselect: true, minLength: 3}, {
+			name: 'aya',
+			displayKey: 'text',
+			source: this.aya_items.ttAdapter(),
+			templates: {
+				suggestion: function(aya) {
+					parts = aya.id.split('_');
+					result = searchResult(aya.text, ayaTokens(aya.text), ayaTokens(search_input.val()));
+					return '<p>'+ result +'</p>'; // '<i>'+ quran_suras[parts[0]-1] +'، '+ parts[1] +'</i>';
+				}
+			}
+		});
+
+		search_input.bind('typeahead:selected', function(t, selected, name) {
+			if (name == 'aya') {
+				id = selected.id;
+				app.router.navigate('quran/'+ id, {trigger: true});
+			}
+		});
+		search_input.bind('typeahead:closed', function() {
+			app.address.render();
+		});
 	},
 	events: {
 		'click .glyphicon': 'controlClick',
@@ -460,6 +500,12 @@ var AddressView = Backbone.View.extend({
 	tafsirScroll: function(args) {
 		if (args['volume'] && args['page'])
 			this.$el.find('.tafsir .left').text('المیزان، ج'+ args['volume'] +' ص'+ args['page']);
+	},
+	showSearch: function() {
+		this.aya_items.initialize();
+		this.$el.find('.front').removeClass('front');
+		this.$el.find('.search').addClass('front');
+		this.$el.find('#search').val('').focus();
 	}
 });
 
@@ -485,6 +531,7 @@ var AppView = Backbone.View.extend({
 		this.address.on('show-tafsir', this.showTafsir, this);
 		this.address.on('show-quran', this.showQuran, this);
 		this.address.on('menu', this.showMenu, this);
+		this.address.on('search', this.address.showSearch, this.address);
 		this.address.on('next-aya', this.nextAyaDetail, this);
 		this.address.on('prev-aya', this.prevAyaDetail, this);
 
@@ -793,3 +840,54 @@ _.each(almizan_sections, function(section) {
 	for (i = parts[1]; i <= parts[2]; i++)
 		almizan_ayas[parts[0]+'_'+i] = section;
 });
+
+
+// aya search
+var searchResult = function(resultText, resultTokens, queryTokens) {
+	words = resultText.split(' ');
+
+	// match query and result
+	matched = [];
+	for (r in resultTokens)
+		for (q in queryTokens)
+			if (resultTokens[r] == queryTokens[q] || (resultTokens[r].substr(0, queryTokens[q].length) == queryTokens[q])) {
+				matched.push(Number(r));
+				break;
+			}
+
+	// select surrounding words
+	selection = []; queue = matched.slice(); chars = 0;
+	while(chars < searchResultChars && queue.length) {
+		word = queue.shift();
+		if (selection.indexOf(word) >= 0)
+			continue;
+
+		if (word > 0)
+			queue.push(word-1);
+		if (word < words.length-1)
+			queue.push(word+1);
+		selection.push(word);
+		chars += words[word].length;
+	}
+
+	// bold matched words
+	for (m in matched)
+		words[matched[m]] = '<b>'+ words[matched[m]] +'</b>';
+
+	// result composition
+	result = [];
+	selection.sort(function(a, b) { return a - b; });
+
+	var lastW = -1;
+	selection.forEach(function(w) {
+		if (w != lastW+1)
+			result += ' ...';
+		result += ' '+ words[w];
+		lastW = w;
+	});
+
+	if (lastW != selection.length-1)
+		result += ' ...';
+
+	return result.trim();
+}

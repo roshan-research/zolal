@@ -4,6 +4,7 @@ var store = false;
 var server = 'http://zolal-files.ap01.aws.af.cm/';
 var chrome_app = 'chrome' in window && chrome.app.isInstalled;
 var android_app = Boolean(screen.lockOrientation);
+var searchResultChars = android_app ? 25 : 50;
 
 
 // apps
