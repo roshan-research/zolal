@@ -412,11 +412,8 @@ var AddressView = Backbone.View.extend({
 			return text.split(' ');
 		}
 
-		quran = new Quran();
-		quran.fetch();
-
 		this.aya_items = new Bloodhound({
-			local: quran.map(function(aya) { return {text: aya.get('raw'), id: aya.get('id')}; }),
+			local: [],
 			datumTokenizer: function(d) { return ayaTokens(d.text); },
 			queryTokenizer: ayaTokens,
 			limit: 20
@@ -502,10 +499,25 @@ var AddressView = Backbone.View.extend({
 			this.$el.find('.tafsir .left').text('المیزان، ج'+ args['volume'] +' ص'+ args['page']);
 	},
 	showSearch: function() {
-		this.aya_items.initialize();
-		this.$el.find('.front').removeClass('front');
-		this.$el.find('.search').addClass('front');
-		this.$el.find('#search').val('').focus();
+		var address = this;
+
+		var showSearchInput = function() {
+			address.$el.find('.front').removeClass('front');
+			address.$el.find('.search').addClass('front');
+			address.$el.find('#search').val('').focus();
+		}
+
+		if (address.aya_items.local.length)
+			showSearchInput();
+		else {
+			setTimeout(function() {
+				var quran = new Quran();
+				quran.fetch().done(function() {
+					address.aya_items.local = quran.map(function(aya) { return {text: aya.get('raw'), id: aya.get('id')}; });
+					address.aya_items.initialize().done(showSearchInput);
+				});
+			}, 1);
+		}
 	}
 });
 
