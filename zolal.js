@@ -322,7 +322,7 @@ var TafsirView = Backbone.View.extend({
 		}
 
 		// footnote
-		this.$el.find('span.footnote').tooltip({html: true, placement: 'auto'});
+		this.$el.find('span.footnote').tooltip({html: true, placement: 'auto', trigger: 'click hover focus'});
 		this.checkScroll();
 	},
 	loadSection: function() {
@@ -357,6 +357,9 @@ var TafsirView = Backbone.View.extend({
 			parts = current_page.split(',');
 			this.trigger('tafsir-scroll', {'volume': parts[0], 'page': parts[1]})
 		}
+
+		// remvoe active footnotes
+		this.$el.find('.tooltip').remove();
 	}
 });
 
