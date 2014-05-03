@@ -150,8 +150,16 @@ var show_tafsir_stats = function() {
 }
 
 var download_quran = function() {
-	if (!localStorage.Quran || localStorage.Quran.split(',').length < 6230)
-		return $.get(server +'quran/all', parse_quran)
+	if (!localStorage.Quran || localStorage.Quran.split(',').length < 6230) {
+		request = $.get(server +'quran/all', parse_quran);
+
+		if (!android_app) {
+			$('#search').addClass('loading');
+			request.then(function() { $('#search').removeClass('loading'); });
+		}
+
+		return request;
+	}
 	return $.Deferred().resolve();
 }
 

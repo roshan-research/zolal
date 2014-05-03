@@ -510,16 +510,14 @@ var AddressView = Backbone.View.extend({
 
 		// init source
 		var address = this;
-		address.$el.find('#search').addClass('loading');
 		download_quran().done(function() {
-			var quran = new Quran();
-			quran.fetch().done(function() {
-				setTimeout(function() {
+			setTimeout(function() {
+				var quran = new Quran();
+				quran.fetch().done(function() {
 					address.aya_items.local = quran.map(function(aya) { return {text: aya.get('raw'), id: aya.get('id')}; });
 					address.aya_items.initialize();
-					address.$el.find('#search').removeClass('loading');
-				}, 1);
-			});
+				});
+			}, 10);
 		});
 	}
 });
