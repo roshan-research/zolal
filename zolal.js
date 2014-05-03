@@ -370,7 +370,7 @@ var AddressView = Backbone.View.extend({
 
 		// sura selector
 		var suraTokens = function(name) {
-			name = name.replace('ي', 'ی').replace('ك', 'ک').replace('أ', 'ا').replace('إ', 'ا').replace('ؤ', 'و').replace('ة', 'ه');
+			name = normalize(name);
 
 			if (name[0] == '‌')
 				name = name.substr(1);
@@ -411,7 +411,7 @@ var AddressView = Backbone.View.extend({
 		// search input
 		var search_input = this.$el.find('#search');
 		var ayaTokens = function(text) {
-			text = text.trim().replace('أ', 'ا').replace('إ', 'ا').replace('ؤ', 'و').replace('ة', 'ه');
+			text = normalize(text.trim());
 			return text.split(' ');
 		}
 
@@ -778,6 +778,11 @@ var renumchars = {'۰': '0', '۱': '1', '۲': '2', '۳': '3', '۴': '4', '۵': '
 var rerefine = function(str) {
 	return String(str).replace(/[۰-۹]/g, function(c) { return renumchars[c]; });
 };
+var normalchars = {'أ': 'ا', 'إ': 'ا', 'آ': 'ا', 'ؤ': 'و', 'ة': 'ه', 'ي': 'ی', 'ك': 'ک'};
+var normalize = function(str) {
+	return String(str).replace(/أإآؤةيك/g, function(c) { return normalchars[c]; });
+};
+
 
 var sectionToAddress = function(section) {
 	tmp = section.replace('-', '_');
