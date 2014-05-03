@@ -202,7 +202,6 @@ var QuranView = Backbone.View.extend({
 		// update address
 		if (this.position.aya == '')
 			this.position.sura = Number(quran_pages[this.position.page][0].split('_')[0]);
-		this.trigger('updateAddress');
 
 		// prepare pages
 		this.loadPage(this.position.page-1);
@@ -280,7 +279,8 @@ var QuranView = Backbone.View.extend({
 			id = this.position.sura +'_'+ this.position.aya;
 			aya = this.collection.get(id);
 			active.removeClass('active');
-			this.$el.find('.aya-text[rel='+ id +']').addClass('active');
+			elm = this.$el.find('.aya-text[rel='+ id +']').addClass('active');
+			elm.parent().parent().scrollTop(elm.offset().top);
 		} else
 			active.removeClass('active');
 
@@ -473,7 +473,7 @@ var AddressView = Backbone.View.extend({
 				title = 'صفحه '+ refine(position.quran.page);
 		} else if (position.mode == 'tafsir') {
 			parts = sectionToAddress(position.tafsir.section);
-			title = 'تفسیر سوره '+ quran_suras[parts[0]] +'، آیات '+ refine(String(parts[1])) +' تا '+ refine(String(parts[2]));
+			title = 'تفسیر سوره '+ quran_suras[parts[0]-1] +'، آیات '+ refine(String(parts[1])) +' تا '+ refine(String(parts[2]));
 		}
 		$(document).attr('title', 'زلال' +' | '+ title);
 
