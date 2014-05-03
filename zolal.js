@@ -778,7 +778,7 @@ var rerefine = function(str) {
 };
 var normalchars = {'أ': 'ا', 'إ': 'ا', 'آ': 'ا', 'ؤ': 'و', 'ة': 'ه', 'ي': 'ی', 'ك': 'ک'};
 var normalize = function(str) {
-	return String(str).replace(/أإآؤةيك/g, function(c) { return normalchars[c]; });
+	return String(str).replace(/[أإآؤةيك]/g, function(c) { return normalchars[c]; });
 };
 
 
