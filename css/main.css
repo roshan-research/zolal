@@ -311,9 +311,8 @@ body {
   direction: rtl;
 }
 #header #search.loading {
-  background-image: url(../img/loading-dark.gif);
-  background-position-x: 10px;
-  background-position-y: center;
+  background: url(../img/loading-dark.gif) no-repeat 10px center;
+  background-color: #031634;
 }
 .header {
   height: 40px;
