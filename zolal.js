@@ -502,25 +502,23 @@ var AddressView = Backbone.View.extend({
 			this.$el.find('.tafsir .left').text('المیزان، ج'+ args['volume'] +' ص'+ args['page']);
 	},
 	showSearch: function() {
+		this.$el.find('.front').removeClass('front');
+		this.$el.find('.search').addClass('front');
+		this.$el.find('#search').val('').focus();
+		if (this.aya_items.local.length)
+			return;
+
+		// init source
 		var address = this;
-
-		var showSearchInput = function() {
-			address.$el.find('.front').removeClass('front');
-			address.$el.find('.search').addClass('front');
-			address.$el.find('#search').val('').focus();
-		}
-
-		if (address.aya_items.local.length)
-			showSearchInput();
-		else {
-			setTimeout(function() {
+		setTimeout(function() {
+			download_quran().done(function() {
 				var quran = new Quran();
 				quran.fetch().done(function() {
 					address.aya_items.local = quran.map(function(aya) { return {text: aya.get('raw'), id: aya.get('id')}; });
-					address.aya_items.initialize().done(showSearchInput);
+					address.aya_items.initialize();
 				});
-			}, 1);
-		}
+			});
+		}, 1);
 	}
 });
 

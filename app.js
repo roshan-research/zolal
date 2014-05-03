@@ -35,10 +35,8 @@ var initApp = function() {
 		$('.store-display').show();
 		$('.store-hide').hide();
 		$('#download-tafsir').click(download_tafsir);
-
-		if (!localStorage.Quran || localStorage.Quran.split(',').length < 6230)
-			download_quran();
 	}
+	download_quran();
 
 	$(window).resize();
 	track('Zolal');
@@ -107,26 +105,6 @@ var requestUrls = function(urls, index, isStored, storeData, progress) {
 	});
 };
 
-var download_quran = function() {
-	var storeData = function(url, data) {
-		_.each(data.split('\n'), function(item) {
-			if (item) {
-				item = $.parseJSON(item);
-				aya = new Aya(item);
-				aya.save();
-			}
-		});
-	}
-
-	var isStored = function(url, success, error) {
-		aya = new Aya({id: quran_pages[Number(url.substr(7))][0]});
-		aya.fetch({success: success, error: error});
-	}
-
-	urls = _.map(quran_pages, function(ayas, page) { return 'quran/p'+ page; });
-	requestUrls(urls, 0, isStored, storeData, false);
-};
-
 var tafsir_progress = function(percent) {
 	if (percent == 100) {
 		$('#download-state').hide();
@@ -171,6 +149,23 @@ var show_tafsir_stats = function() {
 	});
 }
 
+var download_quran = function() {
+	if (!localStorage.Quran || localStorage.Quran.split(',').length < 6230)
+		return $.get(server +'quran/all', parse_quran)
+	return $.Deferred().resolve();
+}
+
+var parse_quran = function(data) {
+	var ids = [];
+	data.split('\n').forEach(function(aya) {
+		if (!aya) return;
+		id = aya.substr(aya.indexOf('id') + 6).slice(0, -2);
+		localStorage['Quran-'+ id] = aya;
+		ids.push(id);
+	});
+	localStorage.Quran = ids.join(',');
+};
+
 
 // main
 if (!android_app || localStorage.Quran)
@@ -178,15 +173,7 @@ if (!android_app || localStorage.Quran)
 else {
 	// read quran.dat before app init
 	$.get('quran.dat', function(data) {
-		var ids = [];
-		data.split('\n').forEach(function(aya) {
-			if (!aya) return;
-			id = aya.substr(aya.indexOf('id') + 6).slice(0, -2);
-			localStorage['Quran-'+ id] = aya;
-			ids.push(id);
-		});
-		localStorage.Quran = ids.join(',');
-
+		parse_quran(data);
 		initApp();
 	});
 }
