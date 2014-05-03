@@ -310,6 +310,11 @@ body {
 #header #search {
   direction: rtl;
 }
+#header #search.loading {
+  background-image: url(../img/loading-dark.gif);
+  background-position-x: 10px;
+  background-position-y: center;
+}
 .header {
   height: 40px;
   line-height: 32px;

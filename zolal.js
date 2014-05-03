@@ -510,15 +510,17 @@ var AddressView = Backbone.View.extend({
 
 		// init source
 		var address = this;
-		setTimeout(function() {
-			download_quran().done(function() {
-				var quran = new Quran();
-				quran.fetch().done(function() {
+		address.$el.find('#search').addClass('loading');
+		download_quran().done(function() {
+			var quran = new Quran();
+			quran.fetch().done(function() {
+				setTimeout(function() {
 					address.aya_items.local = quran.map(function(aya) { return {text: aya.get('raw'), id: aya.get('id')}; });
 					address.aya_items.initialize();
-				});
+					address.$el.find('#search').removeClass('loading');
+				}, 1);
 			});
-		}, 1);
+		});
 	}
 });
 
