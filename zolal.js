@@ -517,7 +517,7 @@ var AddressView = Backbone.View.extend({
 					address.aya_items.local = quran.map(function(aya) { return {text: aya.get('raw'), id: aya.get('id')}; });
 					address.aya_items.initialize();
 				});
-			}, 10);
+			}, 20);
 		});
 	}
 });
