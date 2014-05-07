@@ -20,13 +20,20 @@ if (android_app) {
 
 	// back button
 	document.addEventListener('backbutton', function(e) {
-		if ($(':focus')[0].tagName == 'INPUT') {
-			input = $(':focus');
-			input.typeahead('close');
-			input.blur();
+		focused = $(':focus');
+		if (focused.length && focused[0].tagName == 'INPUT') {
+			focused.blur().typeahead('close');
 			app.address.render();
 			e.preventDefault();
+			return;
 		}
+
+		if ($('.modal').is(':visible')) {
+			$('.modal').modal('hide');
+			return;
+		}
+
+		Backbone.history.history.back();
 	}, false);
 }
 
@@ -87,6 +94,15 @@ $("#views").swipe({
 		app.$el.find('.front').find('.glyphicon-chevron-left').click();
 	}
 });
+
+
+// track
+var trackedData;
+var track = function(title, data) {
+	if ('mixpanel' in window && data != trackedData)
+		mixpanel.track(title, data);
+	trackedData = data;
+}
 
 
 // download

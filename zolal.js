@@ -841,15 +841,6 @@ var pageToOffset = function(page) {
 }
 
 
-// track
-var trackedData;
-var track = function(title, data) {
-	if ('mixpanel' in window && data != trackedData)
-		mixpanel.track(title, data);
-	trackedData = data;
-}
-
-
 // aya inverted index
 var quran_ayas = {}, sura_ayas = {}, almizan_ayas = {};
 _.each(quran_pages, function(page, p) {
