@@ -74,7 +74,35 @@ body, blockquote p, .tooltip-inner {
 }
 
 .loading {
-	background: url(../img/loading.gif) no-repeat center center;
+	position: relative;
+
+	&:before {
+		font-family: 'Glyphicons Halflings';
+		content: "\e031";
+		position: absolute;
+		text-align: center;
+		cursor: pointer;
+		font-size: 20px;
+		line-height: 1;
+		height: 20px;
+		width: 20px;
+		top: calc(~"50% - 10px");
+		left: calc(~"50% - 10px");
+		z-index: 10;
+		.animation(ICON-SPIN 2s infinite linear);
+	}
+
+	&.failed {
+		color: red;
+
+		&:before {
+			.animation(none);
+		}
+	}
+
+	&.twitter-typeahead:before {
+		left: 15px;
+	}
 }
 
 #quran {
@@ -341,10 +369,6 @@ body {
 	#search {
 		direction: rtl;
 	}
-	#search.loading {
-		background: url(../img/loading-dark.gif) no-repeat 10px center;
-		background-color: @color5;
-	}
 }
 .header {
 	height: 40px;
@@ -502,6 +526,15 @@ body {
 	0% { background: none; }
 	5% { background: darken(@color1, 5%); }
 	100% { background: none; }
+}
+
+@keyframes ICON-SPIN {
+	from { transform: rotate(0deg); }
+	to { transform: rotate(360deg); }
+}
+@-webkit-keyframes ICON-SPIN {
+	from { -webkit-transform: rotate(0deg); }
+	to { -webkit-transform: rotate(360deg); }
 }
 
 

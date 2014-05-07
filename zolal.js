@@ -575,7 +575,12 @@ var AppView = Backbone.View.extend({
 		}
 	},
 	connectionError: function() {
-		$('body').find('.loading').removeClass('loading');
+		var refresh_app = function() {
+			$('.loading.failed').removeClass('failed').unbind('click', refresh_app);
+			app.render();
+		}
+
+		$('.loading').addClass('failed').bind('click', refresh_app);
 	},
 	showTafsir: function() {
 		tafsir = quranToTafsir(this.position.quran);

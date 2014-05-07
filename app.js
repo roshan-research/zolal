@@ -18,6 +18,7 @@ if (android_app) {
 	document.addEventListener('menubutton', function() { app.address.trigger('menu'); }, false);
 	$('[rel=menu]').hide();
 
+	// back button
 	document.addEventListener('backbutton', function(e) {
 		if ($(':focus')[0].tagName == 'INPUT') {
 			input = $(':focus');
@@ -164,8 +165,8 @@ var download_quran = function() {
 		request = $.get(server +'quran/all', parse_quran);
 
 		if (!android_app) {
-			$('#search').addClass('loading');
-			request.then(function() { $('#search').removeClass('loading'); });
+			$('#search').parent().addClass('loading');
+			request.then(function() { $('#search').parent().removeClass('loading'); });
 		}
 
 		return request;
