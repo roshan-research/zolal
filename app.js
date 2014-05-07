@@ -17,6 +17,16 @@ if (android_app) {
 	// menu button
 	document.addEventListener('menubutton', function() { app.address.trigger('menu'); }, false);
 	$('[rel=menu]').hide();
+
+	document.addEventListener('backbutton', function(e) {
+		if ($(':focus')[0].tagName == 'INPUT') {
+			input = $(':focus');
+			input.typeahead('close');
+			input.blur();
+			app.address.render();
+			e.preventDefault();
+		}
+	}, false);
 }
 
 
