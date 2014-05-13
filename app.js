@@ -32,7 +32,12 @@ if (android_app) {
 			return;
 		}
 
+		var last_position = $.extend({}, app.position);
 		navigator.app.backHistory();
+		setTimeout(function() {
+			if (JSON.stringify(last_position) == JSON.stringify(app.position))
+				navigator.app.exitApp();
+		}, 20);
 	}, false);
 } else
 	$('[rel=menu]').show();
