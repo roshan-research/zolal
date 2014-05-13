@@ -160,7 +160,7 @@ var Almizan = Backbone.Collection.extend({
 
 // views
 var AyaView = Backbone.View.extend({
-	template: _.template('<span class="aya-text" rel="<%= sura %>_<%= aya %>"><span class="text"><%= html %></span> <span class="number"><%= aya %></span></span>'),
+	template: _.template('<span class="aya-text" rel="<%= sura %>_<%= aya %>"><span class="text"><%= html %></span> <span class="number"><%= aya %></span> </span>'),
 	render: function () {
 		data = this.model.toJSON();
 		text = data['text'];
@@ -235,7 +235,7 @@ var QuranView = Backbone.View.extend({
 					if (item.get('sura') != 1 && item.get('sura') != 9)
 						el.append('<div class="aya-text bism"><span class="text">بِسمِ اللَّهِ الرَّحمٰنِ الرَّحيمِ</span></div>');
 				}
-				el.append(ayaView.render().el, ' ');
+				el.append(ayaView.render().el);
 			}
 		});
 		this.updateSelectedAya();
