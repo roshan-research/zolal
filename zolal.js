@@ -269,6 +269,7 @@ var QuranView = Backbone.View.extend({
 	},
 	updateSelectedAya: function() {
 		active = this.$el.find('.active');
+		page = this.$el.find('.front');
 
 		if (this.position.aya != '') {
 			// don't update it
@@ -280,9 +281,16 @@ var QuranView = Backbone.View.extend({
 			aya = this.collection.get(id);
 			active.removeClass('active');
 			elm = this.$el.find('.aya-text[rel='+ id +']').addClass('active');
-			elm.parent().parent().scrollTop(elm.offset().top);
-		} else
+
+			// scroll page to top or bottom
+			if (elm.position().top < 0)
+				page.scrollTop(0);
+			else if (elm.position().top + elm.height() > page.height())
+				page.scrollTop(page.height());
+		} else {
 			active.removeClass('active');
+			page.scrollTop(0);
+		}
 
 		this.lastPosition = $.extend({}, this.position);
 	},
