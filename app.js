@@ -16,7 +16,6 @@ if (android_app) {
 
 	// menu button
 	document.addEventListener('menubutton', function() { app.address.trigger('menu'); }, false);
-	$('[rel=menu]').hide();
 
 	// back button
 	document.addEventListener('backbutton', function(e) {
@@ -33,9 +32,10 @@ if (android_app) {
 			return;
 		}
 
-		Backbone.history.history.back();
+		navigator.app.backHistory();
 	}, false);
-}
+} else
+	$('[rel=menu]').show();
 
 
 // app initialization

@@ -85,24 +85,27 @@ blockquote p,
   top: calc(50% - 10px);
   left: calc(50% - 10px);
   z-index: 10;
+  color: rgba(3, 22, 52, 0.2);
+}
+.loading.twitter-typeahead:before {
+  left: 15px;
+  color: inherit;
   -webkit-animation: ICON-SPIN 2s infinite linear;
   -moz-animation: ICON-SPIN 2s infinite linear;
   -ms-animation: ICON-SPIN 2s infinite linear;
   -o-animation: ICON-SPIN 2s infinite linear;
   animation: ICON-SPIN 2s infinite linear;
 }
-.loading.failed {
-  color: red;
-}
 .loading.failed:before {
+  color: #031634;
+}
+.loading.failed.twitter-typeahead:before {
   -webkit-animation: none;
   -moz-animation: none;
   -ms-animation: none;
   -o-animation: none;
   animation: none;
-}
-.loading.twitter-typeahead:before {
-  left: 15px;
+  color: inherit;
 }
 #quran {
   max-width: 600px;
@@ -341,6 +344,9 @@ body {
 }
 #header #search {
   direction: rtl;
+}
+#header [rel=menu] {
+  display: none;
 }
 .header {
   height: 40px;
