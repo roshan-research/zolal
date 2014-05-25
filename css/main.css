@@ -36,7 +36,6 @@ body {
 #wrap {
   height: 100%;
   position: relative;
-  overflow: hidden;
 }
 body,
 blockquote p,
