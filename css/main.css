@@ -159,8 +159,8 @@ blockquote p,
   left: -15px;
 }
 .aya-text {
-  line-height: 42px;
-  font-size: 24px;
+  line-height: 45px;
+  font-size: 25px;
 }
 .aya-text.active .text {
   background: #e0d1b9;
@@ -209,7 +209,6 @@ blockquote p,
 }
 #quran .page .aya-text {
   cursor: pointer;
-  word-spacing: -3px;
 }
 .tafsir-text {
   text-align: justify;

@@ -33,7 +33,11 @@ def read_simple(simple, ayas):
 		if len(line) != 3 or line[1] == '0':
 			continue
 
-		ayas['%s_%s' % (line[0], line[1])]['raw'] = line[2]
+		# refine text
+		text = line[2]
+		text = re.sub(r'(^| )أ ', r'\1أ', text)
+
+		ayas['%s_%s' % (line[0], line[1])]['raw'] = text
 
 
 def read_translation(translation, ayas):
