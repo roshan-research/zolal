@@ -89,23 +89,17 @@ body, blockquote p, .tooltip-inner {
 		top: calc(~"50% - 10px");
 		left: calc(~"50% - 10px");
 		z-index: 10;
-		color: fade(@color5, 20%);
+		color: @color5;
+		.animation(ICON-SPIN 2s infinite linear);
 	}
 
 	&.twitter-typeahead:before {
 		left: 15px;
 		color: inherit;
-		.animation(ICON-SPIN 2s infinite linear);
 	}
 
-	&.failed {
-		&:before {
-			color: @color5;
-		}
-		&.twitter-typeahead:before {
-			.animation(none);
-			color: inherit;
-		}
+	&.failed:before {
+		.animation(none);
 	}
 }
 

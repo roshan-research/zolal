@@ -85,27 +85,23 @@ blockquote p,
   top: calc(50% - 10px);
   left: calc(50% - 10px);
   z-index: 10;
-  color: rgba(3, 22, 52, 0.2);
-}
-.loading.twitter-typeahead:before {
-  left: 15px;
-  color: inherit;
+  color: #031634;
   -webkit-animation: ICON-SPIN 2s infinite linear;
   -moz-animation: ICON-SPIN 2s infinite linear;
   -ms-animation: ICON-SPIN 2s infinite linear;
   -o-animation: ICON-SPIN 2s infinite linear;
   animation: ICON-SPIN 2s infinite linear;
 }
-.loading.failed:before {
-  color: #031634;
+.loading.twitter-typeahead:before {
+  left: 15px;
+  color: inherit;
 }
-.loading.failed.twitter-typeahead:before {
+.loading.failed:before {
   -webkit-animation: none;
   -moz-animation: none;
   -ms-animation: none;
   -o-animation: none;
   animation: none;
-  color: inherit;
 }
 #quran {
   max-width: 600px;
