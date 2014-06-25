@@ -51,8 +51,26 @@ var initApp = function() {
 	app.router = new AddressRouter();
 	Backbone.history.start();
 
-	if (Backbone.history.getFragment() == '')
-		app.render();
+	// navigate to previous location
+	if (Backbone.history.getFragment() == '') {
+		address = '';
+
+		position = app.position;
+		if (position.mode == 'quran') {
+			if (position.quran.aya != '')
+				address = 'quran/'+ position.quran.sura +'_'+ position.quran.aya;
+			else
+				address = 'quran/p'+ position.quran.page;
+		} else if (position.mode == 'detail') {
+			address = 'detail/'+ position.detail.sura +'_'+ position.detail.aya;
+		} else if (position.mode == 'tafsir') {
+			address = 'almizan_' + position.tafsir.lang +'/'+ position.tafsir.aya;
+			if (position.tafsir.phrase)
+				address += '/'+ position.tafsir.phrase;
+		}
+
+		app.router.navigate(address, {trigger: true});
+	}
 
 	if (store) {
 		$('.store-display').show();
