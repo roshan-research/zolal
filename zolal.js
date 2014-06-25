@@ -476,14 +476,16 @@ var AddressView = Backbone.View.extend({
 		title = '';
 		if (position.mode == 'quran') {
 			if (position.quran.aya != '')
-				title = 'سوره '+ quran_suras[position.quran.sura-1] +'، آیه '+ refine(position.quran.aya);
+				title = 'آیه '+ refine(position.quran.aya) + ' سوره '+ quran_suras[position.quran.sura-1];
 			else
 				title = 'صفحه '+ refine(position.quran.page);
+		} else if (position.mode == 'detail') {
+			title = 'توضیح آیه '+ refine(position.detail.aya) + ' سوره '+ quran_suras[position.detail.sura-1];
 		} else if (position.mode == 'tafsir') {
 			parts = sectionToAddress(position.tafsir.section);
 			title = 'تفسیر سوره '+ quran_suras[parts[0]-1] +'، آیات '+ refine(String(parts[1])) +' تا '+ refine(String(parts[2]));
 		}
-		$(document).attr('title', 'زلال' +' | '+ title);
+		$(document).attr('title', title +' | زلال');
 
 		// store position
 		variables.position = this.position;
