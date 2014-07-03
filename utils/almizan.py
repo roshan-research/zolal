@@ -40,19 +40,32 @@ def resolve_footnotes(section):
 		content = section.find('.footnote-content[rel="%s"]' % footnote.attr('rel'))
 		if content:
 			content = pq(content[0])
-			footnote.attr('title', refine_note(content.html()))
+			footnote.attr('title', content.html())
 			content.remove()
 
-	for footnote in section.find('.footnote-content'):
-		footnote = pq(footnote)
+	for footnote in section.find('.footnote-content').items():
 		for rel in re.split(' +', re.sub(r'[^ \d]', ' ', footnote.attr('rel'))):
 			ref = section.find('.footnote:not([title])[rel="%s"]' % rel)
 			if ref:
-				pq(ref[0]).attr('title', refine_note(footnote.html()))
+				pq(ref[0]).attr('title', footnote.html())
 			# todo check ambigous multiple footnotes
 			# todo fix unresolved footnotes
 
 		footnote.remove()
+
+	# refine footnotes
+	for footnote in section.find('.footnote').items():
+		title = footnote.attr('title')
+		if title:
+			footnote.attr('title', refine_note(title))
+		else:
+			footnote.remove()
+
+
+number_map = str.maketrans('1234567890', '۱۲۳۴۵۶۷۸۹۰')
+
+def refine_numbers(text):
+	return text.translate(number_map)
 
 
 def refine_html(html):
@@ -98,7 +111,7 @@ def refine_note(text):
 	result = text
 	if result.startswith('-'):
 		result = result[1:]
-	return result.strip()
+	return refine_numbers(result.strip())
 
 
 def refine_translation(section):
@@ -109,7 +122,7 @@ def refine_translation(section):
 		# add aya number
 		aya = trans.attr('rel').split('_')[1]
 		if int(aya):
-			html = html + ' «%s»' % aya
+			html = html + ' «%s»' % refine_numbers(aya)
 		trans.html(html + ' ')
 
 

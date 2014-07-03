@@ -2,7 +2,7 @@
 import json
 from path import path
 from quran import read_quran, read_simple, read_translation, read_lines
-from almizan import read_tafsir, section_ayas, resolve_footnotes, refine_section, resolve_phrases
+from almizan import read_tafsir, section_ayas, refine_numbers, resolve_footnotes, refine_section, resolve_phrases
 
 
 data = path('data')
@@ -38,8 +38,14 @@ if __name__ == '__main__':
 			id, tokens, stems = '0', {}, {}
 		else:
 			html, tokens, stems = section_ayas(id, ayas)
-			ar_section.find('code.section').before('<p class="ayas">'+ html +'</p>')
-			fa_section.find('code.section').before('<p class="ayas">'+ html +'</p>')
+
+			# section range
+			sura, aya = id.split('_')
+			f, t = aya.split('-')[0], aya.split('-')[1]
+			ar_range = 'الآیات %s الى %s' % (f, t) if f != t else 'آیة %s' % f
+			fa_range = 'آیه‌های %s تا %s' % (f, t) if f != t else 'آیه %s' % f
+			ar_section.find('code.section').before(refine_numbers('<p class="ayas">سورة %s %s</p>' % (suras[int(sura)-1], ar_range)))
+			fa_section.find('code.section').before(refine_numbers('<p class="ayas">سوره %s %s</p>' % (suras[int(sura)-1], fa_range)))
 
 		resolve_footnotes(ar_section)
 		refine_section(ar_section)
