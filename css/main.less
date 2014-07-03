@@ -3,17 +3,17 @@
 @font-face {
 	font-family: QuranFont;
 	font-weight: normal;
-	src: url('../fonts/QuranFont.woff') format('woff'), url('../fonts/QuranFont.ttf') format('truetype');
+	src: url('../fonts/QuranFont.woff') format('woff');
 }
 @font-face {
 	font-family: AppFont;
 	font-weight: normal;
-	src: url('../fonts/AppFont.ttf') format('truetype');
+	src: url('../fonts/AppFont.woff') format('woff');
 }
 @font-face {
 	font-family: AppFont;
 	font-weight: bold;
-	src: url('../fonts/AppFontBd.ttf') format('truetype');
+	src: url('../fonts/AppFontBd.woff') format('woff');
 }
 
 /* bootstrap */
@@ -126,7 +126,7 @@ body, blockquote p, .tooltip-inner {
 
 	// page indicator
 	#page {
-		font-size: 20px;
+		font-size: 22px;
 		line-height: 46px;
 		cursor: pointer;
 		position: absolute;
@@ -180,10 +180,10 @@ body, blockquote p, .tooltip-inner {
 	.number {
 		font-family: AppFont;
 		font-weight: bold;
-		font-size: 55%;
+		font-size: 65%;
 		color: lighten(@color1, 10%);
 		background: @color2;
-		padding: 4px 5px 2px 4px;
+		padding: 3px 4px 1px;
 		border-radius: 50px;
 		min-width: 15px;
 		text-align: center;
@@ -249,6 +249,7 @@ body, blockquote p, .tooltip-inner {
 		float: right;
 		visibility: hidden;
 		padding: 0;
+		width: 0;
 	}
 	em {
 		font-style: normal;
@@ -259,13 +260,12 @@ body, blockquote p, .tooltip-inner {
 
 	}
 	span.footnote {
-		font-size: 70%;
 		display: inline-block;
 		vertical-align: middle;
 		line-height: 7px;
 		padding: 5px;
 		margin: -5px;
-		margin-bottom: 7px;
+		margin-bottom: 0px;
 		border-radius: 10px;
 		font-weight: bold;
 		cursor: pointer;

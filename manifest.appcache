@@ -16,8 +16,8 @@ js/typeahead.js
 js/meta.js
 css/bootstrap.css
 css/main.css
-fonts/AppFont.ttf
-fonts/AppFontBd.ttf
+fonts/AppFont.woff
+fonts/AppFontBd.woff
 fonts/QuranFont.woff
 fonts/glyphicons-halflings-regular.woff
 img/fav.png

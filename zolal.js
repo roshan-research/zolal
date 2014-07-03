@@ -160,12 +160,11 @@ var Almizan = Backbone.Collection.extend({
 
 // views
 var AyaView = Backbone.View.extend({
-	template: _.template('<span class="aya-text" rel="<%= sura %>_<%= aya %>"><span class="text"><%= html %></span> <span class="number"><%= aya %></span> </span>'),
+	template: _.template('<span class="aya-text" rel="<%= sura %>_<%= aya %>"><span class="text"><%= html %></span> <span class="number"><%= number %></span> </span>'),
 	render: function () {
 		data = this.model.toJSON();
-		text = data['text'];
-		text = text;//.replace(/َٰ/g, 'ٰ').replace(/[۪۫]/g, ''); // font refinement
-		data['html'] = text.replace(/[ ]*([ۖۗۚۛۙۘ])[ ]*/g, '<span class="mark">\$1</span> ');
+		data['number'] = refine(data['aya']);
+		data['html'] = data['text'].replace(/[ ]*([ۖۗۚۛۙۘ])[ ]*/g, '<span class="mark">\$1</span> ');
 		this.setElement(this.template(data));
 		return this;
 	},
@@ -191,9 +190,9 @@ var QuranView = Backbone.View.extend({
 		// page indicator
 		this.pageElement = new Draggabilly($('#page')[0], {axis: 'y', containment: true})
 			.on('dragMove', function(instance) {
-				instance.element.setAttribute('rel', offsetToPage(instance.position.y));
+				instance.element.setAttribute('rel', refine(offsetToPage(instance.position.y)));
 			}).on('dragEnd', function(instance) {
-				app.router.navigate('quran/p'+ instance.element.getAttribute('rel'), {trigger: true});
+				app.router.navigate('quran/p'+ rerefine(instance.element.getAttribute('rel')), {trigger: true});
 			});
 	},
 	render: function() {
@@ -221,7 +220,7 @@ var QuranView = Backbone.View.extend({
 			});
 
 		// page indicator
-		indicator = this.$el.find('#page').attr('rel', this.position.page);
+		indicator = this.$el.find('#page').attr('rel', refine(this.position.page));
 		indicator.css('top', pageToOffset(this.position.page));
 	},
 	renderPage: function(page) {
@@ -464,7 +463,7 @@ var AddressView = Backbone.View.extend({
 			page_sura = Number(quran_pages[position.quran.page][0].split('_')[0]);
 			this.$el.find('#sura').val(quran_suras[page_sura-1]);
 		} else if (position.mode == 'detail') {
-			this.$el.find('.detail .left').text(position.detail.aya +' سوره '+ quran_suras[position.detail.sura-1]);
+			this.$el.find('.detail .left').text(refine(position.detail.aya) +' سوره '+ quran_suras[position.detail.sura-1]);
 		} else if (position.mode == 'tafsir') {
 			this.$el.find('.tafsir .left').text('المیزان');
 		}
@@ -509,7 +508,7 @@ var AddressView = Backbone.View.extend({
 	},
 	tafsirScroll: function(args) {
 		if (args['volume'] && args['page'])
-			this.$el.find('.tafsir .left').text('المیزان، ج'+ args['volume'] +' ص'+ args['page']);
+			this.$el.find('.tafsir .left').text('المیزان، ج'+ refine(args['volume']) +' ص'+ refine(args['page']));
 	},
 	showSearch: function() {
 		this.$el.find('.front').removeClass('front');
