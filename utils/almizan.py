@@ -117,6 +117,7 @@ def refine_note(text):
 def refine_translation(section):
 	for trans in section.find('.trans').items():
 		html = trans.html()
+		if not html: continue
 		html = re.sub(r'[ -]*\(\d+\) *', '', str(html))
 
 		# add aya number
