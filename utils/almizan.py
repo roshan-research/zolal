@@ -165,7 +165,7 @@ def resolve_phrases(section, tokens, stems, book, id):
 			for match in reversed(list(iter)):
 				m = match.group()[1:-1]
 				rel = resolve_phrase(m, tokens, stems, book[-2:])
-				if rel != 'null':
+				if rel:
 					html = replace(match.start(), match.end(), html, '<em rel="{0}">{1}</em>'.format(rel, m))
 
 			section.html(html)
@@ -180,6 +180,8 @@ def resolve_phrases(section, tokens, stems, book, id):
 def resolve_phrase(text, tokens, stems, book):
 	rel = None
 	text  = text.strip().replace('ة','ه').replace('ؤ','و')
+	if len(text) < 3:
+		return None
 
 	#resolve aya tokens with or without Alif-Lam
 	for aya, token_list in tokens.items():

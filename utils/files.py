@@ -44,8 +44,8 @@ if __name__ == '__main__':
 			f, t = aya.split('-')[0], aya.split('-')[1]
 			ar_range = 'الآیات %s الى %s' % (f, t) if f != t else 'آیة %s' % f
 			fa_range = 'آیه‌های %s تا %s' % (f, t) if f != t else 'آیه %s' % f
-			ar_section.find('code.section').before(refine_numbers('<p class="ayas">سورة %s %s</p>' % (suras[int(sura)-1], ar_range)))
-			fa_section.find('code.section').before(refine_numbers('<p class="ayas">سوره %s %s</p>' % (suras[int(sura)-1], fa_range)))
+			ar_section.find('code.section').before('<h3 class="ayas">'+ refine_numbers('سورة %s %s' % (suras[int(sura)-1], ar_range)) +'</h3>')
+			fa_section.find('code.section').before('<h3 class="ayas">'+ refine_numbers('سوره %s %s' % (suras[int(sura)-1], fa_range)) +'</h3>')
 
 		resolve_footnotes(ar_section)
 		refine_section(ar_section)
