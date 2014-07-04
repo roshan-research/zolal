@@ -50,12 +50,16 @@ var tafsirDb = {
 
 // models
 var Aya = Backbone.Model.extend({
-	insertPhrase: function(phrase) {
-		key = phrase['lang'] +'_'+ phrase['words'];
-		if (!this.get('phrases') || !(key in this.get('phrases'))) {
-			item = {}; item[key] = phrase;
-			this.set('phrases', $.extend(item, this.get('phrases')));
+	insertDetail: function(detail) {
+		details = this.get('details');
+		if (!details) {
+			details = {};
+			this.set('details', details);
 		}
+
+		key = detail['html'].substr(0, 15);
+		if (!details[key])
+			details[key] = detail;
 	},
 	localStorage: new Backbone.LocalStorage('Quran')
 });
@@ -111,11 +115,20 @@ var Almizan = Backbone.Collection.extend({
 		this.loaded = [];
 	},
 	loadBayan: function(id, callback) {
+
+		// load ayas for inserting details after bayan load
+		parts = sectionToAddress(id.split('/')[1])
+		startPage = quran_ayas[parts[0] +'_'+ parts[1]];
+		endPage = quran_ayas[parts[0] +'_'+ parts[2]];
+		this.quran.loadPage(startPage);
+		if (startPage != endPage)
+			this.quran.loadPage(endPage);
+
 		var almizan = this;
 		var bayan = new Bayan({id: id});
 		bayan.fetch({
 			success: function (bayan) {
-				almizan.extractPhrases(bayan);
+				almizan.extractDetails(bayan);
 				if (callback) callback(bayan);
 			},
 			error: $.proxy(function (bayan) {
@@ -125,7 +138,7 @@ var Almizan = Backbone.Collection.extend({
 					success: function(item){
 						bayan = new Bayan({id: this.id, content: item});
 						bayan.save();
-						almizan.extractPhrases(bayan);
+						almizan.extractDetails(bayan);
 						if (callback) callback(bayan);
 					},
 					error: app.connectionError
@@ -133,15 +146,17 @@ var Almizan = Backbone.Collection.extend({
 			})
 		});
 	},
-	extractPhrases: function(bayan) {
-		if (this.loaded.indexOf(bayan.get('id')) < 0)
-			this.loaded.push(bayan.get('id'));
+	extractDetails: function(bayan) {
+		var id = bayan.get('id');
+		if (this.loaded.indexOf(id) < 0)
+			this.loaded.push(id);
 
-		var almizan = this;
+		var lang = id.split('/')[0];
+		var quran = this.quran;
+
 		$(bayan.get('content')).find('em[rel]').each(function() {
 			parts = $(this).attr('rel').split('_'); key = parts[1] +'_'+ parts[2];
-			aya = almizan.quran.get(key);
-			if (! aya) return;
+			aya = quran.get(key); if (!aya) return;
 
 			var page, head;
 			parent = $(this).parent();
@@ -153,7 +168,16 @@ var Almizan = Backbone.Collection.extend({
 				if (page && head)
 					return false;
 			});
-			aya.insertPhrase({words: parts[3], lang: parts[0], html: parent.html(), link: 'almizan_'+ parts[0] +'/'+ parts[1] +'_'+ parts[2] +'/'+ parts[3]});
+			aya.insertDetail({type: 'phrase', lang: lang, html: parent.html(), link: 'almizan_'+ lang +'/'+ parts[1] +'_'+ parts[2] +'/'+ parts[3], words: parts[3]});
+		});
+
+		var parts = sectionToAddress(id.split('/')[1]);
+		$(bayan.get('content')).find('.title').each(function() {
+			// todo: smart aya detection
+			for (i = parts[1]; i <= parts[2]; i++) {
+				aya = quran.get(parts[0] +'_'+ i); if (!aya) continue;
+				aya.insertDetail({type: 'title', lang: lang, html: $(this).html(), link: 'almizan_'+ id});
+			}
 		});
 	}
 });
@@ -745,37 +769,42 @@ var AddressRouter = Backbone.Router.extend({
 var DetailView = Backbone.View.extend({
 	el: $('#detail .content'),
 	render: function () {
-		id = this.position.sura +'_'+ this.position.aya;
-		this.quran.loadPage(quran_ayas[id], $.proxy(this.renderDetails, this));
+		this.$el.find('#sections').empty();
 
-		// phrases
-		this.$el.find('#phrases').empty();
+		id = this.position.sura +'_'+ this.position.aya;
+		this.quran.loadPage(quran_ayas[id], $.proxy(this.renderAya, this));
+
+		// details
 		tafsir = quranToTafsir(this.position);
 		bid = tafsir.lang +'/'+ tafsir.section;
 		if (this.almizan.loaded.indexOf(bid) >= 0)
-			this.renderPhrases();
+			this.renderDetails();
 		else
-			this.almizan.loadBayan(bid, $.proxy(this.renderPhrases, this));
+			this.almizan.loadBayan(bid, $.proxy(this.renderDetails, this));
 	},
-	renderDetails: function() {
+	renderAya: function() {
 		this.aya = this.quran.get(id);
 
+		// aya
 		ayaView = new AyaView({model: this.aya});
 		this.$el.find('#aya').html(ayaView.render().el);
 
+		// translation
 		if (variables.lang == 'fa')
 			this.$el.find('#translation').text(this.aya.get('fa'));
 		else
 			this.$el.find('#translation').empty();
 	},
-	renderPhrases: function() {
-		var words = this.aya.get('text').replace(/[ۖۗۚۛۙۘ]/g, '').split(' ');
-		var detail = this;
-		_.each(this.aya.get('phrases'), function (phrase) {
-			if (phrase['lang'] != variables.lang)
-				return;
-			start = Number(phrase['words'].split('-')[0]); end = Number(phrase['words'].split('-')[1]);
-			detail.$el.find('#phrases').append('<div class="phrase fill" rel="'+ phrase['lang'] +'_'+ phrase['words'] +'"><a href="#'+ phrase['link'] +'"><span class="aya-text fill"><span class="text">'+ words.slice(start-1, end).join(' ') +'</span></span></a>'+ phrase['html'] +'</div>');
+	renderDetails: function() {
+		var view = this;
+		details = this.aya.get('details');
+		if (!details)
+			return;
+
+		var words = this.aya.get('text').split(' ');
+		_.each(details, function (detail) {
+			if (detail.lang != variables.lang) return;
+			view.$el.find('#sections').append('<a href="#'+ detail.link +'"><div class="fill">'+ detail.html +'</div></a>');
 		});
 	}
 });
