@@ -35,9 +35,9 @@ if __name__ == '__main__':
 			print('error', id)
 
 		if not id:
-			id, tokens, stems = '0', {}, {}
+			id, tokens = '0', {}
 		else:
-			html, tokens, stems = section_ayas(id, ayas)
+			tokens = section_ayas(id, ayas)
 
 			# section range
 			sura, aya = id.split('_')
@@ -49,11 +49,11 @@ if __name__ == '__main__':
 
 		resolve_footnotes(ar_section)
 		refine_section(ar_section)
-		resolve_phrases(ar_section, tokens, stems, 'almizan_ar', id)
+		resolve_phrases(ar_section, tokens, 'almizan_ar', id)
 
 		resolve_footnotes(fa_section)
 		refine_section(fa_section)
-		resolve_phrases(fa_section, tokens, stems, 'almizan_fa', id)
+		resolve_phrases(fa_section, tokens, 'almizan_fa', id)
 
 		almizan_sections.append(id)
 		print(ar_section.html(), file=open(files / 'almizan_ar' / id, 'w'))

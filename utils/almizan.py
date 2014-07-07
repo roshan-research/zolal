@@ -7,6 +7,8 @@ from quran import simple_aya
 
 
 isri = stem.ISRIStemmer()
+number_map = str.maketrans('1234567890', '۱۲۳۴۵۶۷۸۹۰')
+refine_numbers = lambda text: text.translate(number_map)
 
 
 def read_tafsir(tafsir):
@@ -21,18 +23,13 @@ def read_tafsir(tafsir):
 
 
 def section_ayas(id, ayas):
-	html = ''
+	tokens = {}
 	sura, aya = id.split('_')
-	tokens, stems = {}, {}
-
 	for a in range(int(aya.split('-')[0]), int(aya.split('-')[1])+1):
 		aya = '%s_%d' % (sura, a)
 		text = ayas[aya]['raw']
-		html += '<span class="aya" rel="%s">%s «%d»</span> ' % (aya, text, a)
-		tokens[aya] = text.split(' ')
-		stems[aya] = list(map(isri.stem, tokens[aya]))
-
-	return html, tokens, stems
+		tokens[aya] = aya_tokens(ayas[aya])
+	return tokens
 
 
 def resolve_footnotes(section):
@@ -60,12 +57,6 @@ def resolve_footnotes(section):
 			footnote.attr('title', refine_note(title))
 		else:
 			footnote.remove()
-
-
-number_map = str.maketrans('1234567890', '۱۲۳۴۵۶۷۸۹۰')
-
-def refine_numbers(text):
-	return text.translate(number_map)
 
 
 def refine_html(html):
@@ -149,7 +140,7 @@ def refine_section(section):
 						span.remove()
 
 
-def resolve_phrases(section, tokens, stems, book, id):
+def resolve_phrases(section, tokens, book, id):
 
 	# find and resolve parantheses
 	if book == 'almizan_fa':
@@ -165,7 +156,7 @@ def resolve_phrases(section, tokens, stems, book, id):
 			iter = re.finditer(r'\([^\)]{3,15}\)', html)
 			for match in reversed(list(iter)):
 				m = match.group()[1:-1]
-				rel = resolve_phrase(m, tokens, stems, book[-2:])
+				rel = resolve_phrase(m, tokens, book[-2:])
 				if rel:
 					html = replace(match.start(), match.end(), html, '<em rel="{0}">{1}</em>'.format(rel, m))
 
@@ -173,29 +164,34 @@ def resolve_phrases(section, tokens, stems, book, id):
 
 	# resolve em elements
 	for em in section.find('em').items():
-		rel = resolve_phrase(em.text(), tokens, stems, book[-2:])
+		rel = resolve_phrase(em.text(), tokens, book[-2:])
 		if rel:
 			em.attr('rel', rel)
 
 
-def resolve_phrase(text, tokens, stems, book):
+def aya_tokens(aya):
+	parts = simple_aya(aya['text']).replace('  ', ' ').split(' ')
+	tokens = [{'word': word, 'stem': isri.stem(word), 'id': parts.index(word)+1} for word in aya['raw'].split(' ') if word in parts]
+	return tokens
+
+
+def resolve_phrase(phrase, tokens, book):
 	rel = None
-	text  = text.strip().replace('ة','ه').replace('ؤ','و')
-	if len(text) < 3:
+	phrase = phrase.strip().replace('ة','ه').replace('ؤ','و').replace('‌', '')
+	if len(phrase) < 3:
 		return None
 
-	#resolve aya tokens with or without Alif-Lam
-	for aya, token_list in tokens.items():
-		for t, token in enumerate(token_list):
-			if text == token or (token[:2] == 'ال' and text == token[2:]) or (token[:1] in 'لبکف' and text == token[1:]):
-				return '{0}_{1}_{2}-{2}'.format(book, aya, t+1)
+	matchings = [
+		lambda token: phrase == token['word'], # exact
+		lambda token: token['word'][:2] == 'ال' and phrase == token['word'][2:], # without Alif-Lam
+		lambda token: token['word'][:1] in 'لبکف' and phrase == token['word'][1:],
+		lambda token: isri.stem(phrase) == token['stem'] # stemed
+	]
 
-	#resolve aya stems
-	text = isri.stem(text.replace('‌', ''))
-	for aya, stem_list in stems.items():
-		for s, stm in enumerate(stem_list):
-			if text == stm:
-				rel = '{0}_{1}_{2}-{2}'.format(book, aya, s+1)
-				break
+	for match in matchings:
+		for aya, token_list in tokens.items():
+			for token in token_list:
+				if match(token):
+					return '{0}_{1}_{2}-{2}'.format(book, aya, token['id'])
 
 	return rel
