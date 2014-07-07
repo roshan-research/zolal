@@ -25,6 +25,8 @@
 
 /* zolal */
 
+@color1: #E8DDCB; @color2: #CDB380; @color3: #036564; @color4: #033649; @color5: #031634; @color6: #008d8a; @tafsir-header: #584c37; @darken-background: darken(@color1, 5%);
+
 * {
 	box-sizing: border-box;
 }
@@ -72,6 +74,38 @@ body, blockquote p, .tooltip-inner {
 		display: block;
 	}
 }
+
+
+#tafsir {
+	font-size: 22px;
+	line-height: 30px;
+
+	.aya {
+		color: @color6;
+		&:before {
+			content: "«"
+		}
+		&:after {
+			content: "»"
+		}
+	}
+
+	h1, h2, h3 {
+		background: @darken-background;
+		text-align: right;
+		padding: 0 10px;
+		margin: 0 -10px;
+		color: @tafsir-header;
+		padding-top: 2px;
+		padding-bottom: 2px;
+	}
+
+	.ayas {
+		background: @color6;
+		color: @color1;
+	}
+}
+
 
 .loading {
 	position: relative;
@@ -165,7 +199,7 @@ body, blockquote p, .tooltip-inner {
 
 	&.active {
 		.text {
-			background: darken(@color1, 5%);
+			background: @darken-background;
 		}
 	}
 
@@ -254,7 +288,7 @@ body, blockquote p, .tooltip-inner {
 	em {
 		font-style: normal;
 		font-weight: bold;
-		font-size: .85em;
+		font-size: 90%;
 	}
 	span.aya {
 
@@ -263,8 +297,8 @@ body, blockquote p, .tooltip-inner {
 		display: inline-block;
 		vertical-align: middle;
 		line-height: 7px;
-		padding: 5px;
-		margin: -5px;
+		padding: 10px 5px;
+		margin: 0 -5px;
 		margin-bottom: 0px;
 		border-radius: 10px;
 		font-weight: bold;
@@ -278,32 +312,57 @@ body, blockquote p, .tooltip-inner {
 #detail {
 	#aya {
 		margin-top: 10px;
+
+		.found {
+			background: @color6;
+			color: @color1;
+		}
 	}
 
 	#translation {
 		margin: 10px 0 20px;
 	}
 
-	.phrase {
-		background: darken(@color1, 5%);
-		margin-bottom: 10px;
-		padding-top: 5px;
-		padding-bottom: 5px;
+	#sections {
+		a {
+			color: inherit;
+			text-decoration: none;
+		}
 
-		.aya-text {
-			color: @color5;
-			font-size: 18px;
-			line-height: 25px;
-			float: right;
-			background: lighten(@color3, 20%);
-			margin-left: 10px;
-			margin-top: -5px;
-			padding-left: 10px;
+		.fill {
+			background: @darken-background;
+			margin-bottom: 10px;
+		}
+
+		.footnote {
+			display: none;
+		}
+
+		p {
+			padding-top: 5px;
+			padding-bottom: 5px;
+		}
+
+		h3 {
+			margin: 0;
+			color: @tafsir-header;
+			font-size: 90%;
+			text-align: right;
 		}
 	}
-}
 
-@color1: #E8DDCB; @color2: #CDB380; @color3: #036564; @color4: #033649; @color5: #031634;
+	#goto-tafsir {
+		float: left;
+		cursor: pointer;
+    background: @color6;
+    margin-left: -10px;
+    padding: 0 10px;
+    color: @color1;
+    text-decoration: none;
+    font-size: 120%;
+    margin-bottom: 20px;
+	}
+}
 
 body {
 	background: @color1;
@@ -520,12 +579,12 @@ body {
 
 @keyframes TAFSIR-HIGHLIGHT {
 	0% { background: none; }
-	5% { background: darken(@color1, 5%); }
+	5% { background: @darken-background; }
 	100% { background: none; }
 }
 @-webkit-keyframes TAFSIR-HIGHLIGHT {
 	0% { background: none; }
-	5% { background: darken(@color1, 5%); }
+	5% { background: @darken-background; }
 	100% { background: none; }
 }
 

@@ -163,7 +163,10 @@ var Almizan = Backbone.Collection.extend({
 		var parts = sectionToAddress(id.split('/')[1]);
 		$(bayan.get('content')).find('.title').each(function() {
 			// todo: smart aya detection
-			html = '<h3>'+ $(this).html() +'<h3>';
+			html = $(this).html().trim();
+			if (html[0] == '(' && html[html.length-1] == ')')
+				html = html.substr(1, html.length-2);
+			html = '<h3>'+ refine(html) +'<h3>';
 			for (i = parts[1]; i <= parts[2]; i++) {
 				aya = quran.get(parts[0] +'_'+ i); if (!aya) continue;
 				aya.insertDetail({type: 'title', lang: lang, html: html, link: 'almizan_'+ id +'/i'+ $(this).parent().index()});
