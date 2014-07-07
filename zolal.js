@@ -519,7 +519,7 @@ var AddressView = Backbone.View.extend({
 			parts = sectionToAddress(position.tafsir.section);
 			title = 'تفسیر سوره '+ quran_suras[parts[0]-1] +'، آیات '+ refine(String(parts[1])) +' تا '+ refine(String(parts[2]));
 		}
-		$(document).attr('title', title +' | زلال');
+		$(document).attr('title', title +' - زلال');
 
 		// store position
 		variables.position = this.position;
