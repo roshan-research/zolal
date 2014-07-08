@@ -682,6 +682,7 @@ var AppView = Backbone.View.extend({
 		if (e.target.tagName == 'INPUT' || $('.modal').is(':visible'))
 			return;
 
+		enter = e.keyCode == 13;
 		page_up = e.keyCode == 33;
 		page_down = e.keyCode == 34;
 		left_arrow = e.keyCode == 37;
@@ -690,6 +691,8 @@ var AppView = Backbone.View.extend({
 		down_arrow = e.keyCode == 40;
 
 		if (this.position.mode == 'quran') {
+			if (enter && this.position.quran.aya)
+				app.router.navigate('detail/'+ this.position.quran.sura +'_'+ this.position.quran.aya, {trigger: true});
 			if(left_arrow)
 				this.nextQuranPage();
 			else if(right_arrow)
