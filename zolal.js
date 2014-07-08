@@ -195,8 +195,7 @@ var AyaView = Backbone.View.extend({
 		this.$el.find('.text').html(this.html());
 	},
 	html: function() {
-		stopsPattern = /[ ]*([ۖۗۚۛۙۘ])[ ]*/g;
-		words = this.model.get('text').replace(stopsPattern, '\$1 ').split(' ');
+		words = this.model.get('text').replace(/[ ]*([ۖۗۚۛۙۘ])[ ]*/g, '\$1 ').split(' ');
 
 		if (this.annotations)
 			_.each(this.annotations, function(annotation) {
@@ -204,7 +203,7 @@ var AyaView = Backbone.View.extend({
 				words[annotation.end] += '</span>';
 			});
 
-		return words.join(' ').replace(stopsPattern, '<span class="mark">\$1</span> ');
+		return words.join(' ').replace(/([ۖۗۚۛۙۘ])(<\/span>)?/g, '\$2<span class="mark">\$1</span>');
 	},
 	click: function() {
 		aya = this.model.get('sura') +'_'+ this.model.get('aya');
