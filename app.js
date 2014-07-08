@@ -64,9 +64,11 @@ var initApp = function() {
 		} else if (position.mode == 'detail') {
 			address = 'detail/'+ position.detail.sura +'_'+ position.detail.aya;
 		} else if (position.mode == 'tafsir') {
-			address = 'almizan_' + position.tafsir.lang +'/'+ position.tafsir.aya;
-			if (position.tafsir.phrase)
-				address += '/'+ position.tafsir.phrase;
+			address = 'almizan_' + position.tafsir.lang +'/';
+			if (position.tafsir.aya)
+				address += position.tafsir.aya;
+			else
+				address += position.tafsir.section +'/i'+ position.tafsir.part;
 		}
 
 		app.router.navigate(address, {trigger: true});
