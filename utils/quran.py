@@ -34,7 +34,7 @@ def read_simple(simple, ayas):
 			continue
 
 		# refine text
-		text = line[2]
+		text = line[2].replace('ى', 'ی')
 		text = re.sub(r'(^| )أ ', r'\1أ', text)
 
 		ayas['%s_%s' % (line[0], line[1])]['raw'] = text
