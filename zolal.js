@@ -43,6 +43,13 @@ var tafsirDb = {
 				localStorage.clear();
 				next();
 			}
+		}, {
+			version: 4,
+			migrate: function (transaction, next) {
+				transaction.objectStore('tafsirs').clear();
+				localStorage.clear();
+				next();
+			}
 		}
 	]
 };

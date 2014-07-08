@@ -2,7 +2,7 @@
 	"name": "Zolal",
 	"description": "Quran with Almizan tafsir.",
 	"short_name": "Zolal",
-	"version": "0.9.8",
+	"version": "0.9.9",
 	"icons": {
 		"128": "logo.png"
 	},
