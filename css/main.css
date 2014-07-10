@@ -292,8 +292,7 @@ blockquote p,
   margin-top: 10px;
 }
 #detail #aya .found {
-  background: #008d8a;
-  color: #e8ddcb;
+  background: #D6BC89;
 }
 #detail #translation {
   margin: 10px 0 20px;
@@ -318,6 +317,16 @@ blockquote p,
   color: #584c37;
   font-size: 90%;
   text-align: right;
+}
+#detail #sections .aya-text {
+  float: right;
+  color: #e8ddcb;
+  background: #008d8a;
+  font-size: 90%;
+  line-height: 1.5;
+  margin-left: 10px;
+  padding-left: 10px;
+  margin-bottom: 0;
 }
 #detail #goto-tafsir {
   float: left;

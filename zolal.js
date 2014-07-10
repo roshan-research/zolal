@@ -831,12 +831,18 @@ var DetailView = Backbone.View.extend({
 		if (!details)
 			return;
 
+		var words = this.aya.get('text').replace(/ ?[ۖۗۚۛۙۘ]/g, '').split(' ');
 		_.each(details, function (detail) {
 			if (detail.lang != variables.lang) return;
-			if (detail.type == 'phrase')
-				view.ayaView.annotate(Number(detail.words.split('-')[0]), Number(detail.words.split('-')[1]), 'found');
 
-			view.$el.find('#sections').append('<a href="#'+ detail.link +'"><div class="fill">'+ detail.html +'</div></a>');
+			phrase = '';
+			if (detail.type == 'phrase') {
+				start = Number(detail.words.split('-')[0]); end = Number(detail.words.split('-')[1]);
+				phrase = '<span class="aya-text fill"><span class="text">'+ words.slice(start-1, end).join(' ') +'</span></span>'
+				view.ayaView.annotate(start, end, 'found');
+			}
+
+			view.$el.find('#sections').append('<a href="#'+ detail.link +'"><div class="fill">'+ phrase + detail.html +'</div></a>');
 		});
 	}
 });
