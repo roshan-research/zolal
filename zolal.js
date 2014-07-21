@@ -33,14 +33,11 @@ var tafsirDb = {
 		}, {
 			version: 2,
 			migrate: function (transaction, next) {
-				transaction.objectStore('tafsirs').clear();
-				localStorage.clear();
 				next();
 			}
 		}, {
 			version: 3,
 			migrate: function (transaction, next) {
-				localStorage.clear();
 				next();
 			}
 		}, {
