@@ -195,7 +195,7 @@ var show_tafsir_stats = function() {
 		success: function() {
 			sections = almizan.models.filter(function(item) {
 				return item.id.substr(0,2) == variables.lang;
-			})
+			});
 			tafsir_progress(100 * sections.length / almizan_sections.length);
 		}
 	});
