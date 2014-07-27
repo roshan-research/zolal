@@ -141,6 +141,7 @@ def refine_section(section):
 
 
 def resolve_phrases(section, tokens, book, id):
+	phrases = []
 
 	# find and resolve parantheses
 	if book == 'almizan_fa':
@@ -156,17 +157,22 @@ def resolve_phrases(section, tokens, book, id):
 			iter = re.finditer(r'\([^\)]{3,15}\)', html)
 			for match in reversed(list(iter)):
 				m = match.group()[1:-1]
-				rel = resolve_phrase(m, tokens, book[-2:])
-				if rel:
-					html = replace(match.start(), match.end(), html, '<em rel="{0}">{1}</em>'.format(rel, m))
+				resolved = resolve_phrase(m, tokens, book[-2:])
+				if resolved:
+					html = replace(match.start(), match.end(), html, '<em rel="{0}">{1}</em>'.format(resolved[0], m))
 
 			section.html(html)
 
 	# resolve em elements
 	for em in section.find('em').items():
-		rel = resolve_phrase(em.text(), tokens, book[-2:])
-		if rel:
-			em.attr('rel', rel)
+		resolved = resolve_phrase(em.text(), tokens, book[-2:])
+		if resolved:
+			em.attr('rel', resolved[0])
+			phrases.append((em.text(), resolved[1], resolved[0]))
+		else:
+			phrases.append((em.text(), ))
+
+	return phrases
 
 
 def aya_tokens(aya):
@@ -176,7 +182,6 @@ def aya_tokens(aya):
 
 
 def resolve_phrase(phrase, tokens, book):
-	rel = None
 	phrase = phrase.strip().replace('ة','ه').replace('ؤ','و').replace('‌', '')
 	if len(phrase) < 3:
 		return None
@@ -192,6 +197,6 @@ def resolve_phrase(phrase, tokens, book):
 		for aya, token_list in tokens.items():
 			for token in token_list:
 				if match(token):
-					return '{0}_{1}_{2}-{2}'.format(book, aya, token['id'])
+					return '{0}_{1}_{2}-{2}'.format(book, aya, token['id']), token['word']
 
-	return rel
+	return None

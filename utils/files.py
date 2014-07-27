@@ -26,7 +26,7 @@ if __name__ == '__main__':
 		print(page, file=quran_file)
 
 	# almizan
-	almizan_sections = []
+	almizan_sections, phrases = [], []
 	for ar_section, fa_section in zip(read_tafsir(open(data / 'almizan_ar.html')), read_tafsir(open(data / 'almizan_fa.html'))):
 
 		# read section id
@@ -49,11 +49,11 @@ if __name__ == '__main__':
 
 		resolve_footnotes(ar_section)
 		refine_section(ar_section)
-		resolve_phrases(ar_section, tokens, 'almizan_ar', id)
+		phrases.extend(resolve_phrases(ar_section, tokens, 'almizan_ar', id))
 
 		resolve_footnotes(fa_section)
 		refine_section(fa_section)
-		resolve_phrases(fa_section, tokens, 'almizan_fa', id)
+		phrases.extend(resolve_phrases(fa_section, tokens, 'almizan_fa', id))
 
 		almizan_sections.append(id)
 		print(ar_section.html(), file=open(files / 'almizan_ar' / id, 'w'))
@@ -65,3 +65,8 @@ if __name__ == '__main__':
 	print('var quran_suras = %s;' % str([sura for sura in suras]), file=meta)
 	print('var quran_pages = %s;' % str(dict(pages)), file=meta)
 	print('var almizan_sections = %s;' % str(almizan_sections), file=meta)
+
+	# resolved phrases
+	output = open('phrases.txt', 'w')
+	print(len(list(filter(lambda t: len(t) == 3, phrases))), len(phrases), sep='/', file=output)
+	print(*phrases, sep='\n', file=output)
