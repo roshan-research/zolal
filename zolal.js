@@ -109,6 +109,8 @@ var Bayan = Backbone.Model.extend({
 	database: tafsirDb,
 	storeName: 'tafsirs'
 });
+// trigger migrations
+(new Bayan({id: '0'})).fetch();
 
 
 var Almizan = Backbone.Collection.extend({
