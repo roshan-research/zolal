@@ -177,17 +177,25 @@ def resolve_phrases(section, tokens, book, id):
 
 def aya_tokens(aya):
 	parts = simple_aya(aya['text']).replace('  ', ' ').split(' ')
-	tokens = [{'word': word, 'stem': isri.stem(word), 'id': parts.index(word)+1} for word in aya['raw'].split(' ') if word in parts]
+	raw_ayas = aya['raw'].split(' ')
+	tokens = [{'word': word, 'stem': isri.stem(word), 'id': parts.index(word)+1} for word in raw_ayas if word in parts]
+	not_found_words = [word for word in raw_ayas  if word not in parts]
+	not_found_parts = [part for part in parts if not part in raw_ayas]
+	for word in not_found_words:
+		for part in not_found_parts:
+			if(word.replace('ا','') == part.replace('ا','')):
+				tokens.append({'word':word,'stem': isri.stem(word),'id': parts.index(part)+1})
 	return tokens
 
 
 def resolve_phrase(phrase, tokens, book):
-	phrase = phrase.strip().replace('ة','ه').replace('ؤ','و').replace('‌', '')
+	phrase = simple_aya(phrase.strip()).replace('‌', '').replace('ّ','')
 	if len(phrase) < 3:
 		return None
 
 	matchings = [
 		lambda token: phrase == token['word'], # exact
+        lambda token: phrase.replace('ة','ه').replace('ؤ','و').replace('إ','ا').replace('أ','ا') == token['word'].replace('ة','ه').replace('ؤ','و').replace('إ','ا').replace('أ','ا'), # without arabic letter
 		lambda token: token['word'][:2] == 'ال' and phrase == token['word'][2:], # without Alif-Lam
 		lambda token: token['word'][:1] in 'لبکف' and phrase == token['word'][1:],
 		lambda token: isri.stem(phrase) == token['stem'] # stemed
