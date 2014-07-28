@@ -1,3 +1,4 @@
+.idea
 files
 utils/data
 utils/deploy/app
@@ -6,3 +7,4 @@ utils/deploy/zolal.js
 *.pyc
 *.zip
 *.dat
+*.txt
