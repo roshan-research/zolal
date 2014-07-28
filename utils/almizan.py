@@ -193,10 +193,14 @@ def resolve_phrase(phrase, tokens, book):
 	if len(phrase) < 3:
 		return None
 
+	normalize_Alif_lam = lambda s: s[2:] if (s[:2] =='ال'  ) else s
+	normalize_arabic_letter = lambda s: s.replace('ة','ه').replace('ؤ','و').replace('إ','ا').replace('أ','ا')
+
 	matchings = [
 		lambda token: phrase == token['word'], # exact
-        lambda token: phrase.replace('ة','ه').replace('ؤ','و').replace('إ','ا').replace('أ','ا') == token['word'].replace('ة','ه').replace('ؤ','و').replace('إ','ا').replace('أ','ا'), # without arabic letter
-		lambda token: token['word'][:2] == 'ال' and phrase == token['word'][2:], # without Alif-Lam
+		lambda token: normalize_arabic_letter(phrase) == normalize_arabic_letter(token['word']), # without arabic letters
+		lambda token: normalize_Alif_lam(phrase) == normalize_Alif_lam(token['word']),# without Alif-lam
+		lambda token: normalize_arabic_letter(normalize_Alif_lam(phrase)) == normalize_arabic_letter(normalize_Alif_lam(token['word'])),# without arabic letters and Alif-lam
 		lambda token: token['word'][:1] in 'لبکف' and phrase == token['word'][1:],
 		lambda token: isri.stem(phrase) == token['stem'] # stemed
 	]
@@ -208,3 +212,6 @@ def resolve_phrase(phrase, tokens, book):
 					return '{0}_{1}_{2}-{2}'.format(book, aya, token['id']), token['word']
 
 	return None
+
+
+
