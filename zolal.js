@@ -638,7 +638,10 @@ var AppView = Backbone.View.extend({
 			this.router.navigate('quran/'+ this.position.detail.sura +'_'+ this.position.detail.aya, {trigger: true});
 		else if (this.position.mode == 'tafsir') {
 			quran = this.position.quran ? this.position.quran : tafsirToQuran(this.position.tafsir);
-			this.router.navigate('quran/'+ quran.sura +'_'+ quran.aya, {trigger: true});
+			if (quran.aya)
+				this.router.navigate('quran/'+ quran.sura +'_'+ quran.aya, {trigger: true});
+			else
+				this.router.navigate('quran/p'+ quran.page, {trigger: true});
 		}
 	},
 	nextQuranPage: function() {
