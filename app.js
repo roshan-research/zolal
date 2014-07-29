@@ -38,12 +38,19 @@ if (android_app) {
 			return;
 		}
 
-		var last_position = $.extend({}, app.position);
-		navigator.app.backHistory();
-		setTimeout(function() {
-			if (JSON.stringify(last_position) == JSON.stringify(app.position))
-				navigator.app.exitApp();
-		}, 20);
+		// up button
+		if (app.position.mode == 'quran')
+			navigator.app.exitApp();
+		else {
+			navigator.app.backHistory();
+
+			// back without history
+			var last_position = $.extend({}, app.position);
+			setTimeout(function() {
+				if (JSON.stringify(last_position) == JSON.stringify(app.position))
+					app.showQuran();
+			}, 25);
+		}
 	}, false);
 } else
 	$('[rel=menu]').show();
