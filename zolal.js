@@ -464,19 +464,19 @@ var AddressView = Backbone.View.extend({
 
 		this.aya_items = new Bloodhound({
 			local: [],
-			datumTokenizer: function(d) { return ayaTokens(d.text); },
+			datumTokenizer: function(d) { return ayaTokens(d.raw); },
 			queryTokenizer: ayaTokens,
 			limit: 20
 		});
 
 		search_input.typeahead({hint: false, autoselect: true, minLength: 3}, {
 			name: 'aya',
-			displayKey: 'text',
+			displayKey: 'raw',
 			source: this.aya_items.ttAdapter(),
 			templates: {
 				suggestion: function(aya) {
 					parts = aya.id.split('_');
-					result = searchResult(aya.text, ayaTokens(aya.text), ayaTokens(search_input.val()));
+					result = searchResult(aya.raw, ayaTokens(aya.raw), ayaTokens(search_input.val()));
 					return '<p>'+ result +'</p>'; // '<i>'+ quran_suras[parts[0]-1] +'، '+ parts[1] +'</i>';
 				}
 			}
@@ -559,13 +559,10 @@ var AddressView = Backbone.View.extend({
 
 		// init source
 		var address = this;
-		download_quran().done(function() {
-			setTimeout(function() {
-				var quran = new Quran();
-				quran.fetch().done(function() {
-					address.aya_items.local = quran.map(function(aya) { return {text: aya.get('raw'), id: aya.get('id')}; });
-					address.aya_items.initialize();
-				});
+		download_quran().then(function() {
+			setTimeout(function() { // render address bar
+				address.aya_items.local = JSON.parse(localStorage.Raws);
+				address.aya_items.initialize();
 			}, 20);
 		});
 	}

@@ -229,14 +229,17 @@ var download_quran = function() {
 }
 
 var parse_quran = function(data) {
-	var ids = [];
+	var ids = [], raws = '';
 	data.split('\n').forEach(function(aya) {
 		if (!aya) return;
 		id = aya.substr(aya.indexOf('id') + 6).slice(0, -2);
+		raws += ',{'+ aya.substr(aya.indexOf('raw')-1);
+
 		localStorage['Quran-'+ id] = aya;
 		ids.push(id);
 	});
 	localStorage.Quran = ids.join(',');
+	localStorage.Raws = '['+ raws.slice(1) +']';
 };
 
 
