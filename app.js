@@ -14,11 +14,16 @@ if (chrome_app || android_app)
 if (android_app) {
 	screen.lockOrientation('portrait');
 
-	// menu button
-	document.addEventListener('menubutton', function() { app.address.trigger('menu'); }, false);
+	document.addEventListener('deviceready', function() {
+		navigator.splashscreen.hide();
+	}, false);
 
-	// back button
+	document.addEventListener('menubutton', function() {
+		app.address.trigger('menu');
+	}, false);
+
 	document.addEventListener('backbutton', function(e) {
+		// back on input
 		focused = $(':focus');
 		if (focused.length && focused[0].tagName == 'INPUT') {
 			focused.blur().typeahead('close');
@@ -27,6 +32,7 @@ if (android_app) {
 			return;
 		}
 
+		// back on modal
 		if ($('.modal').is(':visible')) {
 			$('.modal').modal('hide');
 			return;
