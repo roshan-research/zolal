@@ -3,7 +3,7 @@ var app;
 var store = false;
 var server = 'http://zolal-files.ap01.aws.af.cm/';
 var chrome_app = 'chrome' in window && 'app' in chrome && chrome.app.isInstalled;
-var android_app = Boolean(screen.lockOrientation);
+var android_app = 'cordova' in window;
 var searchResultChars = android_app ? 25 : 50;
 
 
@@ -11,48 +11,54 @@ var searchResultChars = android_app ? 25 : 50;
 if (chrome_app || android_app)
 	store = true;
 
-if (android_app) {
-	screen.lockOrientation('portrait');
 
-	document.addEventListener('deviceready', function() {
-		navigator.splashscreen.hide();
-	}, false);
+// device events
+document.addEventListener('deviceready', function() {
+	navigator.splashscreen.hide();
 
-	document.addEventListener('menubutton', function() {
-		app.address.trigger('menu');
-	}, false);
+	$('a[target]').click(function(){
+		window.open($(this).attr('href'), '_system');
+		return false;
+	});
+}, false);
 
-	document.addEventListener('backbutton', function(e) {
-		// back on input
-		focused = $(':focus');
-		if (focused.length && focused[0].tagName == 'INPUT') {
-			focused.blur().typeahead('close');
-			app.address.render();
-			e.preventDefault();
-			return;
-		}
+document.addEventListener('menubutton', function() {
+	app.address.trigger('menu');
+}, false);
 
-		// back on modal
-		if ($('.modal').is(':visible')) {
-			$('.modal').modal('hide');
-			return;
-		}
+document.addEventListener('backbutton', function(e) {
+	// back on input
+	focused = $(':focus');
+	if (focused.length && focused[0].tagName == 'INPUT') {
+		focused.blur().typeahead('close');
+		app.address.render();
+		e.preventDefault();
+		return;
+	}
 
-		// up button
-		if (app.position.mode == 'quran')
-			navigator.app.exitApp();
-		else {
-			navigator.app.backHistory();
+	// back on modal
+	if ($('.modal').is(':visible')) {
+		$('.modal').modal('hide');
+		return;
+	}
 
-			// back without history
-			var last_position = $.extend({}, app.position);
-			setTimeout(function() {
-				if (JSON.stringify(last_position) == JSON.stringify(app.position))
-					app.showQuran();
-			}, 25);
-		}
-	}, false);
-} else
+	// up button
+	if (app.position.mode == 'quran')
+		navigator.app.exitApp();
+	else {
+		navigator.app.backHistory();
+
+		// back without history
+		var last_position = $.extend({}, app.position);
+		setTimeout(function() {
+			if (JSON.stringify(last_position) == JSON.stringify(app.position))
+				app.showQuran();
+		}, 25);
+	}
+}, false);
+
+
+if (!android_app)
 	$('[rel=menu]').show();
 
 
