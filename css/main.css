@@ -69,6 +69,11 @@ blockquote p,
 #detail.front {
   display: block;
 }
+#quran .content,
+#tafsir .content,
+#detail .content {
+  overflow-x: hidden;
+}
 #tafsir {
   font-size: 22px;
   line-height: 30px;
