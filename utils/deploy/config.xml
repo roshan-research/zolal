@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="ir.sobhe.zolal" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>Zolal</name>
+    <description>
+        Quran with Almizan tafsir.
+    </description>
+    <author email="zolal@sobhe.ir" href="http://zolal.sobhe.ir">
+        Sobhe
+    </author>
+    <content src="index.html" />
+    <access origin="*" />
+    <preference name="Fullscreen" value="true" />
+    <preference name="Orientation" value="portrait" />
+    <preference name="SplashScreen" value="screen" />
+    <preference name="SplashScreenDelay" value="10000"/>
+</widget>

@@ -3,7 +3,7 @@ var app;
 var store = false;
 var server = 'http://zolal-files.ap01.aws.af.cm/';
 var chrome_app = 'chrome' in window && 'app' in chrome && chrome.app.isInstalled;
-var android_app = Boolean(screen.lockOrientation);
+var android_app = 'cordova' in window;
 var searchResultChars = android_app ? 25 : 50;
 
 
@@ -11,35 +11,54 @@ var searchResultChars = android_app ? 25 : 50;
 if (chrome_app || android_app)
 	store = true;
 
-if (android_app) {
-	screen.lockOrientation('portrait');
 
-	// menu button
-	document.addEventListener('menubutton', function() { app.address.trigger('menu'); }, false);
+// device events
+document.addEventListener('deviceready', function() {
+	navigator.splashscreen.hide();
 
-	// back button
-	document.addEventListener('backbutton', function(e) {
-		focused = $(':focus');
-		if (focused.length && focused[0].tagName == 'INPUT') {
-			focused.blur().typeahead('close');
-			app.address.render();
-			e.preventDefault();
-			return;
-		}
+	$('a[target]').click(function(){
+		window.open($(this).attr('href'), '_system');
+		return false;
+	});
+}, false);
 
-		if ($('.modal').is(':visible')) {
-			$('.modal').modal('hide');
-			return;
-		}
+document.addEventListener('menubutton', function() {
+	app.address.trigger('menu');
+}, false);
 
-		var last_position = $.extend({}, app.position);
+document.addEventListener('backbutton', function(e) {
+	// back on input
+	focused = $(':focus');
+	if (focused.length && focused[0].tagName == 'INPUT') {
+		focused.blur().typeahead('close');
+		app.address.render();
+		e.preventDefault();
+		return;
+	}
+
+	// back on modal
+	if ($('.modal').is(':visible')) {
+		$('.modal').modal('hide');
+		return;
+	}
+
+	// up button
+	if (app.position.mode == 'quran')
+		navigator.app.exitApp();
+	else {
 		navigator.app.backHistory();
+
+		// back without history
+		var last_position = $.extend({}, app.position);
 		setTimeout(function() {
 			if (JSON.stringify(last_position) == JSON.stringify(app.position))
-				navigator.app.exitApp();
-		}, 20);
-	}, false);
-} else
+				app.showQuran();
+		}, 25);
+	}
+}, false);
+
+
+if (!android_app)
 	$('[rel=menu]').show();
 
 
@@ -124,8 +143,8 @@ $("#views").swipe({
 // track
 var trackedData;
 var track = function(title, data) {
-	if ('mixpanel' in window && data != trackedData)
-		mixpanel.track(title, data);
+	if ('mixpanel' in window && data != trackedData && navigator.onLine)
+			mixpanel.track(title, data);
 	trackedData = data;
 }
 
@@ -216,14 +235,17 @@ var download_quran = function() {
 }
 
 var parse_quran = function(data) {
-	var ids = [];
+	var ids = [], raws = '';
 	data.split('\n').forEach(function(aya) {
 		if (!aya) return;
 		id = aya.substr(aya.indexOf('id') + 6).slice(0, -2);
+		raws += ',{'+ aya.substr(aya.indexOf('raw')-1);
+
 		localStorage['Quran-'+ id] = aya;
 		ids.push(id);
 	});
 	localStorage.Quran = ids.join(',');
+	localStorage.Raws = '['+ raws.slice(1) +']';
 };
 
 

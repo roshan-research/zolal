@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# 2014 Jul 21
+# 2014 Jul 29
 
 CACHE:
 zolal.js
@@ -14,6 +14,7 @@ js/jquery.touchSwipe.js
 js/bootstrap.js
 js/typeahead.js
 js/meta.js
+js/mixpanel.js
 css/bootstrap.css
 css/main.css
 fonts/AppFont.woff
@@ -21,7 +22,6 @@ fonts/AppFontBd.woff
 fonts/QuranFont.woff
 fonts/glyphicons-halflings-regular.woff
 img/fav.png
-http://cdn.mxpnl.com/libs/mixpanel-2.2.min.js
 
 NETWORK:
 *

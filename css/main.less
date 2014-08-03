@@ -73,6 +73,10 @@ body, blockquote p, .tooltip-inner {
 	&.front {
 		display: block;
 	}
+
+	.content {
+		overflow-x: hidden;
+	}
 }
 
 
@@ -126,14 +130,32 @@ body, blockquote p, .tooltip-inner {
 		color: @color5;
 		.animation(ICON-SPIN 2s infinite linear);
 	}
-
-	&.twitter-typeahead:before {
-		left: 15px;
-		color: inherit;
+	&:after {
+		content: "صبر بفرمایید";
+		position: absolute;
+		top: calc(~"50% + 20px");
+		left: 0;
+		width: 100%;
+		text-align: center;
+		color: @color5;
 	}
 
 	&.failed:before {
 		.animation(none);
+	}
+	&.failed:after {
+		content: "خطا در اتصال";
+		position: absolute;
+		top: calc(~"50% + 20px");
+		left: 0;
+		width: 100%;
+		text-align: center;
+		color: @color5;
+	}
+
+	&.twitter-typeahead:before {
+		left: 15px;
+		color: inherit;
 	}
 }
 
@@ -467,7 +489,7 @@ body {
 	}
 }
 
-.fill, .tafsir-text .active, .page {
+.fill, .tafsir-text .active, .page, .ayas {
 	padding: 0 10px;
 	margin: 0 -10px;
 }
@@ -613,10 +635,16 @@ body {
 	#views {
 		padding: 0 5px;
 	}
-	#quran #page:before {
-		width: 5px;
+	#quran {
+		.page div.sura {
+			margin-right: -5px;
+			margin-left: -5px;
+		}
+		#page:before {
+			width: 5px;
+		}
 	}
-	.fill, .tafsir-text .active, .page {
+	.fill, .tafsir-text .active, .page, .ayas {
 		padding: 0 5px;
 		margin: 0 -5px;
 	}
@@ -646,10 +674,6 @@ body {
 		height: calc(~"100% - 40px");
 	}
 	#quran {
-		.page div.sura {
-			margin-right: -10px;
-			margin-left: -10px;
-		}
 		#page.is-dragging:before, #page.active:before {
 			left: 0;
 		}
@@ -659,5 +683,11 @@ body {
 @media (min-width: 480px) and (max-width: 768px) {
 	html {
 		zoom: 130%;
+	}
+	#quran {
+		.page div.sura {
+			margin-right: -10px;
+			margin-left: -10px;
+		}
 	}
 }
