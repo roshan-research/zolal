@@ -58,6 +58,10 @@ document.addEventListener('backbutton', function(e) {
 }, false);
 
 
+if (android_app)
+	$('.installation #android').hide()
+if (chrome_app)
+	$('.installation #chrome').hide()
 if (!android_app)
 	$('[rel=menu]').show();
 
@@ -93,12 +97,12 @@ var initApp = function() {
 		app.router.navigate(address, {trigger: true});
 	}
 
+	download_quran();
+
 	if (store) {
-		$('.store-display').show();
-		$('.store-hide').hide();
+		$('.storage').show();
 		$('#download-tafsir').click(download_tafsir);
 	}
-	download_quran();
 
 	$(window).resize();
 	track('Zolal');

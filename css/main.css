@@ -18,6 +18,13 @@
   padding-right: 0;
   padding-left: 0;
 }
+.btn {
+  padding: 2px 7px;
+  font-size: 17px;
+}
+.glyphicon {
+  top: 4px;
+}
 /* zolal */
 * {
   box-sizing: border-box;
@@ -502,8 +509,11 @@ body {
   margin-top: 25px;
   min-height: 100px;
 }
-#menu #options p {
+#menu #options div {
   margin-bottom: 15px;
+}
+#menu #options div:last-child {
+  margin-bottom: 0;
 }
 #menu .nav li {
   float: right;
