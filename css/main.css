@@ -593,12 +593,17 @@ body {
   #views {
     padding: 0 5px;
   }
+  #quran .page div.sura {
+    margin-right: -5px;
+    margin-left: -5px;
+  }
   #quran #page:before {
     width: 5px;
   }
   .fill,
   .tafsir-text .active,
-  .page {
+  .page,
+  .ayas {
     padding: 0 5px;
     margin: 0 -5px;
   }
@@ -625,10 +630,6 @@ body {
   #views {
     height: calc(100% - 40px);
   }
-  #quran .page div.sura {
-    margin-right: -10px;
-    margin-left: -10px;
-  }
   #quran #page.is-dragging:before,
   #quran #page.active:before {
     left: 0;
@@ -637,5 +638,9 @@ body {
 @media (min-width: 480px) and (max-width: 768px) {
   html {
     zoom: 130%;
+  }
+  #quran .page div.sura {
+    margin-right: -10px;
+    margin-left: -10px;
   }
 }
