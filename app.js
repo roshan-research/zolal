@@ -143,8 +143,8 @@ $("#views").swipe({
 // track
 var trackedData;
 var track = function(title, data) {
-	if ('mixpanel' in window && data != trackedData)
-		mixpanel.track(title, data);
+	if ('mixpanel' in window && data != trackedData && navigator.onLine)
+			mixpanel.track(title, data);
 	trackedData = data;
 }
 
