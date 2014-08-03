@@ -125,9 +125,14 @@ blockquote p,
   -o-animation: ICON-SPIN 2s infinite linear;
   animation: ICON-SPIN 2s infinite linear;
 }
-.loading.twitter-typeahead:before {
-  left: 15px;
-  color: inherit;
+.loading:after {
+  content: "صبر بفرمایید";
+  position: absolute;
+  top: calc(50% + 20px);
+  left: 0;
+  width: 100%;
+  text-align: center;
+  color: #031634;
 }
 .loading.failed:before {
   -webkit-animation: none;
@@ -135,6 +140,19 @@ blockquote p,
   -ms-animation: none;
   -o-animation: none;
   animation: none;
+}
+.loading.failed:after {
+  content: "خطا در اتصال";
+  position: absolute;
+  top: calc(50% + 20px);
+  left: 0;
+  width: 100%;
+  text-align: center;
+  color: #031634;
+}
+.loading.twitter-typeahead:before {
+  left: 15px;
+  color: inherit;
 }
 #quran {
   max-width: 600px;
