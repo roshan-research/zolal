@@ -178,12 +178,13 @@ def resolve_phrases(section, tokens, book, id):
 def aya_tokens(aya):
 	parts = simple_aya(aya['text']).replace('  ', ' ').split(' ')
 	raw_ayas = aya['raw'].split(' ')
+	normalize_token = lambda s: s.replace('آ','ا').replace('ء','').replace('ئ','').replace('أ','ا').replace('إ','ا').replace('ؤ','و')
 	tokens = [{'word': word, 'stem': isri.stem(word), 'id': parts.index(word)+1} for word in raw_ayas if word in parts]
 	not_found_words = [word for word in raw_ayas  if word not in parts]
 	not_found_parts = [part for part in parts if not part in raw_ayas]
 	for word in not_found_words:
 		for part in not_found_parts:
-			if(word.replace('ا','') == part.replace('ا','')):
+			if( normalize_token(word).replace('ا','') == normalize_token(part).replace('ا','') or normalize_token(word).replace('و','ا') == normalize_token(part).replace('و','ا') or normalize_token(word).replace('ی','ا') == normalize_token(part).replace('ی','ا')):
 				tokens.append({'word':word,'stem': isri.stem(word),'id': parts.index(part)+1})
 	return tokens
 
