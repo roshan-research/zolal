@@ -46,7 +46,7 @@ document.addEventListener('backbutton', function(e) {
 	if (app.position.mode == 'quran')
 		navigator.app.exitApp();
 	else {
-		navigator.app.backHistory();
+		history.back();
 
 		// back without history
 		var last_position = $.extend({}, app.position);
