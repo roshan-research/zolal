@@ -2,7 +2,7 @@
 import json
 from path import path
 from quran import read_quran, read_simple, read_translation, read_lines
-from almizan import read_tafsir, section_ayas, refine_numbers, resolve_footnotes, refine_section, resolve_phrases
+from almizan import read_tafsir, section_ayas, refine_numbers, resolve_footnotes, refine_section, resolve_phrases,resolve_headers
 
 
 data = path('data')
@@ -26,7 +26,7 @@ if __name__ == '__main__':
 		print(page, file=quran_file)
 
 	# almizan
-	almizan_sections, phrases = [], []
+	almizan_sections, phrases, headers = [], [], []
 	for ar_section, fa_section in zip(read_tafsir(open(data / 'almizan_ar.html')), read_tafsir(open(data / 'almizan_fa.html'))):
 
 		# read section id
@@ -50,10 +50,12 @@ if __name__ == '__main__':
 		resolve_footnotes(ar_section)
 		refine_section(ar_section)
 		phrases.extend(resolve_phrases(ar_section, tokens, 'almizan_ar', id))
+		headers.extend(resolve_headers(ar_section, id))
 
 		resolve_footnotes(fa_section)
 		refine_section(fa_section)
 		phrases.extend(resolve_phrases(fa_section, tokens, 'almizan_fa', id))
+		headers.extend(resolve_headers(fa_section, id))
 
 		almizan_sections.append(id)
 		print(ar_section.html(), file=open(files / 'almizan_ar' / id, 'w'))
@@ -70,3 +72,7 @@ if __name__ == '__main__':
 	output = open('phrases.txt', 'w')
 	print(len(list(filter(lambda t: len(t) == 3, phrases))), len(phrases), sep='/', file=output)
 	print(*phrases, sep='\n', file=output)
+
+	# resolved headers
+	output = open('headers.txt', 'w')
+	print(*headers, sep='\n', file=output)
