@@ -4,6 +4,7 @@ from collections import defaultdict
 from pyquery import PyQuery as pq
 from nltk import stem
 from quran import simple_aya
+import numpy
 
 
 isri = stem.ISRIStemmer()
@@ -214,5 +215,130 @@ def resolve_phrase(phrase, tokens, book):
 
 	return None
 
+def resolve_headers(section, id):
+	headers = []
+	normalize_ayas = lambda sura_ayas : [sura_ayas.split('_')[0] + '_%d'% a for a in range(int(sura_ayas.split('_')[1].split('-')[0]), int(sura_ayas.split('_')[1].split('-')[1])+1)] if len(sura_ayas.split('_')[1].split('-')) > 1 else [sura_ayas]
+	for header in section.find('.title').items():
+		header_ayas = sum([normalize_ayas(aya_header.attr('rel')) for aya_header in header.find('.aya').items()], [])
+		header_tokens = sum([normalize_ayas('_'.join(token_header.attr('rel').split('_')[1:3])) for token_header in header.find('em[rel]').items()], [])
+
+		content_ayas, content_tokens = [],[]
+		for content in header.parent().nextAll().items():
+			if(content.is_('h3 .title') or content.is_('p code.aya')):
+				break
+			for span_aya in content.find('span.aya').items():
+				content_ayas.extend(normalize_ayas(span_aya.attr('rel')))
+			for token_content in content.find('em[rel]').items():
+				content_tokens.extend(normalize_ayas('_'.join(token_content.attr('rel').split('_')[1:3])))
+
+		ayas = resolve_header(id, header_ayas, header_tokens, content_ayas, content_tokens)
+		header.attr('rel', ' '.join(ayas))
+
+		headers.append(((header.text(), ayas), (header_ayas, header_tokens, content_ayas, content_tokens)))
+
+	return headers
 
 
+def resolve_header(section_id, header_ayas=[], header_tokens=[], content_ayas=[], content_tokens=[]):
+	"""
+	>>> resolve_header('5_116-120', [], [], [], ['5_116'])
+	['5_116', '5_117', '5_118', '5_119', '5_120']
+	>>> resolve_header('2_180-182', ['2_183'], ['2_183'])
+	['2_180', '2_181', '2_182']
+	>>> resolve_header('2_183-186', ['2_183'], ['2_183'])
+	['2_183']
+	>>> resolve_header('2_1-5', ['2_4'], [], ['2_4', '38_26', '2_4', '2_5', '6_125', '59_9', '2_5'], [])
+	['2_4']
+	>>> resolve_header('5_112-115',['5_112'], [], ['5_112', '5_111', '5_111', '2_260', '2_260', '5_113', '2_260', '5_112'], ['5_112', '5_112', '5_112', '5_112'])
+	['5_112']
+	>>> resolve_header('5_94-99', [], [], ['5_95', '73_16', '5_95', '5_96', '5_95'], ['5_95', '5_95', '5_95', '5_95', '5_95', '5_95', '5_95', '5_95', '5_95', '5_95', '5_95'])
+	['5_95']
+	>>> resolve_header('5_94-99', ['5_97'], [], ['5_97', '4_5', '5_97', '3_96', '5_97', '5_97', '5_97'], ['5_95', '5_97', '5_97', '5_97', '5_95'])
+	['5_97']
+	>>> resolve_header('5_90-93', [], [], ['5_90'],[])
+	['5_90', '5_91', '5_92', '5_93']
+	"""
+
+	# constant values
+	ha_p,ha_m = 1.0,0.5
+	ht_p,ht_m = 1.0,0.5
+	cs_p,cs_m = 0.2,0.0
+	ct_p,ct_m = 0.1,0.0
+	default  = 0.0
+
+	# retreive all ayas in section
+	if(section_id == '0'):
+		return []
+	section_sura,section_aya = section_id.split('_')
+	section_start,section_end = int(section_aya.split('-')[0]),int(section_aya.split('-')[1])
+	not_in_section = lambda sura_aya : int(sura_aya.split('_')[0]) != int(section_sura) or not(section_start <= int(sura_aya.split('_')[1]) <= section_end)
+
+	result = []
+	ayas_weight = defaultdict(float)
+
+	for a in range(section_start, section_end+1):
+		aya = '%s_%d' % (section_sura, a)
+		ayas_weight[aya] = default
+
+	# aya or phrase in header increase probability that aya and decrease others
+	change = False
+	for ha in header_ayas:
+		if(not_in_section(ha)):
+			continue
+		ayas_weight[ha] += ha_p
+		change = True
+
+	if (change):
+		for other in ayas_weight.keys():
+			if(other not in header_ayas ): ayas_weight[other] -= ha_m
+
+	change = False
+	for ht in header_tokens:
+		if(not_in_section(ht)):
+			continue
+		ayas_weight[ht] += ht_p
+		change = True
+
+	if (change):
+		for other in ayas_weight.keys():
+			if(other not in header_tokens ): ayas_weight[other] -= ht_m
+
+	change = False
+	for cs in content_ayas:
+		if(not_in_section(cs)):
+			continue
+		ayas_weight[cs] += cs_p
+		change = True
+
+	if (change):
+		for other in ayas_weight.keys():
+			if (other not in content_ayas): ayas_weight[other] -= cs_m
+
+	change = False
+	for ct in content_tokens:
+		if (not_in_section(ct)):
+			continue
+		ayas_weight[ct] += ct_p
+		change = True
+
+	if (change):
+		for other in ayas_weight.keys():
+			if(other not in content_tokens ): ayas_weight[other] -= ct_m
+
+	# normalize distribution and threshold (function of mean and variance)
+	std = numpy.std(list(ayas_weight.values()))
+	mean = numpy.mean(list(ayas_weight.values()))
+
+	if(std - 0.0 > 0.000001):
+		for aw in ayas_weight.keys():
+			ayas_weight[aw] = (ayas_weight[aw] - mean ) / std
+
+	threshold = default
+	if(std - 0.0 > 0.000001):
+		threshold = (default - mean) /std
+
+	for ayaweight in ayas_weight.keys():
+		if(ayas_weight[ayaweight] >= threshold):
+			result.append(ayaweight)
+
+	return sorted(result)
