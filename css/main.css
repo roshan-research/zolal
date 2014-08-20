@@ -300,6 +300,9 @@ blockquote p,
   font-weight: bold;
   font-size: 90%;
 }
+.tafsir-text h3 em {
+  font-size: 100%;
+}
 .tafsir-text span.footnote {
   display: inline-block;
   vertical-align: middle;
