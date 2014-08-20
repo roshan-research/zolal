@@ -362,7 +362,7 @@ var TafsirView = Backbone.View.extend({
 			scrollElement: this.el,
 			throttle: 100,
 			handler: function (values, done) {
-				app.tafsir.checkScroll(values.bottom < 300, values.top < 300);
+				app.tafsir.checkScroll();
 				done();
 			}
 		});
@@ -375,24 +375,25 @@ var TafsirView = Backbone.View.extend({
 	renderBayan: function (bayan) {
 		content = $(bayan.get('content')).filter(function() { return this.nodeType != 3; });
 		content.find('span.footnote').tooltip({html: true, placement: 'auto', trigger: 'click hover focus'});
-		this.parts = content.toArray();
+
 		this.$el.removeClass('loading');
-		this.content.html('');
-		this.$el.scrollTop(0);
+		this.content.html(content);
 
 		// bold active part
+		active = null;
 		if (this.position.aya)
-			part = content.find('code.aya[rel='+ this.position.aya +']').parent().index();
+			active = content.find('code.aya[rel='+ this.position.aya +']').parent();
 		else if (this.position.part)
-			part = this.position.part;
+			active = $(content[this.position.part]);
 		else
-			part = 0;
-		this.currentPart = part >= 0 && part < this.parts.length ? part : 0;
+			this.$el.scrollTop(0);
 
-		if (this.currentPart > 0)
-			$(this.parts[this.currentPart]).addClass('active');
+		if (active) {
+			this.$el.scrollTop(active.offset().top - this.$el.offset().top + this.$el.scrollTop());
+			active.addClass('active');
+		}
 
-		this.checkScroll(true, true);
+		this.checkScroll();
 	},
 	loadSection: function() {
 		var tafsir = this;
@@ -412,23 +413,7 @@ var TafsirView = Backbone.View.extend({
 
 		this.almizan.loadBayan(position.lang +'/'+ position.section, prepare ? null : $.proxy(this.renderBayan, this));
 	},
-	checkScroll: function (loadBottom, loadTop) {
-		loadParts = 10;
-
-		if (loadBottom)
-			this.content.append(this.parts.splice(this.currentPart, loadParts));
-
-		if (loadTop) {
-			this.currentPart -= loadParts;
-			if (this.currentPart < 0) {
-				loadParts += this.currentPart;
-				this.currentPart = 0;
-			}
-
-			contentHeight =	this.content.height();
-			this.content.prepend(this.parts.splice(this.currentPart, loadParts));
-			this.$el.scrollTop(this.$el.scrollTop() + this.content.height() - contentHeight);
-		}
+	checkScroll: function () {
 
 		// find current page
 		var current_page;
