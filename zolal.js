@@ -124,8 +124,13 @@ var Almizan = Backbone.Collection.extend({
 	model: Bayan,
 	initialize: function() {
 		this.loaded = [];
+		this.lastFetched = null;
 	},
 	loadBayan: function(id, callback) {
+		if (this.lastFetched && this.lastFetched.get('id') == id) {
+			callback(this.lastFetched);
+			return;
+		}
 
 		// load ayas for inserting details after bayan load
 		parts = sectionToAddress(id.split('/')[1])
@@ -140,6 +145,7 @@ var Almizan = Backbone.Collection.extend({
 		bayan.fetch({
 			success: function (bayan) {
 				almizan.extractDetails(bayan);
+				almizan.lastFetched = bayan;
 				if (callback) callback(bayan);
 			},
 			error: $.proxy(function (bayan) {
