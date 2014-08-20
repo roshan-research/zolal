@@ -13,6 +13,7 @@ js/draggabilly.js
 js/jquery.touchSwipe.js
 js/bootstrap.js
 js/typeahead.js
+js/steady.js
 js/meta.js
 js/mixpanel.js
 css/bootstrap.css

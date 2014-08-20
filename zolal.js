@@ -349,10 +349,16 @@ var TafsirView = Backbone.View.extend({
 		this.content = this.$el.find('.content');
 		this.sections = almizan_sections;
 		this.parts = [];
-		this.loading = false;
-	},
-	events: {
-		'scroll': 'checkScroll'
+
+		this.steady = new Steady({
+			conditions: {'min-top': 0, 'min-bottom': 0},
+			scrollElement: this.el,
+			throttle: 100,
+			handler: function (values, done) {
+				app.tafsir.checkScroll(values.bottom < 300, values.top < 300);
+				done();
+			}
+		});
 	},
 	render: function() {
 		this.$el.find('.content').empty();
@@ -379,7 +385,7 @@ var TafsirView = Backbone.View.extend({
 		if (this.currentPart > 0)
 			$(this.parts[this.currentPart]).addClass('active');
 
-		this.checkScroll();
+		this.checkScroll(true, true);
 	},
 	loadSection: function() {
 		var tafsir = this;
@@ -399,15 +405,8 @@ var TafsirView = Backbone.View.extend({
 
 		this.almizan.loadBayan(position.lang +'/'+ position.section, prepare ? null : $.proxy(this.renderBayan, this));
 	},
-	checkScroll: function () {
-		if (this.loading)
-			return;
-		this.loading = true;
-
+	checkScroll: function (loadBottom, loadTop) {
 		loadParts = 10;
-		triggerOff = 300;
-		loadBottom = this.content.height() - this.$el.scrollTop() - this.$el.height() < triggerOff;
-		loadTop = this.$el.scrollTop() < triggerOff;
 
 		if (loadBottom)
 			this.content.append(this.parts.splice(this.currentPart, loadParts));
@@ -440,8 +439,6 @@ var TafsirView = Backbone.View.extend({
 
 		// remvoe active footnotes
 		this.$el.find('.tooltip').remove();
-
-		this.loading = false;
 	}
 });
 
