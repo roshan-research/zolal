@@ -346,7 +346,10 @@ var QuranView = Backbone.View.extend({
 var TafsirView = Backbone.View.extend({
 	el: $("#tafsir"),
 	initialize: function() {
+		this.content = this.$el.find('.content');
 		this.sections = almizan_sections;
+		this.parts = [];
+		this.loading = false;
 	},
 	events: {
 		'scroll': 'checkScroll'
@@ -357,24 +360,25 @@ var TafsirView = Backbone.View.extend({
 		this.loadSection();
 	},
 	renderBayan: function (bayan) {
-		// content
-		this.$el.find('.content').html(bayan.get('content'));
+		content = $(bayan.get('content')).filter(function() { return this.nodeType != 3; });
+		content.find('span.footnote').tooltip({html: true, placement: 'auto', trigger: 'click hover focus'});
+		this.parts = content.toArray();
 		this.$el.removeClass('loading');
+		this.content.html('');
 		this.$el.scrollTop(0);
 
 		// bold active part
 		if (this.position.aya)
-			part = this.$el.find('code.aya[rel='+ this.position.aya +']').parent();
+			part = content.find('code.aya[rel='+ this.position.aya +']').parent().index();
 		else if (this.position.part)
-			part = this.$el.find('.content').children().eq(this.position.part);
+			part = this.position.part;
+		else
+			part = 0;
+		this.currentPart = part >= 0 && part < this.parts.length ? part : 0;
 
-		if (part && part.length > 0) {
-			this.$el.scrollTop(part.offset().top - this.$el.offset().top + this.$el.scrollTop());
-			part.addClass('active');
-		}
+		if (this.currentPart > 0)
+			$(this.parts[this.currentPart]).addClass('active');
 
-		// footnote
-		this.$el.find('span.footnote').tooltip({html: true, placement: 'auto', trigger: 'click hover focus'});
 		this.checkScroll();
 	},
 	loadSection: function() {
@@ -396,6 +400,31 @@ var TafsirView = Backbone.View.extend({
 		this.almizan.loadBayan(position.lang +'/'+ position.section, prepare ? null : $.proxy(this.renderBayan, this));
 	},
 	checkScroll: function () {
+		if (this.loading)
+			return;
+		this.loading = true;
+
+		loadParts = 10;
+		triggerOff = 300;
+		loadBottom = this.content.height() - this.$el.scrollTop() - this.$el.height() < triggerOff;
+		loadTop = this.$el.scrollTop() < triggerOff;
+
+		if (loadBottom)
+			this.content.append(this.parts.splice(this.currentPart, loadParts));
+
+		if (loadTop) {
+			this.currentPart -= loadParts;
+			if (this.currentPart < 0) {
+				loadParts += this.currentPart;
+				this.currentPart = 0;
+			}
+
+			contentHeight =	this.content.height();
+			this.content.prepend(this.parts.splice(this.currentPart, loadParts));
+			this.$el.scrollTop(this.$el.scrollTop() + this.content.height() - contentHeight);
+		}
+
+		// find current page
 		var current_page;
 		base = this.$el.position().top;
 		this.$el.find('code.page').each(function() {
@@ -404,7 +433,6 @@ var TafsirView = Backbone.View.extend({
 				return false;
 			}
 		})
-
 		if (current_page) {
 			parts = current_page.split(',');
 			this.trigger('tafsir-scroll', {'volume': parts[0], 'page': parts[1]})
@@ -412,6 +440,8 @@ var TafsirView = Backbone.View.extend({
 
 		// remvoe active footnotes
 		this.$el.find('.tooltip').remove();
+
+		this.loading = false;
 	}
 });
 
