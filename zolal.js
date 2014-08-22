@@ -374,8 +374,16 @@ var TafsirView = Backbone.View.extend({
 		});
 	},
 	render: function() {
-		this.$el.find('.content').empty();
-		this.loadSection();
+		this.$el.addClass('loading');
+		this.almizan.loadBayan(this.position.lang +'/'+ this.position.section, $.proxy(this.renderBayan, this));
+	},
+	prepareBayan: function() {
+		position = quranToTafsir(this['prepare'].quran);
+		bid = position.lang +'/'+ position.section;
+		if (this.almizan.loaded.indexOf(bid) >= 0)
+			return;
+
+		this.almizan.loadBayan(position.lang +'/'+ position.section);
 	},
 	renderBayan: function (bayan) {
 		content = $(bayan.get('content')).filter(function() { return this.nodeType != 3; });
@@ -385,38 +393,20 @@ var TafsirView = Backbone.View.extend({
 		this.content.html(content);
 
 		// bold active part
-		active = null;
+		this.currentPart = 0;
 		if (this.position.aya)
-			active = content.find('code.aya[rel='+ this.position.aya +']').parent();
-		else if (this.position.part)
-			active = $(content[this.position.part]);
-		else
-			this.$el.scrollTop(0);
+			this.currentPart = content.find('code.aya[rel='+ this.position.aya +']').parent().index();
+		else if (this.position.part && this.currentPart < content.length)
+			this.currentPart = this.position.part;
 
-		if (active && active.length) {
+		if (this.currentPart > 0) {
+			active = $(content[this.currentPart]);
 			this.$el.scrollTop(active.offset().top - this.$el.offset().top + this.$el.scrollTop());
 			active.addClass('active');
-		}
+		} else
+			this.$el.scrollTop(0);
 
 		this.checkScroll();
-	},
-	loadSection: function() {
-		var tafsir = this;
-		var position = this.position;
-		var prepare = Boolean(this['prepare']);
-
-		if (prepare) {
-			position = quranToTafsir(this['prepare'].quran);
-			bid = position.lang +'/'+ position.section;
-			if (this.almizan.loaded.indexOf(bid) >= 0)
-				return;
-		}
-
-		// show loading element
-		if (!prepare)
-			this.$el.addClass('loading');
-
-		this.almizan.loadBayan(position.lang +'/'+ position.section, prepare ? null : $.proxy(this.renderBayan, this));
 	},
 	checkScroll: function () {
 
@@ -623,7 +613,7 @@ var AppView = Backbone.View.extend({
 
 		// set position
 		this.position = variables.position;
-		this.quran.on('aya-select', this.tafsir.loadSection, $.extend({}, this.tafsir, {prepare: this.position}));
+		this.quran.on('aya-select', this.tafsir.prepareBayan, $.extend({}, this.tafsir, {prepare: this.position}));
 	},
 	events: {
 		'keydown': 'navKey',
