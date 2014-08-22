@@ -392,7 +392,7 @@ var TafsirView = Backbone.View.extend({
 		else
 			this.$el.scrollTop(0);
 
-		if (active) {
+		if (active && active.length) {
 			this.$el.scrollTop(active.offset().top - this.$el.offset().top + this.$el.scrollTop());
 			active.addClass('active');
 		}
