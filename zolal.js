@@ -144,8 +144,8 @@ var Almizan = Backbone.Collection.extend({
 		var bayan = new Bayan({id: id});
 		bayan.fetch({
 			success: function (bayan) {
-				almizan.extractDetails(bayan);
 				almizan.lastFetched = bayan;
+				almizan.extractDetails(bayan);
 				if (callback) callback(bayan);
 			},
 			error: $.proxy(function (bayan) {
@@ -155,6 +155,7 @@ var Almizan = Backbone.Collection.extend({
 					success: function(item){
 						bayan = new Bayan({id: this.id, content: item});
 						bayan.save();
+						almizan.lastFetched = bayan;
 						almizan.extractDetails(bayan);
 						if (callback) callback(bayan);
 					},
