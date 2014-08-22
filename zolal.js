@@ -337,6 +337,7 @@ var QuranView = Backbone.View.extend({
 			active.removeClass('active');
 			elm = this.$el.find('.aya-text[rel='+ id +']').addClass('active');
 
+			this.trigger('aya-select');
 			// scroll page to top or bottom
 			if (elm.position().top < 0)
 				page.scrollTop(0);
@@ -373,7 +374,6 @@ var TafsirView = Backbone.View.extend({
 	},
 	render: function() {
 		this.$el.find('.content').empty();
-		this.trigger('updateAddress');
 		this.loadSection();
 	},
 	renderBayan: function (bayan) {
@@ -610,8 +610,6 @@ var AppView = Backbone.View.extend({
 		this.detail.quran = this.quran.collection;
 		this.detail.almizan = this.tafsir.almizan;
 
-		this.quran.on('updateAddress', this.address.render, this.address);
-		this.tafsir.on('updateAddress', this.address.render, this.address);
 		this.tafsir.on('tafsir-scroll', this.address.tafsirScroll, this.address);
 		this.address.on('next-page', this.nextQuranPage, this);
 		this.address.on('prev-page', this.prevQuranPage, this);
@@ -624,7 +622,7 @@ var AppView = Backbone.View.extend({
 
 		// set position
 		this.position = variables.position;
-		this.quran.on('updateAddress', this.tafsir.loadSection, $.extend({}, this.tafsir, {prepare: this.position}));
+		this.quran.on('aya-select', this.tafsir.loadSection, $.extend({}, this.tafsir, {prepare: this.position}));
 	},
 	events: {
 		'keydown': 'navKey',
