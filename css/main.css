@@ -221,6 +221,9 @@ blockquote p,
 .aya-text.active .text {
   background: #e0d1b9;
 }
+.aya-text.active .found {
+  background: #D6BC89;
+}
 .aya-text .text {
   font-family: QuranFont;
 }
@@ -323,9 +326,6 @@ blockquote p,
 }
 #detail #aya {
   margin-top: 10px;
-}
-#detail #aya .found {
-  background: #D6BC89;
 }
 #detail #translation {
   margin: 10px 0 20px;

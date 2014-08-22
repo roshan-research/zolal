@@ -61,14 +61,14 @@ var tafsirDb = {
 var Aya = Backbone.Model.extend({
 	insertDetail: function(detail) {
 		details = this.get('details');
-		if (!details) {
+		if (!details)
 			details = {};
-			this.set('details', details);
-		}
 
 		key = detail['html'].substr(0, 15);
-		if (!details[key])
+		if (!details[key]) {
 			details[key] = detail;
+			this.set('details', details);
+		}
 	},
 	localStorage: new Backbone.LocalStorage('Quran')
 });
@@ -196,30 +196,34 @@ var Almizan = Backbone.Collection.extend({
 // views
 var AyaView = Backbone.View.extend({
 	template: _.template('<span class="aya-text" rel="<%= sura %>_<%= aya %>"><span class="text"><%= html %></span> <span class="number"><%= number %></span> </span>'),
+	initialize: function(){
+		this.model.on('change', this.render, this);
+	},
 	render: function () {
 		data = this.model.toJSON();
 		data['number'] = refine(data['aya']);
 		data['html'] = this.html();
-		this.setElement(this.template(data));
+		if (this.$el.hasClass('aya-text'))
+			this.$el.find('.text').html(data['html']);
+		else
+			this.setElement(this.template(data));
 		return this;
 	},
 	events: {
 		'click': 'click'
 	},
-	annotate: function(start, end, tag) {
-		if (!this.annotations)
-			this.annotations = [];
-		this.annotations.push({'start': start-1, 'end': end-1, 'tag': tag})
-		this.$el.find('.text').html(this.html());
-	},
 	html: function() {
 		words = this.model.get('text').replace(/[ ]*([ۖۗۚۛۙۘ])[ ]*/g, '\$1 ').split(' ');
 
-		if (this.annotations)
-			_.each(this.annotations, function(annotation) {
-				words[annotation.start] = '<span class="'+ annotation.tag +'">'+ words[annotation.start];
-				words[annotation.end] += '</span>';
+		if (data['details']) {
+			_.each(data['details'], function (detail) {
+				if (detail.lang != variables.lang || detail.type != 'phrase') return;
+
+				start = Number(detail.words.split('-')[0])-1; end = Number(detail.words.split('-')[1])-1;
+				words[start] = '<span class="found">'+ words[start];
+				words[end] += '</span>';
 			});
+		}
 
 		return words.join(' ').replace(/([ۖۗۚۛۙۘ])(<\/span>)?/g, '\$2<span class="mark">\$1</span>');
 	},
@@ -862,7 +866,6 @@ var DetailView = Backbone.View.extend({
 			if (detail.type == 'phrase') {
 				start = Number(detail.words.split('-')[0]); end = Number(detail.words.split('-')[1]);
 				phrase = '<span class="aya-text fill"><span class="text">'+ words.slice(start-1, end).join(' ') +'</span></span>'
-				view.ayaView.annotate(start, end, 'found');
 			}
 
 			view.$el.find('#sections').append('<a href="#'+ detail.link +'"><div class="fill">'+ phrase + detail.html +'</div></a>');
