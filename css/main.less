@@ -69,6 +69,22 @@ body, blockquote p, .tooltip-inner {
 	padding: 0 10px;
 	position: relative;
 	height: calc(~"100% - 60px");
+
+	&:before, &:after {
+		content: "";
+		position: absolute;
+		background: @color1;
+		width: 600px;
+		height: 100%;
+		top: 0;
+		z-index: 10;
+	}
+	&:before {
+		right: -602px;
+	}
+	&:after {
+		left: -602px;
+	}
 }
 #quran, #tafsir, #detail {
 	height: 100%;
@@ -174,6 +190,11 @@ body, blockquote p, .tooltip-inner {
 	#pages {
 		width: 100000px;
 		height: 100%;
+		position: absolute;
+
+		&.animate {
+			transition: left .3s ease;
+		}
 
 		.page {
 			height: 100%;
@@ -196,6 +217,7 @@ body, blockquote p, .tooltip-inner {
 		left: 0;
 		width: 0;
 		height: 45px;
+		z-index: 20;
 	}
 	#page:after {
 		content: "";
@@ -683,6 +705,10 @@ body {
 	}
 	#views {
 		height: calc(~"100% - 40px");
+
+		&:before, &:after {
+			content: none;
+		}
 	}
 	#quran {
 		#page.is-dragging:before, #page.active:before {

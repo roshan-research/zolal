@@ -253,27 +253,30 @@ var QuranView = Backbone.View.extend({
 			});
 	},
 	render: function() {
+		var quran = this;
 		this.loadPage(this.position.page);
 
 		// update address
 		if (this.position.aya == '')
 			this.position.sura = Number(quran_pages[this.position.page][0].split('_')[0]);
 
-		// prepare pages
-		this.loadPage(this.position.page-1);
-		this.loadPage(this.position.page+1);
-
 		// show page
 		this.$el.find('#page-style').html('#quran .page {width: '+ this.$el.outerWidth() +'px}');
-		var quran = this;
 		el = this.$el.find('.page[rel='+ this.position.page +']');
 		pages = this.$el.find('#pages');
 		front = pages.find('.front');
 		el.addClass('front');
+
 		if (front.attr('rel') != this.position.page)
-			this.$el.stop().animate({scrollLeft: el.offset().left - pages.offset().left + parseInt(this.$el.css('padding-left'))}, (front.length ? 300 : 0), function() {
+			pages.addClass('animate').css({left: -1*(el.offset().left - pages.offset().left)}).bind('transitionend', function() {
 				front.removeClass('front');
 				quran.$el.find('.page[rel='+ quran.position.page +']').addClass('front');
+
+				// prepare pages
+				setTimeout(function() {
+					quran.loadPage(quran.position.page-1);
+					quran.loadPage(quran.position.page+1);
+				}, 10);
 			});
 
 		// page indicator
@@ -315,12 +318,13 @@ var QuranView = Backbone.View.extend({
 		if (this.isRendered(page + 1)) {
 			pages.append(newPage);
 		} else if (this.isRendered(page - 1)) {
-			first = pages.children().first();
-			off = first.offset().left;
 			pages.prepend(newPage);
-			this.$el.scrollLeft(this.$el.scrollLeft() + first.offset().left - off);
+			front = pages.find('.front');
+			if (front.length)
+				pages.removeClass('animate').css({left: -1*(front.offset().left - pages.offset().left)});
 		} else {
 			pages.empty();
+			pages.removeClass('animate').css({left: this.$el.css('padding-left')});
 			pages.append(newPage);
 		}
 
