@@ -368,7 +368,7 @@ var TafsirView = Backbone.View.extend({
 			scrollElement: this.el,
 			throttle: 100,
 			handler: function (values, done) {
-				app.tafsir.checkScroll();
+				app.tafsir.checkScroll(values.bottom < 300, values.top < 300);
 				done();
 			}
 		});
@@ -388,9 +388,10 @@ var TafsirView = Backbone.View.extend({
 	renderBayan: function (bayan) {
 		content = $(bayan.get('content')).filter(function() { return this.nodeType != 3; });
 		content.find('span.footnote').tooltip({html: true, placement: 'auto', trigger: 'click hover focus'});
+		this.parts = content.toArray();
 
 		this.$el.removeClass('loading');
-		this.content.html(content);
+		this.content.empty();
 
 		// bold active part
 		this.currentPart = 0;
@@ -406,9 +407,25 @@ var TafsirView = Backbone.View.extend({
 		} else
 			this.$el.scrollTop(0);
 
-		this.checkScroll();
+		this.checkScroll(true, true);
 	},
-	checkScroll: function () {
+	checkScroll: function (loadBottom, loadTop) {
+		loadParts = 10;
+
+		if (loadBottom)
+			this.content.append(this.parts.splice(this.currentPart, loadParts));
+
+		if (loadTop) {
+			this.currentPart -= loadParts;
+			if (this.currentPart < 0) {
+				loadParts += this.currentPart;
+				this.currentPart = 0;
+			}
+
+			contentHeight =	this.content.height();
+			this.content.prepend(this.parts.splice(this.currentPart, loadParts));
+			this.$el.scrollTop(this.$el.scrollTop() + this.content.height() - contentHeight);
+		}
 
 		// find current page
 		var current_page;
