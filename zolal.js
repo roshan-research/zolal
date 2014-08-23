@@ -281,19 +281,22 @@ var QuranView = Backbone.View.extend({
 		indicator.css('top', pageToOffset(this.position.page));
 	},
 	renderPage: function(page) {
-		var el = this.$el.find('.page[rel='+ page +'] .ayas');
-		el.parent().removeClass('loading');
+		var elements = [];
 		_.each(this.collection.models, function (item) {
 			if (item.get('page') == page) {
 				var ayaView = new AyaView({model: item});
 				if (item.get('aya') == 1) {
-					el.append('<div class="sura header"><div class="right">سورة</div><div class="left">'+ quran_suras[item.get('sura')-1] +'</div></div>');
+					elements.push($('<div class="sura header"><div class="right">سورة</div><div class="left">'+ quran_suras[item.get('sura')-1] +'</div></div>'));
 					if (item.get('sura') != 1 && item.get('sura') != 9)
-						el.append('<div class="aya-text bism"><span class="text">بِسمِ اللَّهِ الرَّحمٰنِ الرَّحيمِ</span></div>');
+						elements.push($('<div class="aya-text bism"><span class="text">بِسمِ اللَّهِ الرَّحمٰنِ الرَّحيمِ</span></div>'));
 				}
-				el.append(ayaView.render().el);
+				elements.push(ayaView.render().el);
 			}
 		});
+
+		page = this.$el.find('.page[rel='+ page +']');
+		page.find('.ayas').html(elements);
+		page.removeClass('loading');
 		this.updateSelectedAya();
 	},
 	loadPage: function(page) {
