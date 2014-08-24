@@ -421,12 +421,19 @@
                         chars = token.split("");
                         while (ch = chars.shift()) {
                             node = node.children[ch] || (node.children[ch] = newNode());
-                            node.ids.push(id);
+                            if(chars.length == 0)
+                                node.ids.push(id);
                         }
                     });
                 });
             },
             get: function get(query) {
+                var extractIds = function(node, ids) {
+                    ids.push.apply(ids, node.ids);
+                    for (i in node.children)
+                        extractIds(node.children[i], ids);
+                }
+
                 var that = this, tokens, matches;
                 tokens = normalizeTokens(this.queryTokenizer(query));
                 _.each(tokens, function(token) {
@@ -440,7 +447,8 @@
                         node = node.children[ch];
                     }
                     if (node && chars.length === 0) {
-                        ids = node.ids.slice(0);
+                        ids = [];
+                        extractIds(node, ids);
                         matches = matches ? getIntersection(matches, ids) : ids;
                     } else {
                         matches = [];
