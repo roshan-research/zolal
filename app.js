@@ -68,7 +68,7 @@ if (!android_app)
 
 // app initialization
 var initApp = function() {
-	$('#views').removeClass('loading');
+	$('#wrap').removeClass('loading');
 
 	app = new AppView();
 	app.router = new AddressRouter();
