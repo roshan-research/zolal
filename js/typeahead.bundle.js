@@ -410,20 +410,16 @@
             },
             add: function(data) {
                 var that = this;
+                var id, tokens, node;
                 data = _.isArray(data) ? data : [ data ];
                 _.each(data, function(datum) {
-                    var id, tokens;
                     id = that.datums.push(datum) - 1;
                     tokens = normalizeTokens(that.datumTokenizer(datum));
                     _.each(tokens, function(token) {
-                        var node, chars, ch;
                         node = that.trie;
-                        chars = token.split("");
-                        while (ch = chars.shift()) {
-                            node = node.children[ch] || (node.children[ch] = newNode());
-                            if(chars.length == 0)
-                                node.ids.push(id);
-                        }
+                        for (i in token)
+                          node = node.children[token[i]] || (node.children[token[i]] = newNode());
+                        node.ids.push(id);
                     });
                 });
             },
