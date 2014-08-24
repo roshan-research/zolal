@@ -1,4 +1,6 @@
 
+var quran_tokens = {};
+
 // read variables
 appStorage = new Backbone.LocalStorage('App');
 if (!appStorage.find({id: 'variables'})) {
@@ -500,27 +502,25 @@ var AddressView = Backbone.View.extend({
 
 		// search input
 		var search_input = this.$el.find('#search');
-		var ayaTokens = function(text) {
-			text = normalize(text.trim());
-			return text.split(' ');
-		}
+		var datumTokenizer = function(d) { return quran_tokens[d.id].split(' '); };
+		var queryTokenizer = function(q) { return normalize(q).split(' '); };
 
 		this.aya_items = new Bloodhound({
 			local: [],
-			datumTokenizer: function(d) { return ayaTokens(d.raw); },
-			queryTokenizer: ayaTokens,
+			datumTokenizer: datumTokenizer,
+			queryTokenizer: queryTokenizer,
 			limit: 20
 		});
 
 		search_input.typeahead({hint: false, autoselect: true, minLength: 3}, {
 			name: 'aya',
-			displayKey: 'raw',
+			displayKey: function(aya) { return 'سوره '+ quran_suras[Number(aya.id.split('_')[0])-1] +'، آیه '+ refine(aya.id.split('_')[1]); },
 			source: this.aya_items.ttAdapter(),
 			templates: {
 				suggestion: function(aya) {
-					parts = aya.id.split('_');
-					result = searchResult(aya.raw, ayaTokens(aya.raw), ayaTokens(search_input.val()));
-					return '<p>'+ result +'</p>'; // '<i>'+ quran_suras[parts[0]-1] +'، '+ parts[1] +'</i>';
+					model = new Aya({id: aya.id}); model.fetch();
+					html = searchResult(model.get('raw'), datumTokenizer(aya), queryTokenizer(search_input.val()));
+					return '<p>'+ html +'</p>';;
 				}
 			}
 		});
@@ -604,7 +604,8 @@ var AddressView = Backbone.View.extend({
 		var address = this;
 		download_quran().then(function() {
 			setTimeout(function() { // render address bar
-				address.aya_items.local = JSON.parse(localStorage.Raws);
+				quran_tokens = JSON.parse(localStorage.QuranTokens);
+				address.aya_items.local = _.map(localStorage.Quran.split(','), function(id) { return {id: id}; });
 				address.aya_items.initialize();
 			}, 20);
 		});
@@ -896,10 +897,6 @@ var renumchars = {'۰': '0', '۱': '1', '۲': '2', '۳': '3', '۴': '4', '۵': '
 var rerefine = function(str) {
 	return String(str).replace(/[۰-۹]/g, function(c) { return renumchars[c]; });
 };
-var normalchars = {'أ': 'ا', 'إ': 'ا', 'آ': 'ا', 'ؤ': 'و', 'ة': 'ه', 'ي': 'ی', 'ك': 'ک'};
-var normalize = function(str) {
-	return String(str).replace(/[أإآؤةيك]/g, function(c) { return normalchars[c]; });
-};
 
 
 var sectionToAddress = function(section) {
@@ -973,54 +970,3 @@ _.each(almizan_sections, function(section) {
 	for (i = parts[1]; i <= parts[2]; i++)
 		almizan_ayas[parts[0]+'_'+i] = section;
 });
-
-
-// aya search
-var searchResult = function(resultText, resultTokens, queryTokens) {
-	words = resultText.split(' ');
-
-	// match query and result
-	matched = [];
-	for (r in resultTokens)
-		for (q in queryTokens)
-			if (resultTokens[r] == queryTokens[q] || (resultTokens[r].substr(0, queryTokens[q].length) == queryTokens[q])) {
-				matched.push(Number(r));
-				break;
-			}
-
-	// select surrounding words
-	selection = []; queue = matched.slice(); chars = 0;
-	while(chars < searchResultChars && queue.length) {
-		word = queue.shift();
-		if (selection.indexOf(word) >= 0)
-			continue;
-
-		if (word > 0)
-			queue.push(word-1);
-		if (word < words.length-1)
-			queue.push(word+1);
-		selection.push(word);
-		chars += words[word].length;
-	}
-
-	// bold matched words
-	for (m in matched)
-		words[matched[m]] = '<b>'+ words[matched[m]] +'</b>';
-
-	// result composition
-	result = [];
-	selection.sort(function(a, b) { return a - b; });
-
-	var lastW = -1;
-	selection.forEach(function(w) {
-		if (w != lastW+1)
-			result += ' ...';
-		result += ' '+ words[w];
-		lastW = w;
-	});
-
-	if (lastW != selection.length-1)
-		result += ' ...';
-
-	return result.trim();
-}

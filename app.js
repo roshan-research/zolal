@@ -242,14 +242,15 @@ var parse_quran = function(data) {
 	var ids = [], raws = '';
 	data.split('\n').forEach(function(aya) {
 		if (!aya) return;
-		id = aya.substr(aya.indexOf('id') + 6).slice(0, -2);
-		raws += ',{'+ aya.substr(aya.indexOf('raw')-1);
+		i = aya.indexOf('id'); r = aya.indexOf('raw');
+		id = aya.substr(i + 6).slice(0, -2);
+		raws += id + aya.substr(r+3, i-r-3);
 
 		localStorage['Quran-'+ id] = aya;
 		ids.push(id);
 	});
 	localStorage.Quran = ids.join(',');
-	localStorage.Raws = '['+ raws.slice(1) +']';
+	localStorage.QuranTokens = normalize('{"'+ raws.slice(0, -3) +'}');
 };
 
 

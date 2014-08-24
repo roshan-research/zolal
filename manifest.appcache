@@ -4,6 +4,7 @@ CACHE MANIFEST
 CACHE:
 zolal.js
 app.js
+search.js
 js/jquery.js
 js/underscore.js
 js/backbone.js
