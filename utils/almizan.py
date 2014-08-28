@@ -5,6 +5,7 @@ from pyquery import PyQuery as pq
 from nltk import stem
 from quran import simple_aya
 import numpy
+from nltk.tokenize.punkt import PunktSentenceTokenizer
 
 
 isri = stem.ISRIStemmer()
@@ -144,6 +145,7 @@ def refine_section(section):
 def resolve_phrases(section, tokens, book, id):
 	phrases = []
 
+	sentences = []
 	# find and resolve parantheses
 	if book == 'almizan_fa':
 		if int(id.split('_')[0]) <= 2:
@@ -170,10 +172,17 @@ def resolve_phrases(section, tokens, book, id):
 		if resolved:
 			em.attr('rel', resolved[0])
 			phrases.append((em.text(), resolved[1], resolved[0]))
+			paragraph = em.parent().html()
+			for start, end in PunktSentenceTokenizer().span_tokenize(paragraph):
+				if paragraph[start:end].find(em.outerHtml()) != -1:
+					this_sentence = paragraph[start:end]
+					em.attr('data-sentence', start + ":" + end)
+			sentences.append((em.text(), resolved[0], this_sentence))
 		else:
 			phrases.append((em.text(), ))
 
 	return phrases
+	return phrases, sentences
 
 
 def aya_tokens(aya):
