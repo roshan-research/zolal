@@ -144,7 +144,6 @@ def refine_section(section):
 
 def resolve_phrases(section, tokens, book, id):
 	phrases = []
-
 	sentences = []
 	# find and resolve parantheses
 	if book == 'almizan_fa':
@@ -176,12 +175,11 @@ def resolve_phrases(section, tokens, book, id):
 			for start, end in PunktSentenceTokenizer().span_tokenize(paragraph):
 				if paragraph[start:end].find(em.outerHtml()) != -1:
 					this_sentence = paragraph[start:end]
-					em.attr('data-sentence', start + ":" + end)
+					em.attr('data-sentence', '{0}:{1}'.format(start,end))
 			sentences.append((em.text(), resolved[0], this_sentence))
 		else:
 			phrases.append((em.text(), ))
 
-	return phrases
 	return phrases, sentences
 
 
