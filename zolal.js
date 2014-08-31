@@ -198,13 +198,13 @@ var Almizan = Backbone.Collection.extend({
 
 // views
 var AyaView = Backbone.View.extend({
-	template: _.template('<span class="aya-text" rel="<%= sura %>_<%= aya %>"><span class="text"><%= html %></span> <span class="number"><%= number %></span> </span>'),
+	template: _.template('<span class="aya-text" rel="<%= id %>"><span class="text"><%= html %></span> <span class="number"><%= number %></span> </span>'),
 	initialize: function(){
 		this.model.on('change', this.render, this);
 	},
 	render: function () {
 		data = this.model.toJSON();
-		data['number'] = refine(data['aya']);
+		data['number'] = refine(data['id'].split('_')[1]);
 		data['html'] = this.html();
 		if (this.$el.hasClass('aya-text'))
 			this.$el.find('.text').html(data['html']);
@@ -231,7 +231,7 @@ var AyaView = Backbone.View.extend({
 		return words.join(' ').replace(/([ۖۗۚۛۙۘ])(<\/span>)?/g, '\$2<span class="mark">\$1</span>');
 	},
 	click: function() {
-		aya = this.model.get('sura') +'_'+ this.model.get('aya');
+		aya = this.model.get('id');
 		if (app.position.mode == 'quran') {
 			if (this.$el.hasClass('active'))
 				app.router.navigate('detail/'+ aya, {trigger: true});
