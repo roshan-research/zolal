@@ -141,6 +141,15 @@ def refine_section(section):
 						item.append(span.outerHtml())
 						span.remove()
 
+def refine_sentence(sentence):
+	remove_from_start = ('و', 'قوله', 'تعالی', ':', '؟', 'الخ', 'إلخ', '.', '،')
+	sentence = sentence.lstrip()
+	while sentence.startswith(remove_from_start):
+		sentence = (sentence.split(' ', 1)[1]).lstrip()
+	if sentence.startswith('إلی آخر الآیة'):
+		sentence = sentence[14:].lstrip()
+	return sentence
+
 
 def resolve_phrases(section, tokens, book, id):
 	phrases = []
@@ -165,6 +174,7 @@ def resolve_phrases(section, tokens, book, id):
 
 			section.html(html)
 
+	pst = PunktSentenceTokenizer()
 	# resolve em elements
 	for em in section.find('em').items():
 		resolved = resolve_phrase(em.text(), tokens, book[-2:])
@@ -172,22 +182,31 @@ def resolve_phrases(section, tokens, book, id):
 			em.attr('rel', resolved[0])
 			phrases.append((em.text(), resolved[1], resolved[0]))
 			paragraph = em.parent().html()
-			for start, end in PunktSentenceTokenizer().span_tokenize(paragraph):
+			for start, end in pst.span_tokenize(paragraph):
 				if paragraph[start:end].find(em.outerHtml()) != -1:
 					this_sentence = paragraph[start:end].lstrip()
-					new_start = start
-					if this_sentence.startswith("<code"):
+					this_sentence = refine_sentence(this_sentence)
+
+					while this_sentence.startswith("<code"):
 						if this_sentence.find('</code>') != -1:
 							new_start = this_sentence.find('</code>') + 7
 						else:
 							new_start = this_sentence.find('/>') + 2
 						this_sentence = this_sentence[new_start:].lstrip()
-					if this_sentence.startswith('<span'):
+
+					this_sentence = refine_sentence(this_sentence)
+
+					while this_sentence.startswith('<span'):
 						new_start = this_sentence.find('</span>') + 7
 						this_sentence = this_sentence[new_start:].lstrip()
-					em.attr('data-sentence', '{0}:{1}'.format(new_start, end))
+
+					this_sentence = refine_sentence(this_sentence)
+
+					before = this_sentence.index(em.outerHtml())
+					after = len(this_sentence) - len(em.outerHtml()) - before
+					em.attr('data-sentence', '{0}:{1}'.format(before, after))
 					break
-			sentences.append((em.text(), resolved[0], this_sentence))
+			sentences.append((em.text(), resolved[0], (before, after), [this_sentence]))
 		else:
 			phrases.append((em.text(), ))
 
