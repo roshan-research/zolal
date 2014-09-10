@@ -183,15 +183,17 @@ var Almizan = Backbone.Collection.extend({
 
 		var parts = sectionToAddress(id.split('/')[1]);
 		$(bayan.get('content')).find('.title').each(function() {
-			// todo: smart aya detection
-			html = $(this).html().trim();
+			var header = $(this);
+			var html = header.html().trim();
 			if (html[0] == '(' && html[html.length-1] == ')')
 				html = html.substr(1, html.length-2);
 			html = '<h3>'+ refine(html) +'<h3>';
-			for (i = parts[1]; i <= parts[2]; i++) {
-				aya = quran.get(parts[0] +'_'+ i); if (!aya) continue;
-				aya.insertDetail({type: 'title', lang: lang, html: html, link: 'almizan_'+ id +'/i'+ $(this).parent().index()});
-			}
+
+			var parentId = header.parent().index();
+			_.each(header.attr('rel').split(' '), function(a) {
+				aya = quran.get(a); if (!aya) return;
+				aya.insertDetail({type: 'title', lang: lang, html: html, link: 'almizan_'+ id +'/i'+ parentId});
+			});
 		});
 	}
 });
