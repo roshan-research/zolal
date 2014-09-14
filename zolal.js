@@ -292,9 +292,10 @@ var QuranView = Backbone.View.extend({
 		_.each(this.collection.models, function (item) {
 			if (item.get('page') == page) {
 				var ayaView = new AyaView({model: item});
-				if (item.get('aya') == 1) {
-					elements.push($('<div class="sura header"><div class="right">سورة</div><div class="left">'+ quran_suras[item.get('sura')-1] +'</div></div>'));
-					if (item.get('sura') != 1 && item.get('sura') != 9)
+				parts = item.get('id').split('_');
+				if (parts[1] == 1) {
+					elements.push($('<div class="sura header"><div class="right">سورة</div><div class="left">'+ quran_suras[parts[0]-1] +'</div></div>'));
+					if (parts[0] != 1 && parts[0] != 9)
 						elements.push($('<div class="aya-text bism"><span class="text">بِسمِ اللَّهِ الرَّحمٰنِ الرَّحيمِ</span></div>'));
 				}
 				elements.push(ayaView.render().el);
