@@ -411,6 +411,8 @@ var TafsirView = Backbone.View.extend({
 			this.currentPart = content.find('code.aya[rel='+ this.position.aya +']').parent().index();
 		else if (this.position.part && this.currentPart < content.length)
 			this.currentPart = this.position.part;
+		if (this.currentPart < 0)
+		 this.currentPart = 0;
 
 		if (this.currentPart > 0) {
 			active = $(content[this.currentPart]);
