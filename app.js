@@ -97,7 +97,7 @@ var initApp = function() {
 		app.router.navigate(address, {trigger: true});
 	}
 
-	download_quran();
+	download_quran(server +'quran/');
 
 	if (store) {
 		$('.storage').show();
@@ -224,9 +224,12 @@ var show_tafsir_stats = function() {
 	});
 }
 
-var download_quran = function() {
+var download_quran = function(origin) {
 	if (!localStorage.Quran || localStorage.Quran.split(',').length < 6230) {
-		request = $.get(server +'quran/all', parse_quran);
+
+		request = $.when($.get(origin +'all.dat'), $.getJSON(origin +'fa.dat')).done(function(all, fa) {
+			parse_quran(all[0], fa[0]);
+		});
 
 		if (!android_app) {
 			$('#search').parent().addClass('loading');
@@ -238,13 +241,16 @@ var download_quran = function() {
 	return $.Deferred().resolve();
 }
 
-var parse_quran = function(data) {
+var parse_quran = function(data, trans) {
 	var ids = [], raws = '';
 	data.split('\n').forEach(function(aya) {
 		if (!aya) return;
 		i = aya.indexOf('id'); r = aya.indexOf('raw');
 		id = aya.substr(i + 6).slice(0, -2);
 		raws += id + aya.substr(r+3, i-r-3);
+
+		if (id in trans)
+			aya = aya.substr(0, aya.length-1) +', "fa": "'+ trans[id] +'"}';
 
 		localStorage['Quran-'+ id] = aya;
 		ids.push(id);
@@ -258,9 +264,7 @@ var parse_quran = function(data) {
 if (!android_app || localStorage.Quran)
 	initApp();
 else {
-	// read quran.dat before app init
-	$.get('quran.dat', function(data) {
-		parse_quran(data);
+	download_quran('').then(function() {
 		initApp();
 	});
 }

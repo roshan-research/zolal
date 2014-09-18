@@ -2,6 +2,8 @@
 import re
 from collections import defaultdict
 
+aya_int = lambda id: int(id.split('_')[0])*1000+int(id.split('_')[1])
+
 
 def read_quran(quran):
 	ayas, suras = {}, []
@@ -40,15 +42,6 @@ def read_simple(simple, ayas):
 		ayas['%s_%s' % (line[0], line[1])]['raw'] = text
 
 
-def read_translation(translation, ayas):
-	for line in translation:
-		line = line.strip().split('|')
-		if len(line) != 3:
-			continue
-
-		ayas['%s_%s' % (line[0], line[1])]['fa'] = line[2]
-
-
 def read_lines(lines, ayas):
 	for line in lines:
 		line = line.split(', ')
@@ -59,7 +52,7 @@ def read_lines(lines, ayas):
 		if id in ayas:
 			ayas[id]['page'] = int(line[0])
 
-	aya_ids = sorted(ayas.keys(), key=lambda id: int(id.split('_')[0])*1000+int(id.split('_')[1]))
+	aya_ids = sorted(ayas.keys(), key=aya_int)
 
 	page = 1
 	for id in aya_ids:

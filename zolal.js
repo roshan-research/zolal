@@ -183,28 +183,30 @@ var Almizan = Backbone.Collection.extend({
 
 		var parts = sectionToAddress(id.split('/')[1]);
 		$(bayan.get('content')).find('.title').each(function() {
-			// todo: smart aya detection
-			html = $(this).html().trim();
+			var header = $(this);
+			var html = header.html().trim();
 			if (html[0] == '(' && html[html.length-1] == ')')
 				html = html.substr(1, html.length-2);
 			html = '<h3>'+ refine(html) +'<h3>';
-			for (i = parts[1]; i <= parts[2]; i++) {
-				aya = quran.get(parts[0] +'_'+ i); if (!aya) continue;
-				aya.insertDetail({type: 'title', lang: lang, html: html, link: 'almizan_'+ id +'/i'+ $(this).parent().index()});
-			}
+
+			var parentId = header.parent().index();
+			_.each(header.attr('rel').split(' '), function(a) {
+				aya = quran.get(a); if (!aya) return;
+				aya.insertDetail({type: 'title', lang: lang, html: html, link: 'almizan_'+ id +'/i'+ parentId});
+			});
 		});
 	}
 });
 
 // views
 var AyaView = Backbone.View.extend({
-	template: _.template('<span class="aya-text" rel="<%= sura %>_<%= aya %>"><span class="text"><%= html %></span> <span class="number"><%= number %></span> </span>'),
+	template: _.template('<span class="aya-text" rel="<%= id %>"><span class="text"><%= html %></span> <span class="number"><%= number %></span> </span>'),
 	initialize: function(){
 		this.model.on('change', this.render, this);
 	},
 	render: function () {
 		data = this.model.toJSON();
-		data['number'] = refine(data['aya']);
+		data['number'] = refine(data['id'].split('_')[1]);
 		data['html'] = this.html();
 		if (this.$el.hasClass('aya-text'))
 			this.$el.find('.text').html(data['html']);
@@ -231,7 +233,7 @@ var AyaView = Backbone.View.extend({
 		return words.join(' ').replace(/([ۖۗۚۛۙۘ])(<\/span>)?/g, '\$2<span class="mark">\$1</span>');
 	},
 	click: function() {
-		aya = this.model.get('sura') +'_'+ this.model.get('aya');
+		aya = this.model.get('id');
 		if (app.position.mode == 'quran') {
 			if (this.$el.hasClass('active'))
 				app.router.navigate('detail/'+ aya, {trigger: true});
@@ -290,9 +292,10 @@ var QuranView = Backbone.View.extend({
 		_.each(this.collection.models, function (item) {
 			if (item.get('page') == page) {
 				var ayaView = new AyaView({model: item});
-				if (item.get('aya') == 1) {
-					elements.push($('<div class="sura header"><div class="right">سورة</div><div class="left">'+ quran_suras[item.get('sura')-1] +'</div></div>'));
-					if (item.get('sura') != 1 && item.get('sura') != 9)
+				parts = item.get('id').split('_');
+				if (parts[1] == 1) {
+					elements.push($('<div class="sura header"><div class="right">سورة</div><div class="left">'+ quran_suras[parts[0]-1] +'</div></div>'));
+					if (parts[0] != 1 && parts[0] != 9)
 						elements.push($('<div class="aya-text bism"><span class="text">بِسمِ اللَّهِ الرَّحمٰنِ الرَّحيمِ</span></div>'));
 				}
 				elements.push(ayaView.render().el);
@@ -408,6 +411,8 @@ var TafsirView = Backbone.View.extend({
 			this.currentPart = content.find('code.aya[rel='+ this.position.aya +']').parent().index();
 		else if (this.position.part && this.currentPart < content.length)
 			this.currentPart = this.position.part;
+		if (this.currentPart < 0)
+		 this.currentPart = 0;
 
 		if (this.currentPart > 0) {
 			active = $(content[this.currentPart]);
