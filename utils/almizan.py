@@ -210,6 +210,18 @@ def resolve_phrases(section, tokens, book, id):
 		else:
 			phrases.append((em.text(), ))
 
+	new_section = section.html()
+	p = re.compile(r'<em rel="([^"]+)" data-sentence="([^"]+)">([^<]+)<\/em>')
+	matched_ist = [(m.start(0), m.end(0), m.group(1), m.group(2)) for m in re.finditer(p, new_section)]
+	last_start = -1
+	for matched in reversed(matched_ist):
+		start_span = matched[0] - int(matched[3].split(':')[0])
+		end_span = matched[1] + int(matched[3].split(':')[1])
+		if start_span != last_start:
+			new_section = new_section[:start_span] + '<span class="phrase">' + new_section[start_span:end_span] + '</span>' + new_section[end_span:]
+			last_start = start_span
+
+	section.html(new_section)
 	return phrases, sentences
 
 
