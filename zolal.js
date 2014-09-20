@@ -177,7 +177,7 @@ var Almizan = Backbone.Collection.extend({
 		$(bayan.get('content')).find('em[rel]').each(function() {
 			parts = $(this).attr('rel').split('_'); key = parts[1] +'_'+ parts[2];
 			aya = quran.get(key); if (!aya) return;
-			index = $(this).parent().index(); if (!index) index = $(this).parent().parent().index()
+			index = $(this).parent().parent().index(); if (!index) index = $(this).parent().parent().parent().index()
 			aya.insertDetail({type: 'phrase', lang: lang, html: '<p>'+ $(this).parent().html() +'</p>', link: 'almizan_'+ id +'/i'+ index, words: parts[3]});
 		});
 
