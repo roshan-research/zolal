@@ -181,7 +181,7 @@ def resolve_phrases(section, tokens, book, id):
 		if resolved:
 			em.attr('rel', resolved[0])
 			phrases.append((em.text(), resolved[1], resolved[0]))
-			paragraph = em.parent().html()
+			paragraph = em.parent().html(method='html')
 			for start, end in pst.span_tokenize(paragraph):
 				if paragraph[start:end].find(em.outerHtml()) != -1:
 					this_sentence = paragraph[start:end].lstrip()
@@ -210,11 +210,11 @@ def resolve_phrases(section, tokens, book, id):
 		else:
 			phrases.append((em.text(), ))
 
-	new_section = section.html()
+	new_section = section.html(method='html')
 	p = re.compile(r'<em rel="([^"]+)" data-sentence="([^"]+)">([^<]+)<\/em>')
-	matched_ist = [(m.start(0), m.end(0), m.group(1), m.group(2)) for m in re.finditer(p, new_section)]
+	matched_list = [(m.start(0), m.end(0), m.group(1), m.group(2)) for m in re.finditer(p, new_section)]
 	last_start = -1
-	for matched in reversed(matched_ist):
+	for matched in reversed(matched_list):
 		start_span = matched[0] - int(matched[3].split(':')[0])
 		end_span = matched[1] + int(matched[3].split(':')[1])
 		if start_span != last_start:
