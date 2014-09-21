@@ -15,7 +15,7 @@ read_simple(open(data / 'quran-simple.txt'), ayas)
 pages = read_lines(open(data / 'quran-lines.txt'), ayas)
 
 # write quran pages
-with open(files / 'quran' / 'all.dat', 'w') as quran_file:
+with open(files / 'quran' / 'all', 'w') as quran_file:
 	format = lambda aya: OrderedDict([('page', aya['page']), ('text', aya['text']), ('raw', aya['raw']), ('id', aya['id'])])
 	for p, ids in pages.items():
 		page = '\n'.join([json.dumps(format(ayas[id]), ensure_ascii=False) for id in ids])
@@ -66,7 +66,7 @@ for ar_section, fa_section in zip(read_tafsir(open(data / 'almizan_ar.html')), r
 
 
 # write translations
-json.dump(translations, open(files / 'quran' / 'fa.dat', 'w'), ensure_ascii=False, sort_keys=True)
+json.dump(translations, open(files / 'quran' / 'fa', 'w'), ensure_ascii=False, sort_keys=True)
 
 # write meta.js
 meta = open('../js/meta.js', 'w')

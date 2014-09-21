@@ -227,7 +227,7 @@ var show_tafsir_stats = function() {
 var download_quran = function(origin) {
 	if (!localStorage.Quran || localStorage.Quran.split(',').length < 6230) {
 
-		request = $.when($.get(origin +'all.dat'), $.getJSON(origin +'fa.dat')).done(function(all, fa) {
+		request = $.when($.get(origin +'all'), $.getJSON(origin +'fa')).done(function(all, fa) {
 			parse_quran(all[0], fa[0]);
 		});
 
