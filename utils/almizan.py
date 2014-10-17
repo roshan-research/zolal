@@ -230,10 +230,24 @@ def aya_tokens(aya):
 	tokens = [{'word': word, 'stem': isri.stem(word), 'id': parts.index(word)+1} for word in raw_ayas if word in parts]
 	not_found_words = [word for word in raw_ayas if word not in parts]
 	not_found_parts = [part for part in parts if not part in raw_ayas]
+	start = -1
 	for word in not_found_words:
 		for part in not_found_parts:
-			if( normalize_token(word).replace('ا','') == normalize_token(part).replace('ا','') or normalize_token(word).replace('و','ا') == normalize_token(part).replace('و','ا') or normalize_token(word).replace('ی','ا') == normalize_token(part).replace('ی','ا')):
-				tokens.append({'word':word,'stem': isri.stem(word),'id': parts.index(part)+1})
+			if not_found_parts.index(part) > start:
+				if normalize_token(word).replace('ا', '') == normalize_token(part).replace('ا', '') or normalize_token(word).replace('و', 'ا') == normalize_token(part).replace('و', 'ا') or normalize_token(word).replace('ی', 'ا') == normalize_token(part).replace('ی', 'ا'):
+					found_ids = [token['id'] for token in tokens]
+					k = found_ids[found_ids.index(parts.index(part) + 1)] if parts.index(part)+1 in found_ids else 0
+					tokens.append({'word': word, 'stem': isri.stem(word), 'id': parts.index(part, k)+1})
+					start = not_found_parts.index(part)
+					break
+
+	for i in range(len(tokens)):
+		for j in range(i+1, len(tokens)):
+			if tokens[i]['id'] == tokens[j]['id']:
+				try:
+					tokens[j]['id'] = parts.index(tokens[j]['word'], tokens[i]['id']) + 1
+				except ValueError as e:
+					print(str(e))
 	return tokens
 
 
