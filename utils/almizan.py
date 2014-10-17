@@ -163,7 +163,7 @@ def resolve_phrases(section, tokens, book, id):
 			# in chapter1, remove parantheses for ayas
 			iter = re.finditer(r'(<span[^\n]*>)[ ]*\(([^\)s]*)\)[^\)]*(</span[^\n]*>)', html)
 			for m in reversed(list(iter)):
-				html = replace(m.start(), m.end(), html, m.group().replace('(','').replace(')',''))
+				html = replace(m.start(), m.end(), html, m.group().replace('(', '').replace(')', ''))
 
 			iter = re.finditer(r'\([^\)]{3,15}\)', html)
 			for match in reversed(list(iter)):
@@ -228,9 +228,9 @@ def resolve_phrases(section, tokens, book, id):
 def aya_tokens(aya):
 	parts = simple_aya(aya['text']).replace('  ', ' ').split(' ')
 	raw_ayas = aya['raw'].split(' ')
-	normalize_token = lambda s: s.replace('آ','ا').replace('ء','').replace('ئ','').replace('أ','ا').replace('إ','ا').replace('ؤ','و')
+	normalize_token = lambda s: s.replace('آ', 'ا').replace('ء', '').replace('ئ', '').replace('أ', 'ا').replace('إ', 'ا').replace('ؤ', 'و')
 	tokens = [{'word': word, 'stem': isri.stem(word), 'id': parts.index(word)+1} for word in raw_ayas if word in parts]
-	not_found_words = [word for word in raw_ayas  if word not in parts]
+	not_found_words = [word for word in raw_ayas if word not in parts]
 	not_found_parts = [part for part in parts if not part in raw_ayas]
 	for word in not_found_words:
 		for part in not_found_parts:
@@ -240,12 +240,12 @@ def aya_tokens(aya):
 
 
 def resolve_phrase(phrase, tokens, book):
-	phrase = simple_aya(phrase.strip()).replace('‌', '').replace('ّ','')
+	phrase = simple_aya(phrase.strip()).replace('‌', '').replace('ّ', '')
 	if len(phrase) < 3:
 		return None
 
-	normalize_Alif_lam = lambda s: s[2:] if (s[:2] =='ال'  ) else s
-	normalize_arabic_letter = lambda s: s.replace('ة','ه').replace('ؤ','و').replace('إ','ا').replace('أ','ا')
+	normalize_Alif_lam = lambda s: s[2:] if (s[:2] == 'ال') else s
+	normalize_arabic_letter = lambda s: s.replace('ة', 'ه').replace('ؤ', 'و').replace('إ', 'ا').replace('أ', 'ا')
 
 	matchings = [
 		lambda token: phrase == token['word'], # exact
@@ -271,9 +271,9 @@ def resolve_headers(section, id):
 		header_ayas = sum([normalize_ayas(aya_header.attr('rel')) for aya_header in header.find('.aya').items()], [])
 		header_tokens = sum([normalize_ayas('_'.join(token_header.attr('rel').split('_')[1:3])) for token_header in header.find('em[rel]').items()], [])
 
-		content_ayas, content_tokens = [],[]
+		content_ayas, content_tokens = [], []
 		for content in header.parent().nextAll().items():
-			if(content.is_('h3 .title') or content.is_('p code.aya')):
+			if content.is_('h3 .title') or content.is_('p code.aya'):
 				break
 			for span_aya in content.find('span.aya').items():
 				content_ayas.extend(normalize_ayas(span_aya.attr('rel')))
@@ -309,18 +309,18 @@ def resolve_header(section_id, header_ayas=[], header_tokens=[], content_ayas=[]
 	"""
 
 	# constant values
-	ha_p,ha_m = 1.0,0.5
-	ht_p,ht_m = 1.0,0.5
-	cs_p,cs_m = 0.2,0.0
-	ct_p,ct_m = 0.1,0.0
-	default  = 0.0
+	ha_p, ha_m = 1.0, 0.5
+	ht_p, ht_m = 1.0, 0.5
+	cs_p, cs_m = 0.2, 0.0
+	ct_p, ct_m = 0.1, 0.0
+	default = 0.0
 
-	# retreive all ayas in section
-	if(section_id == '0'):
+	# retrieve all ayas in section
+	if section_id == '0':
 		return []
-	section_sura,section_aya = section_id.split('_')
-	section_start,section_end = int(section_aya.split('-')[0]),int(section_aya.split('-')[1])
-	not_in_section = lambda sura_aya : int(sura_aya.split('_')[0]) != int(section_sura) or not(section_start <= int(sura_aya.split('_')[1]) <= section_end)
+	section_sura, section_aya = section_id.split('_')
+	section_start, section_end = int(section_aya.split('-')[0]), int(section_aya.split('-')[1])
+	not_in_section = lambda sura_aya: int(sura_aya.split('_')[0]) != int(section_sura) or not(section_start <= int(sura_aya.split('_')[1]) <= section_end)
 
 	result = []
 	ayas_weight = defaultdict(float)
@@ -332,62 +332,66 @@ def resolve_header(section_id, header_ayas=[], header_tokens=[], content_ayas=[]
 	# aya or phrase in header increase probability that aya and decrease others
 	change = False
 	for ha in header_ayas:
-		if(not_in_section(ha)):
+		if not_in_section(ha):
 			continue
 		ayas_weight[ha] += ha_p
 		change = True
 
-	if (change):
+	if change:
 		for other in ayas_weight.keys():
-			if(other not in header_ayas ): ayas_weight[other] -= ha_m
+			if other not in header_ayas:
+				ayas_weight[other] -= ha_m
 
 	change = False
 	for ht in header_tokens:
-		if(not_in_section(ht)):
+		if not_in_section(ht):
 			continue
 		ayas_weight[ht] += ht_p
 		change = True
 
-	if (change):
+	if change:
 		for other in ayas_weight.keys():
-			if(other not in header_tokens ): ayas_weight[other] -= ht_m
+			if other not in header_tokens:
+				ayas_weight[other] -= ht_m
 
 	change = False
 	for cs in content_ayas:
-		if(not_in_section(cs)):
+		if not_in_section(cs):
 			continue
 		ayas_weight[cs] += cs_p
 		change = True
 
-	if (change):
+	if change:
 		for other in ayas_weight.keys():
-			if (other not in content_ayas): ayas_weight[other] -= cs_m
+			if other not in content_ayas:
+				ayas_weight[other] -= cs_m
 
 	change = False
 	for ct in content_tokens:
-		if (not_in_section(ct)):
+		if not_in_section(ct):
 			continue
 		ayas_weight[ct] += ct_p
 		change = True
 
-	if (change):
+	if change:
 		for other in ayas_weight.keys():
-			if(other not in content_tokens ): ayas_weight[other] -= ct_m
+			if other not in content_tokens:
+				ayas_weight[other] -= ct_m
 
 	# normalize distribution and threshold (function of mean and variance)
 	std = numpy.std(list(ayas_weight.values()))
 	mean = numpy.mean(list(ayas_weight.values()))
 
-	if(std - 0.0 > 0.000001):
+	if std - 0.0 > 0.000001:
 		for aw in ayas_weight.keys():
-			ayas_weight[aw] = (ayas_weight[aw] - mean ) / std
+			ayas_weight[aw] = (ayas_weight[aw] - mean) / std
 
 	threshold = default
-	if(std - 0.0 > 0.000001):
-		threshold = (default - mean) /std
+	if std - 0.0 > 0.000001:
+		threshold = (default - mean) / std
 
 	for ayaweight in ayas_weight.keys():
-		if(ayas_weight[ayaweight] >= threshold):
+		if ayas_weight[ayaweight] >= threshold:
 			result.append(ayaweight)
 
 	return sorted(result)
