@@ -255,6 +255,15 @@ def resolve_phrase(phrase, tokens, book):
 		lambda token: isri.stem(phrase) == token['stem'] # stemed
 	]
 
+	matchings2 = [
+		lambda token, i: phrase.split()[i] == token['word'], # exact
+		lambda token, i: normalize_arabic_letter(phrase.split()[i]) == normalize_arabic_letter(token['word']), # without arabic letters
+		lambda token, i: normalize_Alif_lam(phrase.split()[i]) == normalize_Alif_lam(token['word']),# without Alif-lam
+		lambda token, i: normalize_arabic_letter(normalize_Alif_lam(phrase.split()[i])) == normalize_arabic_letter(normalize_Alif_lam(token['word'])),# without arabic letters and Alif-lam
+	    lambda token, i: normalize_arabic_letter(normalize_LBKF(phrase.split()[i])) == normalize_arabic_letter(normalize_LBKF(token['word'])),
+		lambda token, i: isri.stem(phrase.split()[i]) == token['stem'] # stemed
+	]
+
 	matched = []
 	for aya, token_list in tokens.items():
 		for token in token_list:
@@ -265,6 +274,22 @@ def resolve_phrase(phrase, tokens, book):
 	if len(matched) == 1:
 		return matched[0]
 
+	matched = []
+	if len(phrase.split()) == 2:
+		for aya, token_list in tokens.items():
+			for token1 in token_list:
+				for token2 in token_list:
+					if token2['id'] == token1['id'] + 1:
+						for match1 in matchings2:
+							if match1(token1, 0):
+								for match2 in matchings2:
+									if match2(token2, 1):
+										matched.append(('{0}_{1}_{2}-{3}'.format(book, aya, token1['id'], token2['id']), '{0} {1}'.format(token1['word'], token2['word'])))
+										break
+								break
+
+	if len(matched) == 1:
+		return matched[0]
 	return None
 
 def resolve_headers(section, id):
