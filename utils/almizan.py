@@ -104,7 +104,7 @@ def refine_note(text):
 	result = text
 	if result.startswith('-'):
 		result = result[1:]
-	return refine_numbers(result.strip())
+	return refine_numbers(result.strip().replace('.', ''))
 
 
 def refine_translation(section):
@@ -190,8 +190,6 @@ def resolve_phrases(section, tokens, book, id):
 					while this_sentence.startswith("<code"):
 						if this_sentence.find('</code>') != -1:
 							new_start = this_sentence.find('</code>') + 7
-						else:
-							new_start = this_sentence.find('/>') + 2
 						this_sentence = this_sentence[new_start:].lstrip()
 
 					this_sentence = refine_sentence(this_sentence)
