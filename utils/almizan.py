@@ -244,21 +244,26 @@ def resolve_phrase(phrase, tokens, book):
 
 	normalize_Alif_lam = lambda s: s[2:] if (s[:2] == 'ال') else s
 	normalize_arabic_letter = lambda s: s.replace('ة', 'ه').replace('ؤ', 'و').replace('إ', 'ا').replace('أ', 'ا')
+	normalize_LBKF = lambda s: s[1:] if (s[:1] in 'لبکف') else s
 
 	matchings = [
 		lambda token: phrase == token['word'], # exact
 		lambda token: normalize_arabic_letter(phrase) == normalize_arabic_letter(token['word']), # without arabic letters
 		lambda token: normalize_Alif_lam(phrase) == normalize_Alif_lam(token['word']),# without Alif-lam
 		lambda token: normalize_arabic_letter(normalize_Alif_lam(phrase)) == normalize_arabic_letter(normalize_Alif_lam(token['word'])),# without arabic letters and Alif-lam
-		lambda token: token['word'][:1] in 'لبکف' and phrase == token['word'][1:],
+	    lambda token: normalize_arabic_letter(normalize_LBKF(phrase)) == normalize_arabic_letter(normalize_LBKF(token['word'])),
 		lambda token: isri.stem(phrase) == token['stem'] # stemed
 	]
 
-	for match in matchings:
-		for aya, token_list in tokens.items():
-			for token in token_list:
+	matched = []
+	for aya, token_list in tokens.items():
+		for token in token_list:
+			for match in matchings:
 				if match(token):
-					return '{0}_{1}_{2}-{2}'.format(book, aya, token['id']), token['word']
+					matched.append(('{0}_{1}_{2}-{2}'.format(book, aya, token['id']), token['word']))
+					break
+	if len(matched) == 1:
+		return matched[0]
 
 	return None
 
