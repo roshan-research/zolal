@@ -364,7 +364,7 @@ def resolve_header(section_id, header_ayas=[], header_tokens=[], content_ayas=[]
 	section_start, section_end = int(section_aya.split('-')[0]), int(section_aya.split('-')[1])
 	not_in_section = lambda sura_aya: int(sura_aya.split('_')[0]) != int(section_sura) or not(section_start <= int(sura_aya.split('_')[1]) <= section_end)
 
-	result = []
+
 	ayas_weight = defaultdict(float)
 
 	for a in range(section_start, section_end+1):
@@ -432,8 +432,10 @@ def resolve_header(section_id, header_ayas=[], header_tokens=[], content_ayas=[]
 	if std - 0.0 > 0.000001:
 		threshold = (default - mean) / std
 
-	for ayaweight in ayas_weight.keys():
-		if ayas_weight[ayaweight] >= threshold:
-			result.append(ayaweight)
+	result = []
+	for aya in ayas_weight.keys():
+		if ayas_weight[aya] >= threshold:
+			result.append({'aya': aya, 'score': ayas_weight[aya]})
+	result = sorted(result, key=lambda k: k['score'], reverse=True)
 
-	return sorted(result)
+	return ['{0}:{1}'.format(item['aya'], item['score']) for item in result]
