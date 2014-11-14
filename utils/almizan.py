@@ -1,9 +1,8 @@
 
 import re
-from collections import defaultdict
 from pyquery import PyQuery as pq
 from nltk import stem
-from quran import simple_aya
+from quran import simple_aya, aya_int
 import numpy
 from nltk.tokenize.punkt import PunktSentenceTokenizer
 
@@ -265,7 +264,7 @@ def resolve_phrase(phrase, tokens, book):
 		lambda token: normalize_arabic_letter(phrase) == normalize_arabic_letter(token['word']), # without arabic letters
 		lambda token: normalize_Alif_lam(phrase) == normalize_Alif_lam(token['word']),# without Alif-lam
 		lambda token: normalize_arabic_letter(normalize_Alif_lam(phrase)) == normalize_arabic_letter(normalize_Alif_lam(token['word'])),# without arabic letters and Alif-lam
-	    lambda token: normalize_arabic_letter(normalize_LBKF(phrase)) == normalize_arabic_letter(normalize_LBKF(token['word'])),
+		lambda token: normalize_arabic_letter(normalize_LBKF(phrase)) == normalize_arabic_letter(normalize_LBKF(token['word'])),
 		lambda token: isri.stem(phrase) == token['stem'] # stemed
 	]
 
@@ -274,7 +273,7 @@ def resolve_phrase(phrase, tokens, book):
 		lambda token, i: normalize_arabic_letter(phrase.split()[i]) == normalize_arabic_letter(token['word']), # without arabic letters
 		lambda token, i: normalize_Alif_lam(phrase.split()[i]) == normalize_Alif_lam(token['word']),# without Alif-lam
 		lambda token, i: normalize_arabic_letter(normalize_Alif_lam(phrase.split()[i])) == normalize_arabic_letter(normalize_Alif_lam(token['word'])),# without arabic letters and Alif-lam
-	    lambda token, i: normalize_arabic_letter(normalize_LBKF(phrase.split()[i])) == normalize_arabic_letter(normalize_LBKF(token['word'])),
+		lambda token, i: normalize_arabic_letter(normalize_LBKF(phrase.split()[i])) == normalize_arabic_letter(normalize_LBKF(token['word'])),
 		lambda token, i: isri.stem(phrase.split()[i]) == token['stem'] # stemed
 	]
 
@@ -364,12 +363,7 @@ def resolve_header(section_id, header_ayas=[], header_tokens=[], content_ayas=[]
 	section_start, section_end = int(section_aya.split('-')[0]), int(section_aya.split('-')[1])
 	not_in_section = lambda sura_aya: int(sura_aya.split('_')[0]) != int(section_sura) or not(section_start <= int(sura_aya.split('_')[1]) <= section_end)
 
-
-	ayas_weight = defaultdict(float)
-
-	for a in range(section_start, section_end+1):
-		aya = '%s_%d' % (section_sura, a)
-		ayas_weight[aya] = default
+	ayas_weight = {'%s_%d' % (section_sura, a): default for a in range(section_start, section_end+1)}
 
 	# aya or phrase in header increase probability that aya and decrease others
 	change = False
@@ -432,10 +426,5 @@ def resolve_header(section_id, header_ayas=[], header_tokens=[], content_ayas=[]
 	if std - 0.0 > 0.000001:
 		threshold = (default - mean) / std
 
-	result = []
-	for aya in ayas_weight.keys():
-		if ayas_weight[aya] >= threshold:
-			result.append({'aya': aya, 'score': ayas_weight[aya]})
-	result = sorted(result, key=lambda k: k['score'], reverse=True)
-
-	return ['{0}:{1}'.format(item['aya'], item['score']) for item in result]
+	# sort ayas with (score, -id) key and filter under threshold ones
+	return [id for id, score in sorted(ayas_weight.items(), key=lambda item: (item[1], -aya_int(item[0])), reverse=True) if score >= threshold]
