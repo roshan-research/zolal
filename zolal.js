@@ -66,17 +66,6 @@ var tafsirDb = {
 
 // models
 var Aya = Backbone.Model.extend({
-	insertDetail: function(detail) {
-		details = this.get('details');
-		if (!details)
-			details = {};
-
-		key = $(detail['html']).text().substr(0, 15);
-		if (!details[key]) {
-			details[key] = detail;
-			this.set('details', details);
-		}
-	},
 	localStorage: new Backbone.LocalStorage('Quran')
 });
 
@@ -180,25 +169,36 @@ var Almizan = Backbone.Collection.extend({
 		var quran = this.quran;
 		content = $(bayan.get('content'));
 
+		parts = sectionToAddress(id.split('/')[1]);
+		ayas = _.map(_.range(parts[1], parts[2]+1), function(i) { return parts[0] +'_'+ i; });
+		details = {}; ayas.forEach(function(aya) { details[aya] = {}; });
+
 		content.find('em[rel]').each(function() {
-			parts = $(this).attr('rel').split('_'); key = parts[1] +'_'+ parts[2];
-			aya = quran.get(key); if (!aya) return;
-			index = $(this).parent().parent().index(); if (!index) index = $(this).parent().parent().parent().index()
-			aya.insertDetail({type: 'phrase', lang: lang, html: '<p>'+ $(this).parent().html() +'</p>', link: 'almizan_'+ id +'/i'+ index, words: parts[3]});
+			parts = $(this).attr('rel').split('_'); aya = parts[1] +'_'+ parts[2];
+			index = $(this).parent().parent().index(); if (!index) index = $(this).parent().parent().parent().index();
+			details[aya][$(this).parent().text()] = {type: 'phrase', lang: lang, html: '<p>'+ $(this).parent().html() +'</p>', link: 'almizan_'+ id +'/i'+ index, words: parts[3]};
 		});
 
-		var parts = sectionToAddress(id.split('/')[1]);
 		content.find('.title').each(function() {
 			var header = $(this);
 			var html = header.html().trim();
 			if (html[0] == '(' && html[html.length-1] == ')')
 				html = html.substr(1, html.length-2);
+			html = '<h3>'+ html +'<h3>';
 
 			var parentId = header.parent().index();
-			_.each(header.attr('rel').split(' '), function(a) {
-				aya = quran.get(a); if (!aya) return;
-				aya.insertDetail({type: 'title', lang: lang, html: '<h3>'+ html +'<h3>', link: 'almizan_'+ id +'/i'+ parentId});
+			_.each(header.attr('rel').split(' '), function(aya) {
+				text = $(html).text();
+				if (!details[aya][text])
+					details[aya][text] = {type: 'title', lang: lang, html: html, text: text, link: 'almizan_'+ id +'/i'+ parentId};
 			});
+		});
+
+		ayas.forEach(function(aya) {
+			if (details[aya]) {
+				aya = quran.get(aya); if (!aya) return;
+				aya.set('details', _.values(details[aya.get('id')]));
+			}
 		});
 	}
 });
@@ -207,7 +207,10 @@ var Almizan = Backbone.Collection.extend({
 var AyaView = Backbone.View.extend({
 	template: _.template('<span class="aya-text" rel="<%= id %>"><span class="text"><%= html %></span> <span class="number"><%= number %></span> </span>'),
 	initialize: function(){
-		this.model.on('change', this.render, this);
+		this.model.on('change', function() {
+			if (this.model.get('details').length)
+				this.render();
+		}, this);
 	},
 	render: function () {
 		data = this.model.toJSON();
