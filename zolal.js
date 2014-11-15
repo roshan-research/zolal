@@ -408,10 +408,13 @@ var TafsirView = Backbone.View.extend({
 	renderBayan: function (bayan) {
 		content = $(bayan.get('content')).filter(function() { return this.nodeType != 3; });
 		content.find('span.footnote').tooltip({html: true, placement: 'auto', trigger: 'click hover focus'});
-		this.parts = content.toArray();
 
 		this.$el.removeClass('loading');
-		this.content.empty();
+		if (partialRendering) {
+			this.parts = content.toArray();
+			this.content.empty();
+		} else
+			this.content.html(content);
 
 		// bold active part
 		this.currentPart = 0;
@@ -432,21 +435,23 @@ var TafsirView = Backbone.View.extend({
 		this.checkScroll(true, true);
 	},
 	checkScroll: function (loadBottom, loadTop) {
-		loadParts = 10;
+		if (partialRendering) {
+			loadParts = 10;
 
-		if (loadBottom)
-			this.content.append(this.parts.splice(this.currentPart, loadParts));
+			if (loadBottom)
+				this.content.append(this.parts.splice(this.currentPart, loadParts));
 
-		if (loadTop) {
-			this.currentPart -= loadParts;
-			if (this.currentPart < 0) {
-				loadParts += this.currentPart;
-				this.currentPart = 0;
+			if (loadTop) {
+				this.currentPart -= loadParts;
+				if (this.currentPart < 0) {
+					loadParts += this.currentPart;
+					this.currentPart = 0;
+				}
+
+				contentHeight =	this.content.height();
+				this.content.prepend(this.parts.splice(this.currentPart, loadParts));
+				this.$el.scrollTop(this.$el.scrollTop() + this.content.height() - contentHeight);
 			}
-
-			contentHeight =	this.content.height();
-			this.content.prepend(this.parts.splice(this.currentPart, loadParts));
-			this.$el.scrollTop(this.$el.scrollTop() + this.content.height() - contentHeight);
 		}
 
 		// find current page

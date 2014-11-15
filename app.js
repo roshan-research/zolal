@@ -5,6 +5,7 @@ var server = 'http://zolal-files.ap01.aws.af.cm/';
 var chrome_app = 'chrome' in window && 'app' in chrome && chrome.app.isInstalled;
 var android_app = 'cordova' in window;
 var searchResultChars = android_app ? 25 : 50;
+var partialRendering = false;
 
 
 // apps
