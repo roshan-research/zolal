@@ -710,12 +710,11 @@ var AppView = Backbone.View.extend({
 	},
 	nextQuranAya: function() {
 		quran = this.position.quran;
-		if (quran.aya == '') {
-			first_aya = quran_pages[Number(quran.page)][0].split('_');
-			quran.sura = Number(first_aya[0]);
-			quran.aya = Number(first_aya[1]);
-		}
-		this.router.navigate('quran/'+ nextAya(quran.sura, quran.aya), {trigger: true, replace: true});
+		if (quran.aya == '')
+			aya = quran_pages[Number(quran.page)][0];
+		else
+			aya = nextAya(quran.sura, quran.aya);
+		this.router.navigate('quran/'+ aya, {trigger: true, replace: true});
 	},
 	prevQuranAya: function() {
 		quran = this.position.quran;
