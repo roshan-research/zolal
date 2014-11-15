@@ -71,7 +71,7 @@ var Aya = Backbone.Model.extend({
 		if (!details)
 			details = {};
 
-		key = detail['html'].substr(0, 15);
+		key = $(detail['html']).text().substr(0, 15);
 		if (!details[key]) {
 			details[key] = detail;
 			this.set('details', details);
@@ -178,8 +178,9 @@ var Almizan = Backbone.Collection.extend({
 
 		var lang = id.split('/')[0];
 		var quran = this.quran;
+		content = $(bayan.get('content'));
 
-		$(bayan.get('content')).find('em[rel]').each(function() {
+		content.find('em[rel]').each(function() {
 			parts = $(this).attr('rel').split('_'); key = parts[1] +'_'+ parts[2];
 			aya = quran.get(key); if (!aya) return;
 			index = $(this).parent().parent().index(); if (!index) index = $(this).parent().parent().parent().index()
@@ -187,17 +188,16 @@ var Almizan = Backbone.Collection.extend({
 		});
 
 		var parts = sectionToAddress(id.split('/')[1]);
-		$(bayan.get('content')).find('.title').each(function() {
+		content.find('.title').each(function() {
 			var header = $(this);
 			var html = header.html().trim();
 			if (html[0] == '(' && html[html.length-1] == ')')
 				html = html.substr(1, html.length-2);
-			html = '<h3>'+ refine(html) +'<h3>';
 
 			var parentId = header.parent().index();
 			_.each(header.attr('rel').split(' '), function(a) {
 				aya = quran.get(a); if (!aya) return;
-				aya.insertDetail({type: 'title', lang: lang, html: html, link: 'almizan_'+ id +'/i'+ parentId});
+				aya.insertDetail({type: 'title', lang: lang, html: '<h3>'+ html +'<h3>', link: 'almizan_'+ id +'/i'+ parentId});
 			});
 		});
 	}
