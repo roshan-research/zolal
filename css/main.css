@@ -71,7 +71,7 @@ blockquote p,
   width: 600px;
   height: 100%;
   top: 0;
-  z-index: 10;
+  z-index: 20;
 }
 #views:before {
   right: -602px;
@@ -209,7 +209,7 @@ blockquote p,
   left: 0;
   width: 0;
   height: 45px;
-  z-index: 20;
+  z-index: 30;
 }
 #quran #page:after {
   content: "";
