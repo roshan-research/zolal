@@ -853,6 +853,7 @@ var DetailView = Backbone.View.extend({
 	el: $('#detail .content'),
 	render: function () {
 		this.$el.find('#sections').empty();
+		this.$el.scrollTop(0);
 
 		id = this.position.sura +'_'+ this.position.aya;
 		this.quran.loadPage(quran_ayas[id], $.proxy(this.renderAya, this));

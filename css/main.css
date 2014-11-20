@@ -676,7 +676,12 @@ body {
     left: 0;
   }
 }
-@media (min-width: 480px) and (max-width: 768px) {
+@media (min-width: 360px) and (max-width: 480px) {
+  html {
+    zoom: 110%;
+  }
+}
+@media (min-width: 480px) and (max-width: 768px), (min-height: 750px) {
   html {
     zoom: 130%;
   }
