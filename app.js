@@ -16,6 +16,7 @@ if (chrome_app || android_app)
 // device events
 document.addEventListener('deviceready', function() {
 	navigator.splashscreen.hide();
+	window.plugins.insomnia.keepAwake();
 
 	$('a[target]').click(function(){
 		window.open($(this).attr('href'), '_system');
@@ -149,7 +150,7 @@ $("#views").swipe({
 var trackedData;
 var track = function(title, data) {
 	if ('mixpanel' in window && data != trackedData && navigator.onLine)
-			mixpanel.track(title, data);
+		mixpanel.track(title, data);
 	trackedData = data;
 }
 
