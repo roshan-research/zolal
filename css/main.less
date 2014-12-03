@@ -208,41 +208,6 @@ body, blockquote p, .tooltip-inner {
 			padding-bottom: 5px;
 		}
 	}
-
-	// page indicator
-	#page {
-		font-size: 22px;
-		line-height: 46px;
-		cursor: pointer;
-		position: absolute;
-		left: 0;
-		width: 0;
-		height: 45px;
-		z-index: 30;
-	}
-	#page:after {
-		content: "";
-		position: absolute;
-		width: 30px;
-		height: inherit;
-		left: -15px;
-	}
-	#page:before {
-		content: "";
-		background: @color3;
-		position: absolute;
-		color: @color1;
-		height: inherit;
-		width: 7px;
-		left: -2px;
-		transition: width .2s ease, left .3s ease;
-	}
-	#page:hover:before, #page.is-dragging:before, #page.active:before {
-		content: attr(rel);
-		text-align: center;
-		width: 60px;
-		left: -15px;
-	}
 }
 
 .aya-text {
@@ -676,9 +641,6 @@ body {
 			margin-right: -5px;
 			margin-left: -5px;
 		}
-		#page:before {
-			width: 5px;
-		}
 	}
 	.fill, .tafsir-text .active, .page, .ayas {
 		padding: 0 5px;
@@ -711,11 +673,6 @@ body {
 
 		&:before, &:after {
 			content: none;
-		}
-	}
-	#quran {
-		#page.is-dragging:before, #page.active:before {
-			left: 0;
 		}
 	}
 }

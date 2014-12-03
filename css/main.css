@@ -201,41 +201,6 @@ blockquote p,
   padding-top: 5px;
   padding-bottom: 5px;
 }
-#quran #page {
-  font-size: 22px;
-  line-height: 46px;
-  cursor: pointer;
-  position: absolute;
-  left: 0;
-  width: 0;
-  height: 45px;
-  z-index: 30;
-}
-#quran #page:after {
-  content: "";
-  position: absolute;
-  width: 30px;
-  height: inherit;
-  left: -15px;
-}
-#quran #page:before {
-  content: "";
-  background: #036564;
-  position: absolute;
-  color: #e8ddcb;
-  height: inherit;
-  width: 7px;
-  left: -2px;
-  transition: width .2s ease, left .3s ease;
-}
-#quran #page:hover:before,
-#quran #page.is-dragging:before,
-#quran #page.active:before {
-  content: attr(rel);
-  text-align: center;
-  width: 60px;
-  left: -15px;
-}
 .aya-text {
   line-height: 45px;
   font-size: 25px;
@@ -634,9 +599,6 @@ body {
     margin-right: -5px;
     margin-left: -5px;
   }
-  #quran #page:before {
-    width: 5px;
-  }
   .fill,
   .tafsir-text .active,
   .page,
@@ -670,10 +632,6 @@ body {
   #views:before,
   #views:after {
     content: none;
-  }
-  #quran #page.is-dragging:before,
-  #quran #page.active:before {
-    left: 0;
   }
 }
 @media (min-width: 360px) and (max-width: 480px) {

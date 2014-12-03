@@ -10,7 +10,6 @@ js/underscore.js
 js/backbone.js
 js/backbone.localStorage.js
 js/backbone.indexedDb.js
-js/draggabilly.js
 js/jquery.touchSwipe.js
 js/bootstrap.js
 js/typeahead.js

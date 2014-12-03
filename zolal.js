@@ -255,14 +255,6 @@ var QuranView = Backbone.View.extend({
 	el: $("#quran"),
 	initialize: function() {
 		this.collection = new Quran();
-
-		// page indicator
-		this.pageElement = new Draggabilly($('#page')[0], {axis: 'y', containment: true})
-			.on('dragMove', function(instance) {
-				instance.element.setAttribute('rel', refine(offsetToPage(instance.position.y)));
-			}).on('dragEnd', function(instance) {
-				app.router.navigate('quran/p'+ rerefine(instance.element.getAttribute('rel')), {trigger: true});
-			});
 	},
 	render: function() {
 		var quran = this;
@@ -290,10 +282,6 @@ var QuranView = Backbone.View.extend({
 					quran.loadPage(quran.position.page+1);
 				}, 10);
 			});
-
-		// page indicator
-		indicator = this.$el.find('#page').attr('rel', refine(this.position.page));
-		indicator.css('top', pageToOffset(this.position.page));
 	},
 	renderPage: function(page) {
 		var elements = [];
@@ -958,20 +946,6 @@ var prevAya = function(sura, aya) {
 		aya = sura_ayas[sura];
 	}
 	return sura +'_'+ aya;
-}
-
-var offsetToPage = function(offset) {
-	height = $('.page').height() - $('#page').height();
-	page = Math.round((offset / height) * 604);
-
-	if (page > 604) return 604;
-	if (page < 1) return 1;
-	return page;
-}
-var pageToOffset = function(page) {
-	height = $('.page').height() - $('#page').height();
-	offset = height * (page / 604);
-	return offset;
 }
 
 
