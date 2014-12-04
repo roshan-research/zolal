@@ -456,6 +456,20 @@ body {
 	#search {
 		direction: rtl;
 	}
+	#page {
+		width: 40px;
+		float: right;
+		padding: 0;
+		text-align: center;
+		direction: ltr;
+
+		&::selection {
+			background: none;
+		}
+		&:focus {
+			background: @color3;
+		}
+	}
 	[rel=menu] {
 		display: none;
 	}
