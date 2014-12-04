@@ -520,7 +520,7 @@ var AddressView = Backbone.View.extend({
 
 		search_input.typeahead({hint: false, autoselect: true, minLength: 3}, {
 			name: 'aya',
-			displayKey: function(aya) { return 'سوره '+ quran_suras[Number(aya.id.split('_')[0])-1] +'، آیه '+ refine(aya.id.split('_')[1]); },
+			displayKey: function(aya) { return 'سوره '+ quran_suras[Number(aya.id.split('_')[0])-1] +'، آیه '+ aya.id.split('_')[1]; },
 			source: this.aya_items.ttAdapter(),
 			templates: {
 				suggestion: function(aya) {
@@ -552,7 +552,7 @@ var AddressView = Backbone.View.extend({
 			page_sura = Number(quran_pages[position.quran.page][0].split('_')[0]);
 			this.$el.find('#sura').val(quran_suras[page_sura-1]);
 		} else if (position.mode == 'detail') {
-			this.$el.find('.detail .left').text(refine(position.detail.aya) +' سوره '+ quran_suras[position.detail.sura-1]);
+			this.$el.find('.detail .left').text(position.detail.aya +' سوره '+ quran_suras[position.detail.sura-1]);
 		} else if (position.mode == 'tafsir') {
 			this.$el.find('.tafsir .left').text('المیزان');
 		}
@@ -597,7 +597,7 @@ var AddressView = Backbone.View.extend({
 	},
 	tafsirScroll: function(args) {
 		if (args['volume'] && args['page'])
-			this.$el.find('.tafsir .left').text('المیزان، ج'+ refine(args['volume']) +' ص'+ refine(args['page']));
+			this.$el.find('.tafsir .left').text('المیزان، ج'+ args['volume'] +' ص'+ args['page']);
 	},
 	showSearch: function() {
 		this.$el.find('.front').removeClass('front');
@@ -869,7 +869,7 @@ var DetailView = Backbone.View.extend({
 
 		// goto
 		goto = this.$el.find('#goto-tafsir');
-		goto.html('تفسیر آیه '+ refine(this.position.aya) +' سوره '+ quran_suras[this.position.sura-1]);
+		goto.html('تفسیر آیه '+ this.position.aya +' سوره '+ quran_suras[this.position.sura-1]);
 		goto.attr('href', '#almizan_'+ variables.lang +'/'+ this.aya.get('id'));
 	},
 	renderDetails: function() {

@@ -14,7 +14,7 @@ def read_quran(quran):
 			continue
 
 		name = lines[0]
-		suras.append(name[5:])
+		suras.append(name[5:].replace('ي', 'ی'))
 
 		for aya in lines[2:-2]:
 			parts = aya.split('(')
