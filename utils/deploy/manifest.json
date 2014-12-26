@@ -8,9 +8,9 @@
 	},
 	"app": {
 		"launch": {
-			"web_url": "http://zolal.sobhe.ir/"
+			"web_url": "http://zolal-quran.ir/"
 		},
-		"urls": [ "http://zolal.sobhe.ir/" ]
+		"urls": [ "http://zolal-quran.ir/" ]
 	},
 	"permissions": [
 		"unlimitedStorage"
