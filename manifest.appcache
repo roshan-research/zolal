@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# 2014 Dec 4
+# 2014 Dec 27
 
 CACHE:
 zolal.js
@@ -19,6 +19,7 @@ js/mixpanel.js
 css/bootstrap.css
 css/main.css
 fonts/AppFont.woff
+fonts/NumberFont.woff
 fonts/AppFontBd.woff
 fonts/QuranFont.woff
 fonts/glyphicons-halflings-regular.woff
