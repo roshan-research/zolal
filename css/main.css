@@ -555,6 +555,9 @@ body {
 #menu #download-tafsir .glyphicon {
   top: 5px;
 }
+#menu #installation .btn {
+  margin-top: -3px;
+}
 #menu .modal-footer {
   font-size: 90%;
   padding: 10px 20px;
