@@ -61,9 +61,9 @@ document.addEventListener('backbutton', function(e) {
 
 
 if (android_app)
-	$('.installation #android').hide()
+	$('#installation #android').hide()
 if (chrome_app)
-	$('.installation #chrome').hide()
+	$('#installation #chrome').hide()
 if (!android_app)
 	$('[rel=menu]').show();
 

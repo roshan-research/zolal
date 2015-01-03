@@ -556,7 +556,9 @@ body {
   top: 5px;
 }
 #menu #installation .btn {
-  margin-top: -3px;
+  float: right;
+  margin-top: -1px;
+  margin-right: 5px;
 }
 #menu .modal-footer {
   font-size: 90%;
