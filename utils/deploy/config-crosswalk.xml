@@ -9,7 +9,7 @@
     </author>
     <content src="index.html" />
     <access origin="*" />
-    <preference name="android-minSdkVersion" value="9" />
+    <preference name="android-minSdkVersion" value="14" />
     <preference name="android-maxSdkVersion" value="18" />
     <preference name="android-targetSdkVersion" value="10" />
     <preference name="Fullscreen" value="false" />
