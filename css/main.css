@@ -674,4 +674,7 @@ body {
     margin-right: -10px;
     margin-left: -10px;
   }
+  .aya-text {
+    line-height: 46px;
+  }
 }
