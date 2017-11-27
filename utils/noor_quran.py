@@ -76,6 +76,8 @@ replacements = [
 	('[', '۫'),
 	(']', '۪'),
 
+	('مَا لِ ', 'مَالِ '),  # remove space between ma le
+
 	('-', '#'),  # sura indicators
 ]
 
