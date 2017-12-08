@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# 2015 Jul 6
+# 2017 Dec 8
 
 CACHE:
 zolal.js
@@ -15,7 +15,7 @@ js/bootstrap.js
 js/typeahead.js
 js/steady.js
 js/meta.js
-js/mixpanel.js
+js/amplitude.js
 css/bootstrap.css
 css/main.css
 fonts/AppFont.woff
