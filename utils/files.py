@@ -1,12 +1,14 @@
 
 import json
-from path import path
+from path import Path
 from collections import OrderedDict
 from quran import read_quran, read_simple, read_lines
 from almizan import read_tafsir, section_ayas, refine_numbers, resolve_footnotes, refine_section, resolve_phrases,resolve_headers
 
-data = path('data')
-files = path('../files')
+USE_ALMIZAN_TRANSLATION = False
+
+data = Path('data')
+files = Path('../files')
 
 
 # read quran data
@@ -55,15 +57,22 @@ for ar_section, fa_section in zip(read_tafsir(open(data / 'almizan_ar.html')), r
 	phrases.extend(resolve_phrases(fa_section, tokens, 'almizan_fa', id))
 	headers.extend(resolve_headers(fa_section, id))
 
-	# translations
-	for trans in fa_section.find('.trans').items():
-		translations[trans.attr('rel')] = trans.text().split('«')[0].strip()
+	# extract translations from tafsir
+	if USE_ALMIZAN_TRANSLATION:
+		for trans in fa_section.find('.trans').items():
+			translations[trans.attr('rel')] = trans.text().split('«')[0].strip()
 
 	almizan_sections.append(id)
 	print(ar_section.html(), file=open(files / 'almizan_ar' / id, 'w'))
 	print(fa_section.html(), file=open(files / 'almizan_fa' / id, 'w'))
 	print(id)
 
+
+if not USE_ALMIZAN_TRANSLATION:
+	for line in open(data / 'fa.makarem.txt'):
+		parts = line.split('|')
+		if len(parts) == 3:
+			translations['_'.join(parts[:2])] = parts[2].strip()
 
 # write translations
 json.dump(translations, open(files / 'quran' / 'fa', 'w'), ensure_ascii=False, sort_keys=True)
