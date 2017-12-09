@@ -56,6 +56,11 @@ var tafsirDb = {
 			version: 6,
 			migrate: function (transaction, next) {
 				transaction.objectStore('tafsirs').clear();
+				next();
+			}
+		}, {
+			version: 7,
+			migrate: function (transaction, next) {
 				localStorage.clear();
 				next();
 			}
