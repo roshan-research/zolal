@@ -62,6 +62,11 @@ var tafsirDb = {
 			version: 7,
 			migrate: function (transaction, next) {
 				localStorage.clear();
+
+				// fill data after clearing
+				if (android_app)
+					download_quran('');
+
 				next();
 			}
 		}
