@@ -64,8 +64,10 @@ if (android_app)
 	$('#installation #android').hide()
 if (chrome_app)
 	$('#installation #chrome').hide()
-if (!android_app)
-	$('[rel=menu]').show();
+
+$('[rel=menu]').show();
+if (android_app)
+	$('.quran [rel=menu]').hide();
 
 
 // app initialization
