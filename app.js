@@ -60,10 +60,10 @@ document.addEventListener('backbutton', function(e) {
 }, false);
 
 
-if (android_app)
-	$('#installation #android').hide()
 if (chrome_app)
 	$('#installation #chrome').hide()
+if (android_app)
+	$('#installation').hide()
 
 $('[rel=menu]').show();
 if (android_app)
