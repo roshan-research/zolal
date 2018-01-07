@@ -77,6 +77,7 @@ replacements = [
 	(']', '۪'),
 
 	('مَا لِ ', 'مَالِ '),  # remove space between ma le
+	('يَّیٰ', 'يَّـٰ'),  # remove ya in one specific instance
 
 	('-', '#'),  # sura indicators
 ]
@@ -99,4 +100,4 @@ quran = re.sub(r'([ٔۧۨ])', r'ـ\1', quran)
 quran = re.sub(r'(\n| )([ءأ])َ ', r'\1\2َ', quran)
 
 
-print(quran, file=open('quran.txt', 'w'))
+print(quran, file=open('data/quran.txt', 'w'))
