@@ -393,7 +393,9 @@ body {
 #header .glyphicon {
   cursor: pointer;
   font-size: 16px;
-  padding: 13px 12px 11px;
+  height: 40px;
+  line-height: 40px;
+  padding: 0 12px;
   float: right;
   z-index: 10;
   top: 0;
@@ -431,7 +433,7 @@ body {
   line-height: 44px;
   width: 40px;
   float: right;
-  padding: 0;
+  padding: 2px 0 0 0;
   text-align: center;
   direction: ltr;
 }
