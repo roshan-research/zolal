@@ -7,3 +7,4 @@ cordova create zolal ir.sobhe.zolal Zolal
 cordova platforms add android
 
 cordova plugin add cordova-plugin-splashscreen cordova-plugin-insomnia cordova-plugin-statusbar
+cordova plugin add cordova-plugin-crosswalk-webview

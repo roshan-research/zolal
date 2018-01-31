@@ -23,7 +23,6 @@
         <preference name="StatusBarBackgroundColor" value="#036564" />
         <preference name="StatusBarStyle" value="lightcontent" />
         <preference name="android-minSdkVersion" value="19" />
-        <preference name="android-targetSdkVersion" value="10" />
     </platform>
     <platform name="ios">
         <allow-intent href="itms:*" />

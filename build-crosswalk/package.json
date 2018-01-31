@@ -11,6 +11,7 @@
     "license": "Apache-2.0",
     "dependencies": {
         "cordova-android": "^7.0.0",
+        "cordova-plugin-crosswalk-webview": "^2.4.0",
         "cordova-plugin-insomnia": "^4.3.0",
         "cordova-plugin-splashscreen": "^5.0.1",
         "cordova-plugin-statusbar": "^2.4.1",
@@ -21,7 +22,14 @@
             "cordova-plugin-whitelist": {},
             "cordova-plugin-splashscreen": {},
             "cordova-plugin-insomnia": {},
-            "cordova-plugin-statusbar": {}
+            "cordova-plugin-statusbar": {},
+            "cordova-plugin-crosswalk-webview": {
+                "XWALK_VERSION": "23+",
+                "XWALK_LITEVERSION": "xwalk_core_library_canary:17+",
+                "XWALK_COMMANDLINE": "--disable-pull-to-refresh-effect",
+                "XWALK_MODE": "embedded",
+                "XWALK_MULTIPLEAPK": "true"
+            }
         },
         "platforms": [
             "android"
