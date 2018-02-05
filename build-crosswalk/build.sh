@@ -7,7 +7,7 @@ export ANDROID_HOME=/home/nournia/Softwares/Android/sdk/
 # cordova run android
 cordova build --release android
 
-cp platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk Zolal-unsigned.apk
+cp platforms/android/app/build/outputs/apk/arm64/release/app-arm64-release-unsigned.apk Zolal-unsigned.apk
 
 rm Zolal.apk
 jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore sobhe.jks Zolal-unsigned.apk sobhekey

@@ -22,8 +22,9 @@
         <preference name="StatusBarOverlaysWebView" value="true" />
         <preference name="StatusBarBackgroundColor" value="#036564" />
         <preference name="StatusBarStyle" value="lightcontent" />
-        <preference name="android-minSdkVersion" value="14" />
+        <preference name="android-minSdkVersion" value="16" />
         <preference name="android-maxSdkVersion" value="18" />
+        <preference name="xwalkMode" value="embedded" />
     </platform>
     <platform name="ios">
         <allow-intent href="itms:*" />
@@ -42,7 +43,7 @@
         <variable name="XWALK_LITEVERSION" value="xwalk_core_library_canary:17+" />
         <variable name="XWALK_COMMANDLINE" value="--disable-pull-to-refresh-effect" />
         <variable name="XWALK_MODE" value="embedded" />
-        <variable name="XWALK_MULTIPLEAPK" value="true" />
+        <variable name="XWALK_MULTIPLEAPK" value="false" />
     </plugin>
     <engine name="android" spec="^7.0.0" />
 </widget>
