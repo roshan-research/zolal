@@ -1,7 +1,7 @@
 
 var app;
 var store = false;
-var server = 'http://cloud.sobhe.ir/zolal/';
+var server = 'https://cloud.sobhe.ir/zolal/';
 var chrome_app = 'chrome' in window && 'app' in chrome && chrome.app.isInstalled;
 var android_app = 'cordova' in window;
 var searchResultChars = android_app ? 25 : 50;
