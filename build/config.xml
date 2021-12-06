@@ -36,5 +36,5 @@
     <plugin name="cordova-plugin-insomnia" spec="^4.3.0" />
     <plugin name="cordova-plugin-splashscreen" spec="^5.0.1" />
     <plugin name="cordova-plugin-statusbar" spec="^2.4.1" />
-    <engine name="android" spec="^7.0.0" />
+    <engine name="android" spec="^9.1.0" />
 </widget>
