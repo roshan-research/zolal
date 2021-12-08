@@ -670,13 +670,14 @@ body {
 }
 @media (min-width: 480px) and (max-width: 768px), (min-height: 750px) {
   html {
-    zoom: 130%;
+    zoom: 100%;
   }
   #quran .page div.sura {
     margin-right: -10px;
     margin-left: -10px;
   }
   .aya-text {
-    line-height: 46px;
+    font-size: 23px;
+    line-height: 40px;
   }
 }
