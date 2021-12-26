@@ -494,6 +494,16 @@ body {
   line-height: 24px;
   cursor: pointer;
 }
+
+#font-slider{
+  margin-top: 10px;
+  margin-right: 20px;
+}
+
+#font-slider input {
+  width: 25vw;
+}
+
 .twitter-typeahead .tt-suggestion:nth-child(even) {
   background-color: #031634;
 }
@@ -679,5 +689,12 @@ body {
   .aya-text {
     font-size: 23px;
     line-height: 40px;
+  }
+}
+
+
+@media screen and (max-width: 480px) {
+  #font-slider input {
+    width: 40vw;
   }
 }

@@ -12,3 +12,6 @@ fa
 *.txt
 *.xdk*
 *.jks
+platforms
+plugins
+node_modules

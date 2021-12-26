@@ -76,6 +76,7 @@ var initApp = function() {
 
 	app = new AppView();
 	app.router = new AddressRouter();
+
 	Backbone.history.start();
 
 	// navigate to previous location
