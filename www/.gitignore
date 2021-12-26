@@ -1,0 +1,14 @@
+.idea
+files
+utils/data
+utils/deploy/app
+utils/deploy/zolal.js
+all
+fa
+*.exe
+*.apk
+*.pyc
+*.zip
+*.txt
+*.xdk*
+*.jks

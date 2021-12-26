@@ -3,6 +3,19 @@ let fontShower = document.querySelector('#font-shower');
 let htmlDocument = document.querySelector('html');
 let pageInput = document.querySelector('#page');
 
+let globalZoom = parseInt(localStorage.getItem("zoom"));
+if(globalZoom !== null) {
+    let pageValue = parseInt(pageInput.value);
+    let thisPage = pageValue;
+    let nextPage = pageValue + 2;
+    fontSlider.value = globalZoom;
+    htmlDocument.style.zoom = globalZoom + '%';
+    app.router.navigate('quran/p'+ nextPage, {trigger: true, replace: true});
+    app.router.navigate('quran/p'+ thisPage, {trigger: true, replace: true});
+} else {
+    fontSlider.value = 100;
+}
+
 fontSlider.oninput = () => {
     let pageValue = parseInt(pageInput.value);
     let thisPage = pageValue;
@@ -16,10 +29,11 @@ fontSlider.oninput = () => {
         fontShower.innerText = 'بزرگ‌ نمایی برنامه: کوچک';
     }
     htmlDocument.style.zoom = zoomValue + '%';
+    globalZoom = zoomValue;
     app.router.navigate('quran/p'+ nextPage, {trigger: true, replace: true});
     app.router.navigate('quran/p'+ thisPage, {trigger: true, replace: true});
 }
 
 window.onchange = () => {
-
+    localStorage.setItem("zoom",globalZoom.toString());
 }
