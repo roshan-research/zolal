@@ -692,9 +692,44 @@ body {
   }
 }
 
-
-@media screen and (max-width: 480px) {
-  #font-slider input {
-    width: 40vw;
+@media screen and (min-width: 768px) {
+  #zoom-buttons{
+    display: none;
   }
+}
+
+#zoom-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  width: 13vh;
+  height: 6.5vh;
+  border-bottom: 3px solid #46b8da;
+  background-color: transparent;
+}
+
+.zoom-button{
+  height: 5vh;
+  width: 5vh;
+  background-color: #eee;
+  border: 1px solid #2c2c2c;
+  line-height: 0.5;
+  border-radius: 5px;
+  color: #3875cb;
+  font-size: 4vh;
+  font-weight: bold;
+  transition: 0.1s;
+}
+
+#plus-button {
+  /*font-size: 3.3vh;*/
+}
+
+#minus-button {
+  /*font-size: 1.9vh;*/
+}
+
+.zoom-button:active{
+  transform: scale(0.80);
 }
