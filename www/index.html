@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html manifest="manifest.appcache">
+<head>
+	<title>زلال</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="user-scalable=yes, initial-scale=1, maximum-scale=2, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+	<meta name="google-site-verification" content="29QgZ_sPK4RQ5CUWy5KcqWOojwvvYObLuPq7gPK5rNY" />
+	<link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/cmhmgigldkolppfbfdadehjlmfgblgin">
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+	<link rel="shortcut icon" type="image/png" href="img/fav.png">
+	<!-- <script type="text/javascript" src="cordova.js"></script> -->
+</head>
+<body>
+	<div id="wrap" class="container loading">
+		<div id="header">
+			<div class="header search">
+				<input id="search" type="text">
+			</div>
+			<div class="header quran front">
+				<div class="buttons-right">
+					<span rel="show-tafsir" title="تفسیر" class="glyphicon glyphicon-book"></span>
+					<span rel="search" title="جستجو" class="glyphicon glyphicon-search"></span>
+					<span rel="menu" title="تنظیمات" class="glyphicon glyphicon-cog"></span>
+				</div>
+				<div class="right">سورة</div>
+				<input id="sura" type="text" value="الفاتحة">
+				<div class="buttons-left">
+					<span rel="prev-page" title="صفحه قبل" class="glyphicon glyphicon-chevron-right"></span>
+					<input id="page" type="tel">
+					<span rel="next-page" title="صفحه بعد" class="glyphicon glyphicon-chevron-left"></span>
+				</div>
+			</div>
+			<div class="header detail">
+				<div class="buttons-right">
+					<span rel="show-quran" title="قرآن" class="glyphicon glyphicon-align-justify"></span>
+					<span rel="menu" title="تنظیمات" class="glyphicon glyphicon-cog"></span>
+				</div>
+				<div class="right">آیه</div>
+				<div class="left"></div>
+				<div class="buttons-left">
+					<span rel="prev-aya" title="آیه قبل" class="glyphicon glyphicon-chevron-right"></span>
+					<span rel="next-aya" title="آیه بعد" class="glyphicon glyphicon-chevron-left"></span>
+				</div>
+			</div>
+			<div class="header tafsir">
+				<div class="buttons-right">
+					<span rel="show-quran" title="قرآن" class="control glyphicon glyphicon-align-justify"></span>
+					<span rel="menu" title="تنظیمات" class="control glyphicon glyphicon-cog"></span>
+				</div>
+				<div class="right">تفسیر</div>
+				<div class="left"></div>
+			</div>
+		</div>
+
+		<div id="views">
+			<div id="quran" class="fill">
+				<style id="page-style"></style>
+				<div id="pages"></div>
+				<span id="page"></span>
+			</div>
+
+			<div id="tafsir" class="tafsir-text fill">
+				<div class="content clearfix fill"></div>
+			</div>
+
+			<div id="detail" class="fill">
+				<div class="content clearfix fill">
+					<div id="aya" class="aya-text active"></div>
+					<div id="translation" class="tafsir-text"></div>
+					<div id="sections" class="tafsir-text"></div>
+					<a id="goto-tafsir"></a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="menu" class="modal fade">
+	<div class="modal-dialog">
+	<div class="modal-content">
+		<div class="modal-body">
+			<button type="button" class="close pull-left" data-dismiss="modal" aria-hidden="true">&times;</button>
+
+			<ul class="nav">
+				<li class="active"><a href="#options" data-toggle="tab">تنظیمات</a></li>
+				<li><a href="#about" data-toggle="tab">درباره زلال</a></li>
+			</ul>
+
+			<div class="tab-content">
+				<div class="tab-pane active" id="options">
+					<div class="option">
+						زبان نمایش تفسیر: <select id="language" class="form-control"><option value="fa">فارسی</option><option value="ar">عربی</option></select>
+					</div>
+
+					<div class="storage" style="display: none">
+						<div id="download-state" style="display: none">
+							<p style="margin-bottom: 5px">بخش‌های دریافت شده تفسیر: </p>
+							<div id="download-progress" class="progress progress-striped">
+								<div class="progress-bar progress-bar-info" role="progressbar"></div>
+							</div>
+							<a href="#" id="download-tafsir" class="btn btn-link"><span class="glyphicon glyphicon-download"></span> دریافت همه بخش‌ها برای استفاده بدون اتصال</a>
+						</div>
+						<div id="complete-state" style="display: none">
+							همه بخش‌های تفسیر دریافت شده‌اند.
+						</div>
+					</div>
+
+					<div id="installation" class="clearfix">
+						<span class="pull-right">نصب در</span>
+						<a id="chrome" class="btn btn-primary" href="https://chrome.google.com/webstore/detail/cmhmgigldkolppfbfdadehjlmfgblgin" target="_blank"><span class="glyphicon glyphicon-globe"></span> مرورگر</a>
+						<a id="android" class="btn btn-info" href="https://play.google.com/store/apps/details?id=ir.sobhe.zolal" target="_blank"><span class="glyphicon glyphicon-phone"></span> آندروید</a>
+					</div>
+				</div>
+
+				<div class="tab-pane" id="about">
+					<p>زلال قرار است قرآنی باشد که با نگاه به ظاهرش، کمی از عمق آن هم پیداست؛ درست مثل آب روان. این‌طوری می‌خواهیم کمی تدبر اضافه کنیم به قرائت‌های روزانه. هدف دور است و باید با قدم‌های کوتاه به آن رسید. برای‌مان دعا کنید و اگر هم اگر پیشنهادی داشتید، <a href="mailto:zolal@sobhe.ir" target="_blank">مشتاق شنیدن هستیم</a>.</p>
+
+					<p>ممنونیم از آتلیه <a href="http://3x4studio.ir" target="_blank">سه در چهار</a> برای طراحی ظاهر زلال و همچنین پروژه <a href="http://tanzil.net" target="_blank">تنزیل</a> برای فراهم کردن ترجمه قرآن.</p>
+				</div>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<div id="copyright">حاصل هم‌راهی <a href="http://www.sobhe.ir/" target="_blank" style="font-family: NumberFont">سُبحه</a> و <a href="http://www.noorsoft.org/" target="_blank">مرکز تحقیقات کامپیوتری علوم اسلامی «نور»</a></div>
+		</div>
+	</div>
+	</div>
+	</div>
+
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/underscore.js"></script>
+	<script type="text/javascript" src="js/backbone.js"></script>
+	<script type="text/javascript" src="js/backbone.localStorage.js"></script>
+	<script type="text/javascript" src="js/backbone.indexedDb.js"></script>
+	<script type="text/javascript" src="js/bootstrap.js"></script>
+	<script type="text/javascript" src="js/typeahead.js"></script>
+	<script type="text/javascript" src="js/jquery.touchSwipe.js"></script>
+	<script type="text/javascript" src="js/steady.js"></script>
+	<script type="text/javascript" src="js/meta.js"></script>
+	<script type="text/javascript" src="search.js"></script>
+	<script type="text/javascript" src="zolal.js"></script>
+	<script type="text/javascript" src="app.js"></script>
+
+
+	<script type="text/javascript">
+		(function(e,t){var n=e.amplitude||{_q:[],_iq:{}};var r=t.createElement("script");r.type="text/javascript";r.async=true;r.src="js/amplitude.js";r.onload=function(){if(e.amplitude.runQueuedFunctions){e.amplitude.runQueuedFunctions()}else{console.log("[Amplitude] Error: could not load SDK")}};var i=t.getElementsByTagName("script")[0];i.parentNode.insertBefore(r,i);function s(e,t){e.prototype[t]=function(){this._q.push([t].concat(Array.prototype.slice.call(arguments,0)));return this}}var o=function(){this._q=[];return this};var a=["add","append","clearAll","prepend","set","setOnce","unset"];for(var u=0;u<a.length;u++){s(o,a[u])}n.Identify=o;var c=function(){this._q=[];return this};var l=["setProductId","setQuantity","setPrice","setRevenueType","setEventProperties"];for(var p=0;p<l.length;p++){s(c,l[p])}n.Revenue=c;var d=["init","logEvent","logRevenue","setUserId","setUserProperties","setOptOut","setVersionName","setDomain","setDeviceId","setGlobalUserProperties","identify","clearUserProperties","setGroup","logRevenueV2","regenerateDeviceId","logEventWithTimestamp","logEventWithGroups","setSessionId"];function v(e){function t(t){e[t]=function(){e._q.push([t].concat(Array.prototype.slice.call(arguments,0)))}}for(var n=0;n<d.length;n++){t(d[n])}}v(n);n.getInstance=function(e){e=(!e||e.length===0?"$default_instance":e).toLowerCase();if(!n._iq.hasOwnProperty(e)){n._iq[e]={_q:[]};v(n._iq[e])}return n._iq[e]};e.amplitude=n})(window,document); amplitude.getInstance().init("67ee172e1a7943968c1d02eae9d7ef2d", null, {forceHttps: false, batchEvents: true});
+	</script>
+</body>
+</html>

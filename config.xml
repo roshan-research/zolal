@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="ir.sobhe.zolal" version="1.7.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>زلال</name>
+    <description>
+        Quran with Almizan tafsir.
+    </description>
+    <author email="zolal@sobhe.ir" href="http://zolal-quran.ir">
+        Sobhe
+    </author>
+    <content src="index.html" />
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+    <allow-intent href="mailto:*" />
+    <allow-navigation href="*" />
+    <access origin="*" />
+    <platform name="android">
+        <allow-intent href="market:*" />
+        <icon density="ldpi" src="res/icon/android/icon-36-ldpi.png" />
+        <icon density="mdpi" src="res/icon/android/icon-48-mdpi.png" />
+        <icon density="hdpi" src="res/icon/android/icon-72-hdpi.png" />
+        <icon density="xhdpi" src="res/icon/android/icon-96-xhdpi.png" />
+        <preference name="StatusBarOverlaysWebView" value="true" />
+        <preference name="StatusBarBackgroundColor" value="#036564" />
+        <preference name="StatusBarStyle" value="lightcontent" />
+        <preference name="android-minSdkVersion" value="26" />
+    </platform>
+    <platform name="ios">
+        <allow-intent href="itms:*" />
+        <allow-intent href="itms-apps:*" />
+    </platform>
+    <preference name="Fullscreen" value="false" />
+    <preference name="Orientation" value="portrait" />
+    <preference name="SplashScreen" value="screen" />
+    <preference name="SplashScreenDelay" value="3000" />
+    <preference name="SplashScreenBackgroundColor" value="#ffffff" />
+    <preference name="AndroidWindowSplashScreenAnimatedIcon" value="res/screen/android/icon.png" />
+    <preference name="AndroidWindowSplashScreenIconBackgroundColor" value="#ffffff" />
+
+</widget>

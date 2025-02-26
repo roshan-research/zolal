@@ -1,0 +1,17 @@
+{
+	"version": "1.0.0",
+	"name": "Zolal",
+	"description": "Quran with Tafsir.",
+	"launch_path": "/index.html",
+	"fullscreen": "true",
+	"icons": {
+		"16": "/img/logo16.png",
+		"128": "/img/logo128.png"
+	},
+	"developer": {
+		"name": "Sobhe",
+		"url": "http://www.sobhe.ir"
+	},
+	"default_locale": "en",
+	"installs_allowed_from": ["*"]
+}

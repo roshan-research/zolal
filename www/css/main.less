@@ -1,0 +1,730 @@
+@import "prefixer.less";
+
+@font-face {
+	font-family: QuranFont;
+	font-weight: normal;
+	src: url('../fonts/QuranFont.woff') format('woff');
+}
+@font-face {
+	font-family: AppFont;
+	font-weight: normal;
+	src: url('../fonts/AppFont.woff') format('woff');
+}
+@font-face {
+	font-family: AppFont;
+	font-weight: bold;
+	src: url('../fonts/AppFontBd.woff') format('woff');
+}
+@font-face {
+	font-family: NumberFont;
+	font-weight: normal;
+	src: url('../fonts/NumberFont.woff') format('woff');
+}
+
+/* bootstrap */
+
+.nav {
+	padding-right: 0;
+	padding-left: 0;
+}
+.btn {
+	padding: 2px 7px;
+	font-size: 17px;
+}
+.btn-link[disabled] {
+	color: #999;
+}
+.glyphicon {
+	top: 4px;
+}
+
+/* zolal */
+
+@color1: #e8ddcb; @color2: #cdb380; @color3: #036564; @color4: #033649; @color5: #031634; @color6: #008d8a; @tafsir-header: #584c37; @darken-background: darken(@color1, 5%);
+
+* {
+	box-sizing: border-box;
+}
+html {
+	height: 100%;
+	overflow: hidden;
+}
+body {
+	height: 100%;
+	padding: 0;
+	overflow: hidden;
+	direction: rtl;
+	font-family: AppFont, NumberFont;
+	-webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+}
+#wrap {
+	height: 100%;
+	position: relative;
+}
+body, blockquote p, .tooltip-inner {
+	font-size: 18px;
+}
+
+.container {
+	max-width: 600px;
+}
+
+#wrap {
+	padding: 0;
+	border-right: 2px solid @color4;
+	border-left: 2px solid @color5;
+}
+#views {
+	padding: 0 10px;
+	position: relative;
+	height: calc(~"100% - 60px");
+
+	&:before, &:after {
+		content: "";
+		position: absolute;
+		background: @color1;
+		width: 600px;
+		height: 100%;
+		top: 0;
+		z-index: 20;
+	}
+	&:before {
+		right: -602px;
+	}
+	&:after {
+		left: -602px;
+	}
+}
+#quran, #tafsir, #detail {
+	height: 100%;
+	text-align: justify;
+	color: @color5;
+	overflow: auto;
+	display: none;
+
+	&.front {
+		display: block;
+	}
+
+	.content {
+		overflow-x: hidden;
+	}
+}
+
+
+#tafsir {
+	font-size: 22px;
+	line-height: 30px;
+
+	.aya {
+		color: @color6;
+		&:before {
+			content: "«"
+		}
+		&:after {
+			content: "»"
+		}
+	}
+
+	h1, h2, h3 {
+		background: @darken-background;
+		text-align: right;
+		padding: 0 10px;
+		margin: 0 -10px;
+		color: @tafsir-header;
+		padding-top: 2px;
+		padding-bottom: 2px;
+	}
+
+	.ayas {
+		background: @color6;
+		color: @color1;
+	}
+}
+
+
+.loading {
+	position: relative;
+
+	&:before {
+		font-family: 'Glyphicons Halflings';
+		content: "\e031";
+		position: absolute;
+		text-align: center;
+		cursor: pointer;
+		font-size: 20px;
+		line-height: 1;
+		height: 20px;
+		width: 20px;
+		top: calc(~"50% - 10px");
+		left: calc(~"50% - 10px");
+		z-index: 10;
+		color: @color5;
+		.animation(ICON-SPIN 2s infinite linear);
+	}
+	&:after {
+		content: "صبر بفرمایید";
+		position: absolute;
+		top: calc(~"50% + 20px");
+		left: 0;
+		width: 100%;
+		text-align: center;
+		color: @color5;
+	}
+
+	&.failed:before {
+		.animation(none);
+	}
+	&.failed:after {
+		content: "خطا در اتصال";
+		position: absolute;
+		top: calc(~"50% + 20px");
+		left: 0;
+		width: 100%;
+		text-align: center;
+		color: @color5;
+	}
+
+	&.twitter-typeahead:before {
+		left: 15px;
+		color: inherit;
+	}
+}
+
+#quran {
+	max-width: 600px;
+	overflow: hidden;
+	direction: ltr;
+
+	#pages {
+		width: 100000px;
+		height: 100%;
+		position: absolute;
+
+		&.animate {
+			transition: left .3s ease;
+		}
+
+		.page {
+			height: 100%;
+			margin-right: 10px;
+			float: left;
+			direction: rtl;
+			overflow-x: hidden;
+			overflow-y: auto;
+			padding-top: 5px;
+			padding-bottom: 5px;
+		}
+	}
+}
+
+.aya-text {
+	line-height: 44px;
+	font-size: 25px;
+
+	&.active {
+		.text {
+			background: @darken-background;
+		}
+
+		.found {
+			background: #D6BC89;
+		}
+	}
+
+	.text {
+		font-family: QuranFont;
+	}
+
+	.mark {
+		color: @color3;
+	}
+
+	.number {
+		font-family: AppFont;
+		font-weight: bold;
+		font-size: 65%;
+		color: lighten(@color1, 10%);
+		background: @color2;
+		padding: 3px 4px 1px;
+		border-radius: 50px;
+		min-width: 15px;
+		text-align: center;
+		display: inline-block;
+		line-height: 18px;
+		margin: 0 1px;
+		box-sizing: initial;
+		-moz-box-sizing: initial;
+	}
+}
+
+#quran .page {
+	visibility: hidden;
+	&.front {
+		visibility: visible;
+	}
+
+	div.bism {
+		text-align: center;
+		margin-top: -4px;
+
+		span {
+			font-size: 90%;
+		}
+	}
+	div.sura {
+		margin-top: 8px;
+
+		&:first-child {
+			display: none !important;
+		}
+	}
+
+	.aya-text {
+		cursor: pointer;
+	}
+}
+
+.tafsir-text {
+	text-align: justify;
+	font-size: 20px;
+	line-height: 25px;
+
+	h1, h2, h3 {
+		margin: 12px 0 6px;
+		line-height: 30px;
+		font-weight: bold;
+	}
+	h2 {
+		font-size: 24px;
+	}
+	h3 {
+		font-size: 22px;
+	}
+	p {
+		margin-bottom: 8px;
+
+		&.ayas {
+			margin-top: 10px;
+		}
+	}
+	code {
+		float: right;
+		visibility: hidden;
+		padding: 0;
+		width: 0;
+	}
+	em {
+		font-style: normal;
+		font-weight: bold;
+		font-size: 90%;
+	}
+	h3 em {
+		font-size: 100%;
+	}
+	span.footnote {
+		display: inline-block;
+		vertical-align: middle;
+		font-family: NumberFont;
+		line-height: 3px;
+		font-size: 90%;
+		padding: 0px 5px 17px;
+		margin: 0 -5px;
+		border-radius: 10px;
+		cursor: pointer;
+	}
+	.active {
+		.animation(TAFSIR-HIGHLIGHT 1s ease);
+	}
+}
+
+#detail {
+	#aya {
+		margin-top: 10px;
+	}
+
+	#translation {
+		margin: 10px 0 20px;
+	}
+
+	#sections {
+		a {
+			color: inherit;
+			text-decoration: none;
+		}
+		.fill {
+			background: @darken-background;
+			margin-bottom: 10px;
+		}
+
+		.footnote {
+			display: none;
+		}
+
+		p {
+			padding-top: 5px;
+			padding-bottom: 5px;
+		}
+
+		h3 {
+			margin: 0;
+			color: @tafsir-header;
+			font-size: 90%;
+			text-align: right;
+		}
+
+		.aya-text {
+			float: right;
+			color: @color1;
+			background: @color6;
+			font-size: 90%;
+			line-height: 1.5;
+			margin-left: 10px;
+			padding-left: 10px;
+			margin-bottom: 0;
+		}
+	}
+
+	#goto-tafsir {
+		float: left;
+		cursor: pointer;
+    background: @color6;
+    margin-left: -10px;
+    padding: 0 10px;
+    color: @color1;
+    text-decoration: none;
+    font-size: 120%;
+    margin-bottom: 20px;
+	}
+}
+
+body {
+	background: @color1;
+}
+
+#header {
+	position: relative;
+	margin: 20px 10px 0;
+
+	& > div {
+		display: none;
+	}
+	.front {
+		display: block;
+	}
+
+	.buttons-right {
+		position: absolute;
+		top: 0;
+		right: 0;
+	}
+	.buttons-left {
+		position: absolute;
+		top: 0;
+		left: 0;
+	}
+	.glyphicon {
+		cursor: pointer;
+		font-size: 16px;
+		height: 40px;
+		line-height: 40px;
+		padding: 0 12px;
+		float: right;
+		z-index: 10;
+		top: 0;
+	}
+	.glyphicon:hover {
+		background: @color3;
+	}
+
+	input {
+		padding: 0 10px;
+		background-color: @color5;
+		outline: none;
+		border: none;
+		height: 40px;
+		width: 100%;
+	}
+	span.twitter-typeahead {
+		width: 100%;
+		position: absolute !important;
+		left: 0;
+		tof: 0;
+	}
+	#sura {
+		direction: rtl;
+		cursor: pointer;
+		padding-left: 80px;
+		padding-right: 7px;
+		float: left;
+		width: 50%;
+	}
+	#search {
+		direction: rtl;
+	}
+	#page {
+		font-family: NumberFont;
+		line-height: 44px;
+		width: 40px;
+		float: right;
+		padding: 2px 0 0 0;
+		text-align: center;
+		direction: ltr;
+
+		&::selection {
+			background: none;
+		}
+		&:focus {
+			background: @color3;
+		}
+	}
+	[rel=menu] {
+		display: none;
+	}
+}
+.header {
+	height: 40px;
+	line-height: 32px;
+	font-size: 24px;
+	color: @color1;
+	margin-bottom: 4px;
+
+	& > div {
+		height: 100%;
+	}
+
+	.right, .left {
+		width: 50%;
+		display: inline-block;
+		float: right;
+		padding: 4px 7px 4px 5px;
+	}
+
+	.right {
+		background: @color4;
+		text-align: left;
+	}
+	.left {
+		background: @color5;
+	}
+}
+
+.fill, .tafsir-text .active, .page, .ayas {
+	padding-right: 10px;
+	padding-left: 10px;
+	margin-right: -10px;
+	margin-left: -10px;
+}
+
+.twitter-typeahead {
+	width: 100%;
+
+	.tt-dropdown-menu {
+		width: 100%;
+		overflow-y: auto;
+		background-color: @color4;
+	}
+	.tt-suggestion {
+		color: @color1;
+		padding: 2px 10px;
+		font-size: 90%;
+		line-height: 24px;
+		cursor: pointer;
+	}
+	.tt-suggestion:nth-child(even) {
+		background-color: @color5;
+	}
+	.tt-suggestion.tt-cursor {
+		background-color: @color3;
+	}
+	.tt-suggestion p {
+		margin-bottom: 2px;
+		text-align: justify;
+	}
+	.tt-dataset-sura p {
+		padding-right: calc(~"50% + 7px");
+	}
+	.tt-suggestion b {
+		font-size: 85%;
+	}
+}
+
+#menu {
+	overflow-y: hidden;
+
+	.modal-body {
+		padding-bottom: 0;
+	}
+
+	.close {
+		font-family: Helvetica;
+		margin-top: 5px;
+		margin-left: 5px;
+	}
+
+	.tab-content {
+		margin-top: 25px;
+		min-height: 100px;
+	}
+	#options div {
+		margin-bottom: 15px;
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
+
+	.nav {
+		li {
+			float: right;
+
+			a {
+				padding: 7px 15px 5px;
+			}
+			a:hover {
+				background-color: initial;
+				border-bottom: 3px solid #eee;
+			}
+		}
+		li.active {
+			a {
+				background-color: #eee;
+				border-bottom: 3px solid #46b8da;
+			}
+		}
+	}
+
+	p {
+		text-align: justify;
+	}
+
+	select {
+		display: inline-block;
+		width: initial;
+		font-size: 18px;
+		padding: 2px 6px;
+		border-color: #eee;
+	}
+
+	#download-tafsir {
+		font-size: 18px;
+		margin-top: -20px;
+		padding: 0;
+
+		.glyphicon {
+			top: 5px;
+		}
+	}
+
+	#installation .btn {
+		float: right;
+		margin-top: -2px;
+		margin-right: 5px;
+	}
+
+	.modal-footer {
+		font-size: 90%;
+		padding: 10px 20px;
+	}
+}
+
+.progrecss[data-progrecss]:after {
+	background-color: @color4 !important;
+	box-shadow: 0 0 1px @color4 !important;
+	opacity: 1 !important;
+}
+
+.page::-webkit-scrollbar {
+	display: none;
+}
+
+/* animations */
+
+@keyframes TAFSIR-HIGHLIGHT {
+	0% { background: none; }
+	5% { background: @darken-background; }
+	100% { background: none; }
+}
+@-webkit-keyframes TAFSIR-HIGHLIGHT {
+	0% { background: none; }
+	5% { background: @darken-background; }
+	100% { background: none; }
+}
+
+@keyframes ICON-SPIN {
+	from { transform: rotate(0deg); }
+	to { transform: rotate(360deg); }
+}
+@-webkit-keyframes ICON-SPIN {
+	from { -webkit-transform: rotate(0deg); }
+	to { -webkit-transform: rotate(360deg); }
+}
+
+
+/* media */
+
+@media (max-width: 480px) {
+	#views {
+		padding: 0 5px;
+	}
+	#quran {
+		.page div.sura {
+			margin-right: -5px;
+			margin-left: -5px;
+		}
+	}
+	.fill, .tafsir-text .active, .page, .ayas {
+		padding: 0 5px;
+		margin: 0 -5px;
+	}
+	.aya-text {
+		line-height: 36px;
+		font-size: 20px;
+
+		.number {
+			padding: 3px 4px 0px 3px;
+		}
+	}
+}
+
+@media (max-width: 768px) {
+	#wrap {
+		overflow: hidden;
+		border: none;
+	}
+	#header {
+		margin: 0;
+
+		.glyphicon-chevron-left, .glyphicon-chevron-right {
+			display: none;
+		}
+	}
+	#views {
+		height: calc(~"100% - 40px");
+
+		&:before, &:after {
+			content: none;
+		}
+	}
+}
+
+@media (min-width: 360px) and (max-width: 480px) {
+	html {
+		zoom: 110%;
+	}
+}
+
+@media (min-width: 480px) and (max-width: 768px), (min-height: 750px) {
+	html {
+		zoom: 130%;
+	}
+	#quran {
+		.page div.sura {
+			margin-right: -10px;
+			margin-left: -10px;
+		}
+	}
+	.aya-text {
+		line-height: 46px;
+	}
+}

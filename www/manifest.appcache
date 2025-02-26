@@ -1,0 +1,29 @@
+CACHE MANIFEST
+# 2018 Jan 12
+
+CACHE:
+zolal.js
+app.js
+search.js
+js/jquery.js
+js/underscore.js
+js/backbone.js
+js/backbone.localStorage.js
+js/backbone.indexedDb.js
+js/jquery.touchSwipe.js
+js/bootstrap.js
+js/typeahead.js
+js/steady.js
+js/meta.js
+js/amplitude.js
+css/bootstrap.css
+css/main.css
+fonts/AppFont.woff
+fonts/NumberFont.woff
+fonts/AppFontBd.woff
+fonts/QuranFont.woff
+fonts/glyphicons-halflings-regular.woff
+img/fav.png
+
+NETWORK:
+*

@@ -1,0 +1,12 @@
+{
+  "android": {
+    "release": {
+      "keystore": "./release-key.jks",
+      "storePassword": "zolal-roshan-123456",
+      "alias": "release",
+      "password": "zolal-roshan-123456",
+      "packageType": "apk"
+    }
+  }
+}
+  

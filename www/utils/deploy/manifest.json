@@ -1,0 +1,20 @@
+{
+	"name": "Zolal",
+	"description": "Quran with Almizan tafsir.",
+	"short_name": "Zolal",
+	"version": "1.4.0",
+	"icons": {
+		"128": "logo.png"
+	},
+	"app": {
+		"launch": {
+			"web_url": "http://zolal-quran.ir/"
+		},
+		"urls": [ "http://zolal-quran.ir/" ]
+	},
+	"permissions": [
+		"unlimitedStorage"
+	],
+	"offline_enabled": true,
+	"manifest_version": 2
+}
