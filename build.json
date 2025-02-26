@@ -1,10 +1,10 @@
 {
   "android": {
     "release": {
-      "keystore": "./release-key.jks",
-      "storePassword": "zolal-roshan-123456",
-      "alias": "release",
-      "password": "zolal-roshan-123456",
+      "keystore": "./sobhe.jks",
+      "storePassword": "this is hekmat",
+      "alias": "sobhekey",
+      "password": "this is hekmat",
       "packageType": "apk"
     }
   }
